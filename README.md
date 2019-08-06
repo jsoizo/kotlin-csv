@@ -8,12 +8,6 @@
 
 > Kotlin DSL CSV Reader/Writer
 
-## Install
-
-```sh
-npm install
-```
-
 ## Author
 
 👤 **doyaaaaaken**
