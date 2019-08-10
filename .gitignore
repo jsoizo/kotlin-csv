@@ -4,3 +4,4 @@
 # Ignore Gradle build output directory
 build
 out
+org/doyaaaaaken/kotlincsv
