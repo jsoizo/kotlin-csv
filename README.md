@@ -18,6 +18,14 @@
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/doyaaaaaken/kotlin-csv/issues).
 
+## 💻 Development
+
+```
+$ git clone git@github.com:doyaaaaaken/kotlin-csv.git
+$ cd kotlin-csv
+$ ./gradlew test
+```
+
 ## Show your support
 
 Give a ⭐️ if this project helped you!
