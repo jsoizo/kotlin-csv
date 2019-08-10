@@ -10,10 +10,13 @@ repositories {
     jcenter()
 }
 
+val test by tasks.getting(Test::class) {
+    useJUnitPlatform { }
+}
+
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
 }
 
 

@@ -4,3 +4,6 @@
 # Ignore Gradle build output directory
 build
 out
+
+# Ignore kotlintest tmp file
+.kotlintest

@@ -1,11 +1,13 @@
 package org.doyaaaaaken.kotlincsv
 
-import kotlin.test.Test
-import kotlin.test.assertTrue
+import io.kotlintest.shouldBe
+import io.kotlintest.specs.WordSpec
 
-class MyLibraryTest {
-    @Test fun testSomeLibraryMethod() {
-        val classUnderTest = MyLibrary()
-        assertTrue(classUnderTest.someLibraryMethod(), "someLibraryMethod should return 'true'")
+class MyLibraryTest : WordSpec({
+    "testSomeLibraryMethod" should {
+        "return true" {
+            val classUnderTest = MyLibrary()
+            classUnderTest.someLibraryMethod() shouldBe true
+        }
     }
-}
+})
