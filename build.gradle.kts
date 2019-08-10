@@ -25,7 +25,7 @@ publishing {
     }
     repositories {
         maven {
-            url = uri("file://Users/kenta/workspace/oss/kotlin-csv")
+            url = uri("file://Users/kenta/workspace/oss/kotlin-csv/out")
         }
     }
 }
