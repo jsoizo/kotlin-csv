@@ -14,7 +14,6 @@ class CsvReaderDslTest : StringSpec({
         val reader = csvReader {
             charset = Charsets.ISO_8859_1
         }
-        reader.shouldBeTypeOf<CsvReader>()
         reader.charset shouldBe Charsets.ISO_8859_1
     }
 })
