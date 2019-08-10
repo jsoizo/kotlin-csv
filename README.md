@@ -8,12 +8,6 @@
 
 > Kotlin DSL CSV Reader/Writer
 
-## Author
-
-👤 **doyaaaaaken**
-
-* Github: [@doyaaaaaken](https://github.com/doyaaaaaken)
-
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/doyaaaaaken/kotlin-csv/issues).
