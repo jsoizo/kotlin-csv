@@ -16,11 +16,20 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
 
+
+//publishing settings
+//https://docs.gradle.org/current/userguide/publishing_maven.html
+val sourcesJar = task<Jar>("sourcesJar") {
+    from(sourceSets.main.get().allSource)
+    archiveClassifier.set("sources")
+}
+
 publishing {
     publications {
         create<MavenPublication>("myLibrary") {
             artifactId = "kotlin-csv"
             from(components["java"])
+            artifact(sourcesJar)
         }
     }
     repositories {
