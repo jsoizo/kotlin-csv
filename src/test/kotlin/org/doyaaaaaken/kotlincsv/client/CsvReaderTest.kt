@@ -1,4 +1,4 @@
-package org.doyaaaaaken.kotlincsv
+package org.doyaaaaaken.kotlincsv.client
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec

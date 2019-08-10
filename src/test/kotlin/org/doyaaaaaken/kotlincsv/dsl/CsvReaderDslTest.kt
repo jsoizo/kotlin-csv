@@ -3,7 +3,7 @@ package org.doyaaaaaken.kotlincsv.dsl
 import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
-import org.doyaaaaaken.kotlincsv.CsvReader
+import org.doyaaaaaken.kotlincsv.client.CsvReader
 
 class CsvReaderDslTest : StringSpec({
     "csvReader method should work as global method with no argument" {

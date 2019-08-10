@@ -1,6 +1,6 @@
 package org.doyaaaaaken.kotlincsv.dsl
 
-import org.doyaaaaaken.kotlincsv.CsvReader
+import org.doyaaaaaken.kotlincsv.client.CsvReader
 import org.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 
 fun csvReader(init: CsvReaderContext.() -> Unit = {}): CsvReader {

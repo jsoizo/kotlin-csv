@@ -1,4 +1,4 @@
-package org.doyaaaaaken.kotlincsv
+package org.doyaaaaaken.kotlincsv.client
 
 import org.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import org.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext
