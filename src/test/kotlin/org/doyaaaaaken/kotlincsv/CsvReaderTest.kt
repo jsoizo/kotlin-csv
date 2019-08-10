@@ -3,12 +3,12 @@ package org.doyaaaaaken.kotlincsv
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import org.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
+import org.doyaaaaaken.kotlincsv.util.Const
 
 class CsvReaderTest : StringSpec({
     "CsvReader should be created by class constructor with no argument" {
         val reader = CsvReader()
-        //check if default charset is set
-        reader.charset shouldBe Charsets.UTF_8
+        reader.charset shouldBe Const.defaultCharset
     }
     "CsvReader should be created by class constructor with CsvReaderContext argument" {
         val context = CsvReaderContext().apply {
