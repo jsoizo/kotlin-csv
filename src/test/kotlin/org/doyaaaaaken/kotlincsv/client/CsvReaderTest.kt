@@ -13,8 +13,12 @@ class CsvReaderTest : StringSpec({
     "CsvReader should be created by class constructor with CsvReaderContext argument" {
         val context = CsvReaderContext().apply {
             charset = Charsets.ISO_8859_1
+            delimiter = '\t'
+            withHeader = false
         }
         val reader = CsvReader(context)
         reader.charset shouldBe Charsets.ISO_8859_1
+        reader.delimiter shouldBe '\t'
+        reader.withHeader shouldBe false
     }
 })
