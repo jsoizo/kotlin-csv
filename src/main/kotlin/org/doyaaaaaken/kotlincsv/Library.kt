@@ -1,4 +1,4 @@
-package io.github.doyaaaaaken.kotlincsv
+package org.doyaaaaaken.kotlincsv
 
 class Library {
     fun someLibraryMethod(): Boolean {

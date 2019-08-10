@@ -1,4 +1,4 @@
-package io.github.doyaaaaaken.kotlincsv
+package org.doyaaaaaken.kotlincsv
 
 import kotlin.test.Test
 import kotlin.test.assertTrue
