@@ -1,6 +1,6 @@
 package org.doyaaaaaken.kotlincsv
 
-class Library {
+class MyLibrary {
     fun someLibraryMethod(): Boolean {
         return true
     }

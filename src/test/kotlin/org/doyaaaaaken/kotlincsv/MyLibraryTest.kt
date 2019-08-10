@@ -3,9 +3,9 @@ package org.doyaaaaaken.kotlincsv
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class LibraryTest {
+class MyLibraryTest {
     @Test fun testSomeLibraryMethod() {
-        val classUnderTest = Library()
+        val classUnderTest = MyLibrary()
         assertTrue(classUnderTest.someLibraryMethod(), "someLibraryMethod should return 'true'")
     }
 }
