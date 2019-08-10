@@ -19,6 +19,7 @@ dependencies {
 publishing {
     publications {
         create<MavenPublication>("myLibrary") {
+            artifactId = "kotlin-csv"
             from(components["java"])
         }
     }
