@@ -2,11 +2,14 @@ package org.doyaaaaaken.kotlincsv.client
 
 import org.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import org.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext
+import org.doyaaaaaken.kotlincsv.parser.CsvParser
 import java.io.BufferedReader
 import java.io.File
 import kotlin.streams.asSequence
 
 class CsvReader(ctx: CsvReaderContext = CsvReaderContext()) : ICsvReaderContext by ctx {
+
+    private val parser = CsvParser()
 
     fun read(data: String): List<List<String>> {
         return readAsSequence(data).toList()
@@ -27,9 +30,13 @@ class CsvReader(ctx: CsvReaderContext = CsvReaderContext()) : ICsvReaderContext 
     }
 
     private fun readWithBufferedReader(br: BufferedReader): Sequence<List<String>> {
-        return br.lines().asSequence().map {
-            //TODO: implement parse logic
-            it.split(",")
+        var leftOver = ""
+        return br.lines().asSequence().mapNotNull { line ->
+            val parsedLine = parser.parseLine("${leftOver}${line}")
+            if (parsedLine == null) {
+                leftOver = "${leftOver}${line}"
+            }
+            parsedLine
         }
     }
 }
