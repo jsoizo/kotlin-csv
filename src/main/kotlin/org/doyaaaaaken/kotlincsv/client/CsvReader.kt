@@ -32,9 +32,21 @@ class CsvReader(ctx: CsvReaderContext = CsvReaderContext()) : ICsvReaderContext 
     private fun readWithBufferedReader(br: BufferedReader): Sequence<List<String>> {
         var leftOver = ""
         return br.lines().asSequence().mapNotNull { line ->
-            val parsedLine = parser.parseLine("${leftOver}${line}")
+            //TODO: retain line separator as it exists in csv file
+            val lineSeparator = System.lineSeparator()
+            val value = if (leftOver.isEmpty()) {
+                "${line}$lineSeparator"
+            } else {
+                "${leftOver}$lineSeparator${line}$lineSeparator"
+            }
+            val parsedLine = parser.parseLine(value, quoteChar, delimiter, escapeChar)
+
+            //TODO: check if list size is valid as csv requirement
+
             if (parsedLine == null) {
                 leftOver = "${leftOver}${line}"
+            } else {
+                leftOver = ""
             }
             parsedLine
         }
