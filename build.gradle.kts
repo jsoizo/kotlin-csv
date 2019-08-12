@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.github.doyaaaaaken"
-version = "0.1.0"
+version = "0.2.0"
 
 buildscript {
     repositories {
