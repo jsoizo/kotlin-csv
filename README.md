@@ -30,4 +30,6 @@ Copyright © 2019 [doyaaaaaken](https://github.com/doyaaaaaken).<br />
 This project is [Apache License 2.0](https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE) licensed.
 
 ***
+_This project is inspired ❤️ by [scala-csv](https://github.com/tototoshi/scala-csv)_
+
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
