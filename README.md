@@ -13,7 +13,24 @@
 
 ## Download
 
-TODO: enable to download
+gradle kotlin DSL:
+```
+implementation(group = "io.github.doyaaaaaken", name = "kotlin-csv", version = "0.1.0")
+```
+
+gradle groovy DSL:
+```
+implementation 'io.github.doyaaaaaken:kotlin-csv:0.1.0'
+```
+
+maven:
+```
+<dependency>
+  <groupId>io.github.doyaaaaaken</groupId>
+  <artifactId>kotlin-csv</artifactId>
+  <version>0.1.0</version>
+</dependency>
+```
 
 ## Example
 
