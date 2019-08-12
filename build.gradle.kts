@@ -1,6 +1,7 @@
 plugins {
     id("org.jetbrains.kotlin.jvm").version("1.3.41")
     `maven-publish`
+    signing
 }
 
 group = "com.github.doyaaaaaken"
@@ -29,7 +30,7 @@ val sourcesJar = task<Jar>("sourcesJar") {
 
 publishing {
     publications {
-        create<MavenPublication>(project.name) {
+        create<MavenPublication>("mavenJava") {
             artifactId = "kotlin-csv"
             from(components["java"])
             artifact(sourcesJar)
@@ -38,6 +39,16 @@ publishing {
     repositories {
         maven {
             url = uri("https://oss.sonatype.org/content/repositories/snapshots")
+            credentials {
+                val nexusUsername: String? by project
+                val nexusPassword: String? by project
+                username = nexusUsername
+                password = nexusPassword
+            }
         }
     }
+}
+
+signing {
+    sign(publishing.publications["mavenJava"])
 }
