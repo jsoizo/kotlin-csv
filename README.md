@@ -15,7 +15,7 @@
 
 gradle kotlin DSL:
 ```
-compile("com.github.doyaaaaaken:kotlin-csv:0.1.0")
+implementation("com.github.doyaaaaaken:kotlin-csv:0.1.0")
 ```
 
 gradle groovy DSL:
