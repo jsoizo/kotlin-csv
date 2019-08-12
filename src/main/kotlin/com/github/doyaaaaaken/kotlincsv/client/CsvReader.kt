@@ -1,8 +1,8 @@
-package org.doyaaaaaken.kotlincsv.client
+package com.github.doyaaaaaken.kotlincsv.client
 
-import org.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
-import org.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext
-import org.doyaaaaaken.kotlincsv.parser.CsvParser
+import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
+import com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext
+import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import java.io.BufferedReader
 import java.io.File
 import kotlin.streams.asSequence

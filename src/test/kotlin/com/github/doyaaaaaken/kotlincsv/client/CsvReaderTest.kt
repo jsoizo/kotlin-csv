@@ -1,10 +1,10 @@
-package org.doyaaaaaken.kotlincsv.client
+package com.github.doyaaaaaken.kotlincsv.client
 
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
-import org.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
-import org.doyaaaaaken.kotlincsv.dsl.csvReader
-import org.doyaaaaaken.kotlincsv.util.Const
+import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import com.github.doyaaaaaken.kotlincsv.util.Const
 import java.io.File
 
 class CsvReaderTest : WordSpec() {
@@ -55,7 +55,7 @@ class CsvReaderTest : WordSpec() {
                 result shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
             }
             "read tsv file" {
-                val result = csvReader{
+                val result = csvReader {
                     delimiter = '\t'
                 }.read(readTestDataFile("simple.tsv"))
                 result shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))

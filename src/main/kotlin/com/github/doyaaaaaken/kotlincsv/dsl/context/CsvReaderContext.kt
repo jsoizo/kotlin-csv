@@ -1,6 +1,6 @@
-package org.doyaaaaaken.kotlincsv.dsl.context
+package com.github.doyaaaaaken.kotlincsv.dsl.context
 
-import org.doyaaaaaken.kotlincsv.util.Const
+import com.github.doyaaaaaken.kotlincsv.util.Const
 import java.nio.charset.Charset
 
 interface ICsvReaderContext {

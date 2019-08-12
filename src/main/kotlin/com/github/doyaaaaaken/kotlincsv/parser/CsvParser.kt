@@ -1,4 +1,4 @@
-package org.doyaaaaaken.kotlincsv.parser
+package com.github.doyaaaaaken.kotlincsv.parser
 
 import java.lang.RuntimeException
 import java.util.*

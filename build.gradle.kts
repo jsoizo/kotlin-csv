@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-group = "org.doyaaaaaken.kotlincsv"
+group = "com.github.doyaaaaaken"
 version = "0.1.0-SNAPSHOT"
 
 repositories {
