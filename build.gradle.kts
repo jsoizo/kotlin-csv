@@ -47,8 +47,36 @@ publishing {
         create<MavenPublication>("mavenJava") {
             artifactId = "kotlin-csv"
             from(components["java"])
-            artifact(sourcesJar)
-            artifact(dokkaJar)
+            artifacts {
+                artifact(sourcesJar)
+                artifact(dokkaJar)
+            }
+            pom {
+                name.set("kotlin-csv")
+                description.set("Kotlin CSV Reader/Writer")
+                url.set("https://github.com/doyaaaaaken/kotlin-csv")
+
+                organization {
+                    name.set("io.github.doyaaaaaken")
+                    url.set("https://github.com/doyaaaaaken")
+                }
+                licenses {
+                    license {
+                        name.set("Apache License 2.0")
+                        url.set("https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE")
+                    }
+                }
+                scm {
+                    url.set("https://github.com/doyaaaaaken/kotlin-csv")
+                    connection.set("scm:git:git://github.com/doyaaaaaken/kotlin-csv.git")
+                    developerConnection.set("https://github.com/doyaaaaaken/kotlin-csv")
+                }
+                developers {
+                    developer {
+                        name.set("doyaaaaaken")
+                    }
+                }
+            }
         }
     }
     repositories {
