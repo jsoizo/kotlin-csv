@@ -1,11 +1,21 @@
 plugins {
     id("org.jetbrains.kotlin.jvm").version("1.3.41")
+    id("org.jetbrains.dokka").version("0.9.18")
     `maven-publish`
     signing
 }
 
 group = "com.github.doyaaaaaken"
 version = "0.1.0"
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath("org.jetbrains.dokka:dokka-gradle-plugin:0.9.18")
+    }
+}
 
 repositories {
     jcenter()
@@ -27,6 +37,10 @@ val sourcesJar = task<Jar>("sourcesJar") {
     from(sourceSets.main.get().allSource)
     archiveClassifier.set("sources")
 }
+val dokkaJar = task<Jar>("dokkaJar") {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    archiveClassifier.set("javadoc")
+}
 
 publishing {
     publications {
@@ -34,6 +48,7 @@ publishing {
             artifactId = "kotlin-csv"
             from(components["java"])
             artifact(sourcesJar)
+            artifact(dokkaJar)
         }
     }
     repositories {
@@ -44,7 +59,7 @@ publishing {
                 username = nexusUsername
                 password = nexusPassword
             }
-            
+
             val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
             val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
             url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
