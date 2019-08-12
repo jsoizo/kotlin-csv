@@ -29,7 +29,7 @@ val sourcesJar = task<Jar>("sourcesJar") {
 
 publishing {
     publications {
-        create<MavenPublication>("myLibrary") {
+        create<MavenPublication>(project.name) {
             artifactId = "kotlin-csv"
             from(components["java"])
             artifact(sourcesJar)
@@ -37,7 +37,7 @@ publishing {
     }
     repositories {
         maven {
-            url = uri("file://Users/kenta/workspace/oss/kotlin-csv/out")
+            url = uri("https://oss.sonatype.org/content/repositories/snapshots")
         }
     }
 }
