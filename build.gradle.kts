@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.github.doyaaaaaken"
-version = "0.1.0-SNAPSHOT"
+version = "0.1.0"
 
 repositories {
     jcenter()
@@ -38,13 +38,16 @@ publishing {
     }
     repositories {
         maven {
-            url = uri("https://oss.sonatype.org/content/repositories/snapshots")
             credentials {
                 val nexusUsername: String? by project
                 val nexusPassword: String? by project
                 username = nexusUsername
                 password = nexusPassword
             }
+            
+            val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
         }
     }
 }
