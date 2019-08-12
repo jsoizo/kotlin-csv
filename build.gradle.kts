@@ -57,7 +57,7 @@ publishing {
                 url.set("https://github.com/doyaaaaaken/kotlin-csv")
 
                 organization {
-                    name.set("io.github.doyaaaaaken")
+                    name.set("com.github.doyaaaaaken")
                     url.set("https://github.com/doyaaaaaken")
                 }
                 licenses {
