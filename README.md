@@ -56,7 +56,13 @@ val rows: csvReader{
 
 ### Writing example
 
-TODO: implement code
+```kotlin
+val file = new File("out.csv")
+val data = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+csvWriter().use {
+  it.write(file, data)
+}
+```
 
 # Miscellaneousness
 
