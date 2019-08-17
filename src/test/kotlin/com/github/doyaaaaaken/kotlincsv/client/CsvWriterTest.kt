@@ -31,8 +31,9 @@ class CsvWriterTest : WordSpec() {
         }
 
         "writeTo method" should {
+            //TODO: Delete file after test
             "write simple csv data into file" {
-                val row = listOf("a", "b")
+                val row = listOf("a", "b", null)
                 csvWriter().writeTo(File("test.csv")) {
                     writeRow(row)
                     writeRow(row)
