@@ -14,8 +14,12 @@ class CsvWriterDslTest : StringSpec({
         val reader = csvWriter {
             charset = Charsets.ISO_8859_1
             delimiter = '\t'
+            quoteChar = '\''
+            lineTerminator = "\n"
         }
         reader.charset shouldBe Charsets.ISO_8859_1
         reader.delimiter shouldBe '\t'
+        reader.quoteChar shouldBe '\''
+        reader.lineTerminator shouldBe "\n"
     }
 })
