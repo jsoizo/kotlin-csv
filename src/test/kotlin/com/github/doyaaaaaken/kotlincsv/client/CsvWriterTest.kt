@@ -5,9 +5,18 @@ import io.kotlintest.specs.WordSpec
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.github.doyaaaaaken.kotlincsv.util.Const
+import io.kotlintest.TestCase
+import io.kotlintest.TestResult
 import java.io.File
 
 class CsvWriterTest : WordSpec() {
+
+    private val testFileName = "test.csv"
+
+    override fun afterTest(testCase: TestCase, result: TestResult) {
+        File(testFileName).delete()
+        super.afterTest(testCase, result)
+    }
 
     init {
         "CsvWriter class constructor" should {
@@ -31,10 +40,10 @@ class CsvWriterTest : WordSpec() {
         }
 
         "writeTo method" should {
-            //TODO: Delete file after test
             "write simple csv data into file" {
                 val row = listOf("a", "b", null)
-                csvWriter().writeTo(File("test.csv")) {
+                //TODO: check file content
+                csvWriter().writeTo(File(testFileName)) {
                     writeRow(row)
                     writeRow(row)
                     flush()
