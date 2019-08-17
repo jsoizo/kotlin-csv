@@ -7,19 +7,19 @@ import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 
 class CsvWriterDslTest : StringSpec({
     "csvWriter method should work as global method with no argument" {
-        val reader = csvWriter()
-        reader.shouldBeTypeOf<CsvWriter>()
+        val writer = csvWriter()
+        writer.shouldBeTypeOf<CsvWriter>()
     }
     "csvWriter method should work as dsl" {
-        val reader = csvWriter {
+        val writer = csvWriter {
             charset = Charsets.ISO_8859_1
             delimiter = '\t'
             quoteChar = '\''
             lineTerminator = "\n"
         }
-        reader.charset shouldBe Charsets.ISO_8859_1
-        reader.delimiter shouldBe '\t'
-        reader.quoteChar shouldBe '\''
-        reader.lineTerminator shouldBe "\n"
+        writer.charset shouldBe Charsets.ISO_8859_1
+        writer.delimiter shouldBe '\t'
+        writer.quoteChar shouldBe '\''
+        writer.lineTerminator shouldBe "\n"
     }
 })

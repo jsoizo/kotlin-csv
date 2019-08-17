@@ -18,12 +18,16 @@ class CsvReaderTest : WordSpec() {
             "be created with CsvReaderContext argument" {
                 val context = CsvReaderContext().apply {
                     charset = Charsets.ISO_8859_1
+                    quoteChar = '\''
                     delimiter = '\t'
+                    escapeChar = '"'
                     withHeader = false
                 }
                 val reader = CsvReader(context)
                 reader.charset shouldBe Charsets.ISO_8859_1
+                reader.quoteChar shouldBe '\''
                 reader.delimiter shouldBe '\t'
+                reader.escapeChar shouldBe '"'
                 reader.withHeader shouldBe false
             }
         }
