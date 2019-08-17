@@ -3,6 +3,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
 import java.io.Closeable
 import java.io.Flushable
+import java.io.IOException
 import java.io.PrintWriter
 
 class CsvFileWriter internal constructor(
@@ -11,12 +12,17 @@ class CsvFileWriter internal constructor(
 ) : Closeable, Flushable {
 
     fun writeRow(row: List<Any?>) {
-        writer.print(row.map { it.toString() }.joinToString(ctx.delimiter.toString()))
-        writer.print(ctx.lineTerminator)
+        writeNext(row)
+        if (writer.checkError()) {
+            throw IOException("Failed to write")
+        }
     }
 
     fun writeAll(rows: List<List<Any?>>) {
-        TODO()
+        rows.forEach { writeNext(it) }
+        if (writer.checkError()) {
+            throw IOException("Failed to write")
+        }
     }
 
     override fun flush() {
@@ -25,5 +31,11 @@ class CsvFileWriter internal constructor(
 
     override fun close() {
         writer.close()
+    }
+
+    private fun writeNext(row: List<Any?>) {
+        //TODO: apply CsvWriterContext.quoteCharacter option
+        writer.print(row.map { it.toString() }.joinToString(ctx.delimiter.toString()))
+        writer.print(ctx.lineTerminator)
     }
 }
