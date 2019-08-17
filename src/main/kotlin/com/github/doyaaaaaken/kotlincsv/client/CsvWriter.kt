@@ -2,29 +2,27 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvWriterContext
-import java.io.Closeable
-import java.io.File
-import java.io.Flushable
-import java.io.OutputStream
+import java.io.*
 
 class CsvWriter(
-        ctx: CsvWriterContext = CsvWriterContext()
+        private val ctx: CsvWriterContext = CsvWriterContext()
 ) : ICsvWriterContext by ctx {
 
     fun writeTo(targetFile: File, append: Boolean = true, write: CsvFileWriter.() -> Unit) {
-        //TODO: file open and call write method
-        TODO()
+        val fos = FileOutputStream(targetFile, append)
+        writeTo(fos, write)
     }
 
-    fun writeTo(osp: OutputStream, append: Boolean = true, write: CsvFileWriter.() -> Unit) {
-        //TODO: file open and call write method
-        TODO()
+    fun writeTo(ops: OutputStream, write: CsvFileWriter.() -> Unit) {
+        val osw = OutputStreamWriter(ops, ctx.charset)
+        val writer = CsvFileWriter(PrintWriter(osw))
+        writer.write()
     }
 }
 
-class CsvFileWriter() : Closeable, Flushable {
+class CsvFileWriter(private val writer: PrintWriter) : Closeable, Flushable {
     fun writeRow(row: List<Any?>) {
-        TODO()
+        writer.write(row.map { it.toString() }.joinToString(","))
     }
 
     fun writeAll(rows: List<List<Any?>>) {
@@ -32,10 +30,10 @@ class CsvFileWriter() : Closeable, Flushable {
     }
 
     override fun flush() {
-        TODO()
+        writer.flush()
     }
 
     override fun close() {
-        TODO()
+        writer.close()
     }
 }
