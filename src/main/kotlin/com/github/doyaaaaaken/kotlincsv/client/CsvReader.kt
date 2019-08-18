@@ -5,6 +5,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import java.io.BufferedReader
 import java.io.File
+import java.io.InputStream
 import kotlin.streams.asSequence
 
 class CsvReader(ctx: CsvReaderContext = CsvReaderContext()) : ICsvReaderContext by ctx {
@@ -19,6 +20,10 @@ class CsvReader(ctx: CsvReaderContext = CsvReaderContext()) : ICsvReaderContext 
         return readAsSequence(file).toList()
     }
 
+    fun read(ips: InputStream): List<List<String>> {
+        return readAsSequence(ips).toList()
+    }
+
     fun readAsSequence(data: String): Sequence<List<String>> {
         val br = data.byteInputStream(charset).bufferedReader(charset)
         return readWithBufferedReader(br)
@@ -26,6 +31,11 @@ class CsvReader(ctx: CsvReaderContext = CsvReaderContext()) : ICsvReaderContext 
 
     fun readAsSequence(file: File): Sequence<List<String>> {
         val br = file.inputStream().bufferedReader(charset)
+        return readWithBufferedReader(br)
+    }
+
+    fun readAsSequence(ips: InputStream): Sequence<List<String>> {
+        val br = ips.bufferedReader(charset)
         return readWithBufferedReader(br)
     }
 
