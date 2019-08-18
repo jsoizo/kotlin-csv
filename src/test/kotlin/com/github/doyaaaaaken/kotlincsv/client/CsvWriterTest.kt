@@ -18,6 +18,10 @@ class CsvWriterTest : WordSpec() {
         super.afterTest(testCase, result)
     }
 
+    private fun readTestFile(): String {
+        return File(testFileName).readText()
+    }
+
     init {
         "CsvWriter class constructor" should {
             "be created with no argument" {
@@ -40,15 +44,20 @@ class CsvWriterTest : WordSpec() {
         }
 
         "writeTo method" should {
-            "write simple csv data into file" {
-                val row = listOf("a", "b", null)
-                //TODO: check file content
-                csvWriter().writeTo(File(testFileName)) {
-                    writeRow(row)
-                    writeRow(row)
-                    flush()
+            "write simple csv data into file with writing each rows" {
+                val row1 = listOf("a", "b", null)
+                val row2 = listOf("d", "2", "1.0")
+                csvWriter().writeTo(testFileName) {
+                    writeRow(row1)
+                    writeRow(row2)
                 }
+
+                val expected = "a,b,null\r\nd,2,1.0\r\n"
+                val actual = readTestFile()
+                actual shouldBe expected
             }
+
+            //TODO: test writeAll method, charaset test, append test
         }
     }
 }
