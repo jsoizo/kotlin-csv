@@ -67,7 +67,20 @@ class CsvWriterTest : WordSpec() {
                 actual shouldBe expected
             }
 
-            //TODO: test writeAll method, charaset test, append test
+            "write simple csv data to existing file with appending on tail" {
+                val row1 = listOf("a", "b", null)
+                val row2 = listOf("d", "2", "1.0")
+                csvWriter().writeTo(File(testFileName), true) {
+                    writeAll(listOf(row1, row2))
+                    writeAll(listOf(row1, row2))
+                }
+
+                val expected = "a,b,null\r\nd,2,1.0\r\n"
+                val actual = readTestFile()
+                actual shouldBe expected + expected
+            }
+
+            //TODO: charaset test
         }
     }
 }
