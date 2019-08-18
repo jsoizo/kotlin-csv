@@ -21,14 +21,14 @@ class CsvReaderTest : WordSpec() {
                     quoteChar = '\''
                     delimiter = '\t'
                     escapeChar = '"'
-                    withHeader = false
+//                    withHeader = false
                 }
                 val reader = CsvReader(context)
                 reader.charset shouldBe Charsets.ISO_8859_1
                 reader.quoteChar shouldBe '\''
                 reader.delimiter shouldBe '\t'
                 reader.escapeChar shouldBe '"'
-                reader.withHeader shouldBe false
+//                reader.withHeader shouldBe false
             }
         }
 

@@ -34,7 +34,6 @@ class CsvFileWriter internal constructor(
     }
 
     private fun writeNext(row: List<Any?>) {
-        //TODO: apply CsvWriterContext.quoteCharacter option
         writer.print(row.map { it.toString() }.joinToString(ctx.delimiter.toString()))
         writer.print(ctx.lineTerminator)
     }

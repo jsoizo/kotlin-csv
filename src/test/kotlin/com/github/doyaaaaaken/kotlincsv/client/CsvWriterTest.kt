@@ -33,13 +33,13 @@ class CsvWriterTest : WordSpec() {
                 val context = CsvWriterContext().apply {
                     charset = Charsets.ISO_8859_1
                     delimiter = '\t'
-                    quoteChar = '\''
+//                    quoteChar = '\''
                     lineTerminator = "\n"
                 }
                 val writer = CsvWriter(context)
                 writer.charset shouldBe Charsets.ISO_8859_1
                 writer.delimiter shouldBe '\t'
-                writer.quoteChar shouldBe '\''
+//                writer.quoteChar shouldBe '\''
                 writer.lineTerminator shouldBe "\n"
             }
         }
