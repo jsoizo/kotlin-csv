@@ -49,7 +49,7 @@ If you want to improve performance, you can use `readAsSequence` method instead 
 You can also read tsv file by changing setting.
 ```kotlin
 val file = File("test.csv")
-val rows: csvReader{
+val rows = csvReader {
     delimiter = '\t'
 }.read(file)
 ```

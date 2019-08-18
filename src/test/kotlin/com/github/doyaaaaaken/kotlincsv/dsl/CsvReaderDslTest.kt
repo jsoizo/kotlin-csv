@@ -5,6 +5,9 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 
+/**
+ * @author doyaaaaaken
+ */
 class CsvReaderDslTest : StringSpec({
     "csvReader method should work as global method with no argument" {
         val reader = csvReader()

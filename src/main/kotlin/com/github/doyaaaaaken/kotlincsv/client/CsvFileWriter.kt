@@ -6,6 +6,11 @@ import java.io.Flushable
 import java.io.IOException
 import java.io.PrintWriter
 
+/**
+ * CSV Writer class, which controls file I/O flow.
+ *
+ * @author doyaaaaaken
+ */
 class CsvFileWriter internal constructor(
         private val ctx: CsvWriterContext,
         private val writer: PrintWriter

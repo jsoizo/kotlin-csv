@@ -5,6 +5,9 @@ import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 
+/**
+ * @author doyaaaaaken
+ */
 class CsvWriterDslTest : StringSpec({
     "csvWriter method should work as global method with no argument" {
         val writer = csvWriter()

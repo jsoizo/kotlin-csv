@@ -3,6 +3,11 @@ package com.github.doyaaaaaken.kotlincsv.parser
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import java.util.*
 
+/**
+ * Csv Parse logic while reading csv
+ *
+ * @author doyaaaaaken
+ */
 internal class CsvParser {
 
     private val BOM = '\uFEFF'

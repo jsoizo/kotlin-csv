@@ -4,6 +4,11 @@ import com.github.doyaaaaaken.kotlincsv.util.Const
 import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
 import java.nio.charset.Charset
 
+/**
+ * Interface for CSV Writer settings
+ *
+ * @author doyaaaaaken
+ */
 @CsvDslMarker
 interface ICsvWriterContext {
     val charset: Charset
@@ -12,6 +17,11 @@ interface ICsvWriterContext {
     val lineTerminator: String
 }
 
+/**
+ * CSV Writer settings used in `csvWriter` DSL method.
+ *
+ * @author doyaaaaaken
+ */
 @CsvDslMarker
 class CsvWriterContext : ICsvWriterContext {
     override var charset = Const.defaultCharset

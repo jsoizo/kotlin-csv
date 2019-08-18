@@ -8,6 +8,11 @@ import java.io.File
 import java.io.InputStream
 import kotlin.streams.asSequence
 
+/**
+ * CSV Reader class, which decides where to read from and how to read.
+ *
+ * @author doyaaaaaken
+ */
 class CsvReader(ctx: CsvReaderContext = CsvReaderContext()) : ICsvReaderContext by ctx {
 
     private val parser = CsvParser()
