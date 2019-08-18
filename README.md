@@ -32,9 +32,9 @@ maven:
 </dependency>
 ```
 
-## Example
+## Examples
 
-### Reading example
+### Reading examples
 
 You can read csv file by both String and java.io.File object.
 ```kotlin
@@ -50,13 +50,42 @@ You can also read tsv file by changing setting.
 ```kotlin
 val file = File("test.csv")
 val rows: csvReader{
-  delimiter = '\t'
+    delimiter = '\t'
 }.read(file)
 ```
 
-### Writing example
+### Writing examples
 
-TODO: implement code
+#### Simple case
+
+You can write csv simply, only one line.
+No need to call other methods (like `use` `close` `flush`) 
+```kotlin
+val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+csvWriter().writeTo("test.csv") { writeAll(rows) }
+```
+
+You can also write csv file per each line.
+```kotlin
+val row1 = listOf("a", "b", "c")
+val row2 = listOf("d", "e", "f")
+csvWriter().writeTo("test.csv") { 
+    writeRow(row1)
+    writeRow(row2)
+}
+```
+
+#### Customize
+
+When you create CsvWriter, You can choose write options like charset.
+```kotlin
+val writer = csvWriter {
+    charset = Charsets.ISO_8859_1
+    delimiter = '\t'
+    lineTerminator = "\n"
+}
+```
+
 
 # Miscellaneousness
 
