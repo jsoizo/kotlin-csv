@@ -7,7 +7,6 @@ internal class CsvParser {
 
     private val BOM = '\uFEFF'
 
-    @UseExperimental(kotlin.ExperimentalStdlibApi::class)
     fun parseLine(line: String, quoteChar: Char, delimiter: Char, escapeChar: Char): List<String>? {
         val chars = line.toCharArray()
         val fields = Vector<String>()
@@ -69,7 +68,7 @@ internal class CsvParser {
                                 state = ParseState.FIELD
                                 pos += 2
                             } else {
-                                throw MalformedCSVException(chars.concatToString())
+                                throw MalformedCSVException(String(chars))
                             }
                         }
                         delimiter -> {
@@ -110,7 +109,7 @@ internal class CsvParser {
                                     state = ParseState.FIELD
                                     pos += 2
                                 } else {
-                                    throw MalformedCSVException(chars.concatToString())
+                                    throw MalformedCSVException(String(chars))
                                 }
                             } else {
                                 state = ParseState.QUOTE_END
@@ -154,10 +153,10 @@ internal class CsvParser {
                                 state = ParseState.QUOTED_FIELD
                                 pos += 2
                             } else {
-                                throw MalformedCSVException(chars.concatToString())
+                                throw MalformedCSVException(String(chars))
                             }
                         } else {
-                            throw MalformedCSVException(chars.concatToString())
+                            throw MalformedCSVException(String(chars))
                         }
                     } else if (c == quoteChar) {
                         if (pos + 1 < charsLength && chars[pos + 1] == quoteChar) {
@@ -198,7 +197,7 @@ internal class CsvParser {
                             pos += 1
                         }
                         else -> {
-                            throw MalformedCSVException(chars.concatToString())
+                            throw MalformedCSVException(String(chars))
                         }
                     }
                 }
@@ -211,10 +210,10 @@ internal class CsvParser {
                                 state = ParseState.QUOTED_FIELD
                                 pos += 2
                             } else {
-                                throw MalformedCSVException(chars.concatToString())
+                                throw MalformedCSVException(String(chars))
                             }
                         } else {
-                            throw MalformedCSVException(chars.concatToString())
+                            throw MalformedCSVException(String(chars))
                         }
                     } else if (c == quoteChar) {
                         if (pos + 1 < charsLength && chars[pos + 1] == quoteChar) {
