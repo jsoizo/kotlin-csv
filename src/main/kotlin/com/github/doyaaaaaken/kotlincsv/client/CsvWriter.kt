@@ -8,6 +8,11 @@ class CsvWriter(
         private val ctx: CsvWriterContext = CsvWriterContext()
 ) : ICsvWriterContext by ctx {
 
+    fun writeTo(targetFileName: String, append: Boolean = false, write: CsvFileWriter.() -> Unit) {
+        val targetFile = File(targetFileName)
+        writeTo(targetFile, append, write)
+    }
+
     fun writeTo(targetFile: File, append: Boolean = false, write: CsvFileWriter.() -> Unit) {
         val fos = FileOutputStream(targetFile, append)
         writeTo(fos, write)
