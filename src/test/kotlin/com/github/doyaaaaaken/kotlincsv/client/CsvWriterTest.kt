@@ -57,6 +57,16 @@ class CsvWriterTest : WordSpec() {
                 actual shouldBe expected
             }
 
+            "write simple csv data into file with writing all at one time" {
+                val row1 = listOf("a", "b", null)
+                val row2 = listOf("d", "2", "1.0")
+                csvWriter().writeTo(testFileName).writeAll(listOf(row1, row2))
+
+                val expected = "a,b,null\r\nd,2,1.0\r\n"
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+
             //TODO: test writeAll method, charaset test, append test
         }
     }
