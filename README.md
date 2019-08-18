@@ -5,6 +5,7 @@
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
   <img alt="CircleCI" src="https://circleci.com/gh/doyaaaaaken/kotlin-csv/tree/master.svg?style=svg" />
+  <a href="https://www.codefactor.io/repository/github/doyaaaaaken/kotlin-csv"><img src="https://www.codefactor.io/repository/github/doyaaaaaken/kotlin-csv/badge" alt="CodeFactor" /></a>
 </p>
 
 > Kotlin DSL CSV Reader/Writer
@@ -49,7 +50,7 @@ If you want to improve performance, you can use `readAsSequence` method instead 
 You can also read tsv file by changing setting.
 ```kotlin
 val file = File("test.csv")
-val rows: csvReader{
+val rows = csvReader {
     delimiter = '\t'
 }.read(file)
 ```

@@ -7,6 +7,9 @@ import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.util.Const
 import java.io.File
 
+/**
+ * @author doyaaaaaken
+ */
 class CsvReaderTest : WordSpec() {
 
     init {

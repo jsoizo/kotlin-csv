@@ -10,6 +10,9 @@ import io.kotlintest.TestResult
 import java.io.File
 import java.nio.charset.Charset
 
+/**
+ * @author doyaaaaaken
+ */
 class CsvWriterTest : WordSpec() {
 
     private val testFileName = "test.csv"
