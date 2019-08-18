@@ -1,6 +1,7 @@
 plugins {
     id("org.jetbrains.kotlin.jvm").version("1.3.41")
     id("org.jetbrains.dokka").version("0.9.18")
+    jacoco
     `maven-publish`
     signing
 }
@@ -97,4 +98,12 @@ publishing {
 
 signing {
     sign(publishing.publications["mavenJava"])
+}
+
+tasks.withType<JacocoReport> {
+    reports {
+        xml.isEnabled = true
+        xml.destination = File("$buildDir/reports/jacoco/report.xml")
+        html.isEnabled = false
+    }
 }
