@@ -1,9 +1,9 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
-import java.lang.RuntimeException
+import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import java.util.*
 
-class CsvParser {
+internal class CsvParser {
 
     private val BOM = '\uFEFF'
 
@@ -16,15 +16,14 @@ class CsvParser {
         var pos = 0
         val charsLength = chars.size
 
-        if (chars.isNotEmpty() && chars[0] == BOM) {
-            pos += 1
-        }
-
         while (state != ParseState.END && pos < charsLength) {
             val c = chars[pos]
             when (state) {
                 ParseState.START -> {
                     when (c) {
+                        BOM -> {
+                            pos += 1
+                        }
                         quoteChar -> {
                             state = ParseState.QUOTE_START
                             pos += 1
@@ -269,5 +268,3 @@ private enum class ParseState {
     QUOTE_END,
     QUOTED_FIELD
 }
-
-class MalformedCSVException(message: String) : RuntimeException(message)

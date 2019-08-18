@@ -33,7 +33,7 @@ class CsvReaderTest : WordSpec() {
         }
 
         "read method (with String argument)" should {
-            "read csv" {
+            "read simple csv" {
                 val result = csvReader().read(
                         """a,b,c
                         |d,e,f
@@ -50,6 +50,14 @@ class CsvReaderTest : WordSpec() {
                 )
                 result shouldBe listOf(listOf("a", "b", "c", "x", """y
                     | hoge""".trimMargin()), listOf("d", "e", "f", "g", "h"))
+            }
+        }
+
+        "read method (with InputStream argument)" should {
+            "read simple csv" {
+                val file = readTestDataFile("simple.csv")
+                val result = csvReader().read(file.inputStream())
+                result shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
             }
         }
 
