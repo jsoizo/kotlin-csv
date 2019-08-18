@@ -8,6 +8,7 @@ import com.github.doyaaaaaken.kotlincsv.util.Const
 import io.kotlintest.TestCase
 import io.kotlintest.TestResult
 import java.io.File
+import java.nio.charset.Charset
 
 class CsvWriterTest : WordSpec() {
 
@@ -18,8 +19,8 @@ class CsvWriterTest : WordSpec() {
         super.afterTest(testCase, result)
     }
 
-    private fun readTestFile(): String {
-        return File(testFileName).readText()
+    private fun readTestFile(charset: Charset = Charsets.UTF_8): String {
+        return File(testFileName).readText(charset)
     }
 
     init {
@@ -73,13 +74,14 @@ class CsvWriterTest : WordSpec() {
             }
 
             "write simple csv with ISO_8859_1 charset" {
+                val sjis = Charset.forName("SJIS")
                 csvWriter{
-                    charset = Charsets.ISO_8859_1
+                    charset = sjis
                 }.writeTo(File(testFileName)) {
-                    writeAll(listOf(row1, row2))
+                    writeAll(listOf(listOf("あ", "い")))
                 }
-                val actual = readTestFile()
-                actual shouldBe expected
+                val actual = readTestFile(sjis)
+                actual shouldBe "あ,い\r\n"
             }
         }
     }
