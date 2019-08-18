@@ -16,15 +16,14 @@ internal class CsvParser {
         var pos = 0
         val charsLength = chars.size
 
-        if (chars.isNotEmpty() && chars[0] == BOM) {
-            pos += 1
-        }
-
         while (state != ParseState.END && pos < charsLength) {
             val c = chars[pos]
             when (state) {
                 ParseState.START -> {
                     when (c) {
+                        BOM -> {
+                            pos += 1
+                        }
                         quoteChar -> {
                             state = ParseState.QUOTE_START
                             pos += 1
