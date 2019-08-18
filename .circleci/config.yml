@@ -22,4 +22,8 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle.kts" }}
 
-      - run: ./gradlew test
+      - run:
+          command: |
+            ./gradlew test
+            ./gradlew jacocoTestReport
+            bash <(curl -s https://codecov.io/bash)
