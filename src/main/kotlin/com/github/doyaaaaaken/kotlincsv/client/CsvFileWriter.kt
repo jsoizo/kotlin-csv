@@ -39,7 +39,10 @@ class CsvFileWriter internal constructor(
     }
 
     private fun writeNext(row: List<Any?>) {
-        writer.print(row.map { it.toString() }.joinToString(ctx.delimiter.toString()))
+        val rowStr = row.map {
+            if (it == null) ctx.nullCode else it.toString()
+        }.joinToString(ctx.delimiter.toString())
+        writer.print(rowStr)
         writer.print(ctx.lineTerminator)
     }
 }

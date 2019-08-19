@@ -30,7 +30,7 @@ class CsvFileWriterTest : WordSpec() {
         "writeRow method" should {
             "write any primitive types" {
                 val row = listOf("String", 'C', 1, 2L, 3.45, true, null)
-                val expected = "String,C,1,2,3.45,true,null\r\n"
+                val expected = "String,C,1,2,3.45,true,\r\n"
                 csvWriter().writeTo(testFileName) {
                     writeRow(row)
                 }

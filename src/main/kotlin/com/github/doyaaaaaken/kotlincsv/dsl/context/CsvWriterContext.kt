@@ -14,6 +14,7 @@ interface ICsvWriterContext {
     val charset: Charset
     val delimiter: Char
 //    val quoteChar: Char
+    val nullCode: String
     val lineTerminator: String
 }
 
@@ -26,6 +27,6 @@ interface ICsvWriterContext {
 class CsvWriterContext : ICsvWriterContext {
     override var charset = Const.defaultCharset
     override var delimiter: Char = ','
-//    override var quoteChar: Char = '"'
+    override var nullCode: String = ""
     override var lineTerminator: String = "\r\n"
 }

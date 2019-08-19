@@ -18,11 +18,13 @@ class CsvWriterDslTest : StringSpec({
             charset = Charsets.ISO_8859_1
             delimiter = '\t'
 //            quoteChar = '\''
+            nullCode = "NULL"
             lineTerminator = "\n"
         }
         writer.charset shouldBe Charsets.ISO_8859_1
         writer.delimiter shouldBe '\t'
 //        writer.quoteChar shouldBe '\''
+        writer.nullCode shouldBe "NULL"
         writer.lineTerminator shouldBe "\n"
     }
 })
