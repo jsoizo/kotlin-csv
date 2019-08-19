@@ -37,12 +37,14 @@ class CsvWriterTest : WordSpec() {
                     charset = Charsets.ISO_8859_1
                     delimiter = '\t'
 //                    quoteChar = '\''
+                    nullCode = "NULL"
                     lineTerminator = "\n"
                 }
                 val writer = CsvWriter(context)
                 writer.charset shouldBe Charsets.ISO_8859_1
                 writer.delimiter shouldBe '\t'
 //                writer.quoteChar shouldBe '\''
+                writer.nullCode shouldBe "NULL"
                 writer.lineTerminator shouldBe "\n"
             }
         }
@@ -50,7 +52,7 @@ class CsvWriterTest : WordSpec() {
         "writeTo method" should {
             val row1 = listOf("a", "b", null)
             val row2 = listOf("d", "2", "1.0")
-            val expected = "a,b,null\r\nd,2,1.0\r\n"
+            val expected = "a,b,\r\nd,2,1.0\r\n"
 
             "write simple csv data into file with writing each rows" {
                 csvWriter().writeTo(testFileName) {
