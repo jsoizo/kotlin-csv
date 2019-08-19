@@ -51,17 +51,6 @@ class CsvFileWriterTest : WordSpec() {
                 val actual = readTestFile()
                 actual shouldBe expected
             }
-            "write null with customized null code" {
-                val row = listOf(null, null)
-                val expected = "NULL,NULL\r\n"
-                csvWriter {
-                    nullCode = "NULL"
-                }.writeTo(testFileName) {
-                    writeRow(row)
-                }
-                val actual = readTestFile()
-                actual shouldBe expected
-            }
         }
         "writeAll method" should {
             "write Sequence data" {

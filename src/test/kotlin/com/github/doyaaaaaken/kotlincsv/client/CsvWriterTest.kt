@@ -92,8 +92,10 @@ class CsvWriterTest : WordSpec() {
                 val actual = readTestFile()
                 actual shouldBe expected
             }
+        }
 
-            "write simple csv with SJIS charset" {
+        "Customized CsvWriter" should {
+            "write csv with SJIS charset" {
                 val sjis = Charset.forName("SJIS")
                 csvWriter{
                     charset = sjis
@@ -102,6 +104,40 @@ class CsvWriterTest : WordSpec() {
                 }
                 val actual = readTestFile(sjis)
                 actual shouldBe "あ,い\r\n"
+            }
+            "write csv with '|' demimiter" {
+                val row1 = listOf("a", "b")
+                val row2 = listOf("c", "d")
+                val expected = "a|b\r\nc|d\r\n"
+                csvWriter{
+                    delimiter = '|'
+                }.writeTo(File(testFileName)) {
+                    writeAll(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+            "write null with customized null code" {
+                val row = listOf(null, null)
+                csvWriter {
+                    nullCode = "NULL"
+                }.writeTo(testFileName) {
+                    writeRow(row)
+                }
+                val actual = readTestFile()
+                actual shouldBe "NULL,NULL\r\n"
+            }
+            "write csv with \n line terminator" {
+                val row1 = listOf("a", "b")
+                val row2 = listOf("c", "d")
+                val expected = "a,b\nc,d\n"
+                csvWriter{
+                    lineTerminator = "\n"
+                }.writeTo(File(testFileName)) {
+                    writeAll(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
             }
         }
     }
