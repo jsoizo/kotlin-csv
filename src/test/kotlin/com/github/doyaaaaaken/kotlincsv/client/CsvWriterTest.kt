@@ -69,16 +69,31 @@ class CsvWriterTest : WordSpec() {
                 actual shouldBe expected
             }
 
-            "write simple csv data to existing file with appending on tail" {
-                csvWriter().writeTo(File(testFileName), true) {
+            "write simple csv data to the tail of existing file with append = true" {
+                val writer = csvWriter()
+                writer.writeTo(File(testFileName), true) {
                     writeAll(listOf(row1, row2))
+                }
+                writer.writeTo(File(testFileName), true) {
                     writeAll(listOf(row1, row2))
                 }
                 val actual = readTestFile()
                 actual shouldBe expected + expected
             }
 
-            "write simple csv with ISO_8859_1 charset" {
+            "overwrite simple csv data with append = false" {
+                val writer = csvWriter()
+                writer.writeTo(File(testFileName), false) {
+                    writeAll(listOf(row2, row2, row2))
+                }
+                writer.writeTo(File(testFileName), false) {
+                    writeAll(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+
+            "write simple csv with SJIS charset" {
                 val sjis = Charset.forName("SJIS")
                 csvWriter{
                     charset = sjis

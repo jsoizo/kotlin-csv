@@ -5,7 +5,9 @@ import io.kotlintest.specs.WordSpec
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import io.kotlintest.TestCase
 import io.kotlintest.TestResult
+import io.kotlintest.shouldThrow
 import java.io.File
+import java.io.IOException
 import java.nio.charset.Charset
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -70,6 +72,28 @@ class CsvFileWriterTest : WordSpec() {
                 }
                 val actual = readTestFile()
                 actual shouldBe expected
+            }
+        }
+        "close method" should {
+            "throw Exception when stream is already closed" {
+                val row = listOf("a", "b")
+                shouldThrow<IOException> {
+                    csvWriter().writeTo(testFileName) {
+                        close()
+                        writeRow(row)
+                    }
+                }
+            }
+        }
+        "flush method" should {
+            "flush stream" {
+                val row = listOf("a", "b")
+                csvWriter().writeTo(testFileName) {
+                    writeRow(row)
+                    flush()
+                    val actual = readTestFile()
+                    actual shouldBe "a,b\r\n"
+                }
             }
         }
     }
