@@ -3,6 +3,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
+import com.github.doyaaaaaken.kotlincsv.dsl.context.WriteQuoteMode
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.github.doyaaaaaken.kotlincsv.util.Const
 import io.kotlintest.TestCase
@@ -36,16 +37,20 @@ class CsvWriterTest : WordSpec() {
                 val context = CsvWriterContext().apply {
                     charset = Charsets.ISO_8859_1
                     delimiter = '\t'
-//                    quoteChar = '\''
                     nullCode = "NULL"
                     lineTerminator = "\n"
+                    quote {
+                        quoteChar = '\''
+                        quoteMode = WriteQuoteMode.NONE
+                    }
                 }
                 val writer = CsvWriter(context)
                 writer.charset shouldBe Charsets.ISO_8859_1
                 writer.delimiter shouldBe '\t'
-//                writer.quoteChar shouldBe '\''
                 writer.nullCode shouldBe "NULL"
                 writer.lineTerminator shouldBe "\n"
+                writer.quote.quoteChar = '\''
+                writer.quote.quoteMode = WriteQuoteMode.NONE
             }
         }
 
