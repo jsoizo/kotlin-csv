@@ -30,6 +30,13 @@ class CsvFileWriter internal constructor(
         }
     }
 
+    fun writeAll(rows: Sequence<List<Any?>>) {
+        rows.forEach { writeNext(it) }
+        if (writer.checkError()) {
+            throw IOException("Failed to write")
+        }
+    }
+
     override fun flush() {
         writer.flush()
     }
