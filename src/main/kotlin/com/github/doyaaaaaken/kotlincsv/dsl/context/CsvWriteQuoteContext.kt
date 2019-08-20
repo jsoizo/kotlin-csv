@@ -10,7 +10,7 @@ import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
 @CsvDslMarker
 class CsvWriteQuoteContext {
     var quoteChar: Char = '"'
-    var quoteMode: WriteQuoteMode = WriteQuoteMode.MINIMAL
+    var quoteMode: WriteQuoteMode = WriteQuoteMode.CANONICAL
 }
 
 /**
@@ -18,17 +18,14 @@ class CsvWriteQuoteContext {
  *
  * Usage
  *
- *  MINIMAL:
+ *  CANONICAL:
  *      Not quote normally, but quote special characters (quoteChar, delimiter, line feed).
  *      This is specification of CSV.
  *      See https://tools.ietf.org/html/rfc4180#section-2
  *  ALL:
  *      Quote all fields.
- *  NONE:
- *      Not quote each fields.
  */
 enum class WriteQuoteMode {
-    MINIMAL,
-    ALL,
-    NONE
+    CANONICAL,
+    ALL
 }

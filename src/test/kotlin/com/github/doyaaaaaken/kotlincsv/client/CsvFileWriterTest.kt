@@ -62,16 +62,15 @@ class CsvFileWriterTest : WordSpec() {
                 val actual = readTestFile()
                 actual shouldBe expected
             }
-            //TODO: pass tests
-//            "write escaped field when a field contains quoteChar in it" {
-//                val rows = listOf(listOf("a", "\"b", "c"), listOf("d", "e", "f\""))
-//                val expected = "a,\"\"\"b\",c\r\nd,e,\"f\"\"\"\r\n"
-//                csvWriter().writeTo(testFileName) {
-//                    writeAll(rows)
-//                }
-//                val actual = readTestFile()
-//                actual shouldBe expected
-//            }
+            "write escaped field when a field contains quoteChar in it" {
+                val rows = listOf(listOf("a", "\"b", "c"), listOf("d", "e", "f\""))
+                val expected = "a,\"\"\"b\",c\r\nd,e,\"f\"\"\"\r\n"
+                csvWriter().writeTo(testFileName) {
+                    writeAll(rows)
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
             "write escaped field when a field contains delimiter in it" {
                 val rows = listOf(listOf("a", ",b", "c"), listOf("d", "e", "f,"))
                 val expected = "a,\",b\",c\r\nd,e,\"f,\"\r\n"

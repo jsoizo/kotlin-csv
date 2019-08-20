@@ -41,7 +41,7 @@ class CsvWriterTest : WordSpec() {
                     lineTerminator = "\n"
                     quote {
                         quoteChar = '\''
-                        quoteMode = WriteQuoteMode.NONE
+                        quoteMode = WriteQuoteMode.ALL
                     }
                 }
                 val writer = CsvWriter(context)
@@ -50,7 +50,7 @@ class CsvWriterTest : WordSpec() {
                 writer.nullCode shouldBe "NULL"
                 writer.lineTerminator shouldBe "\n"
                 writer.quote.quoteChar = '\''
-                writer.quote.quoteMode = WriteQuoteMode.NONE
+                writer.quote.quoteMode = WriteQuoteMode.ALL
             }
         }
 
