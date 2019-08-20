@@ -87,8 +87,13 @@ When you create CsvWriter, You can choose write options like charset.
 ```kotlin
 val writer = csvWriter {
     charset = Charsets.ISO_8859_1
+    nullCode = "NULL"
     delimiter = '\t'
     lineTerminator = "\n"
+    quote {
+        mode = WriteQuoteMode.ALL
+        char = '\''
+    }
 }
 ```
 
