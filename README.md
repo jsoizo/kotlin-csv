@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to kotlin-csv 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.4.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.5.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
@@ -21,12 +21,12 @@
 
 gradle kotlin DSL:
 ```
-implementation("com.github.doyaaaaaken:kotlin-csv:0.4.0")
+implementation("com.github.doyaaaaaken:kotlin-csv:0.5.0")
 ```
 
 gradle groovy DSL:
 ```
-implementation 'com.github.doyaaaaaken:kotlin-csv:0.4.0'
+implementation 'com.github.doyaaaaaken:kotlin-csv:0.5.0'
 ```
 
 maven:
@@ -34,7 +34,7 @@ maven:
 <dependency>
   <groupId>com.github.doyaaaaaken</groupId>
   <artifactId>kotlin-csv</artifactId>
-  <version>0.4.0</version>
+  <version>0.5.0</version>
 </dependency>
 ```
 
