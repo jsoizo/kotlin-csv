@@ -3,6 +3,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
+import com.github.doyaaaaaken.kotlincsv.dsl.context.WriteQuoteMode
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.github.doyaaaaaken.kotlincsv.util.Const
 import io.kotlintest.TestCase
@@ -36,16 +37,20 @@ class CsvWriterTest : WordSpec() {
                 val context = CsvWriterContext().apply {
                     charset = Charsets.ISO_8859_1
                     delimiter = '\t'
-//                    quoteChar = '\''
                     nullCode = "NULL"
                     lineTerminator = "\n"
+                    quote {
+                        char = '\''
+                        mode = WriteQuoteMode.ALL
+                    }
                 }
                 val writer = CsvWriter(context)
                 writer.charset shouldBe Charsets.ISO_8859_1
                 writer.delimiter shouldBe '\t'
-//                writer.quoteChar shouldBe '\''
                 writer.nullCode shouldBe "NULL"
                 writer.lineTerminator shouldBe "\n"
+                writer.quote.char = '\''
+                writer.quote.mode = WriteQuoteMode.ALL
             }
         }
 
@@ -69,16 +74,33 @@ class CsvWriterTest : WordSpec() {
                 actual shouldBe expected
             }
 
-            "write simple csv data to existing file with appending on tail" {
-                csvWriter().writeTo(File(testFileName), true) {
+            "write simple csv data to the tail of existing file with append = true" {
+                val writer = csvWriter()
+                writer.writeTo(File(testFileName), true) {
                     writeAll(listOf(row1, row2))
+                }
+                writer.writeTo(File(testFileName), true) {
                     writeAll(listOf(row1, row2))
                 }
                 val actual = readTestFile()
                 actual shouldBe expected + expected
             }
 
-            "write simple csv with ISO_8859_1 charset" {
+            "overwrite simple csv data with append = false" {
+                val writer = csvWriter()
+                writer.writeTo(File(testFileName), false) {
+                    writeAll(listOf(row2, row2, row2))
+                }
+                writer.writeTo(File(testFileName), false) {
+                    writeAll(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+        }
+
+        "Customized CsvWriter" should {
+            "write csv with SJIS charset" {
                 val sjis = Charset.forName("SJIS")
                 csvWriter{
                     charset = sjis
@@ -87,6 +109,68 @@ class CsvWriterTest : WordSpec() {
                 }
                 val actual = readTestFile(sjis)
                 actual shouldBe "あ,い\r\n"
+            }
+            "write csv with '|' demimiter" {
+                val row1 = listOf("a", "b")
+                val row2 = listOf("c", "d")
+                val expected = "a|b\r\nc|d\r\n"
+                csvWriter{
+                    delimiter = '|'
+                }.writeTo(File(testFileName)) {
+                    writeAll(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+            "write null with customized null code" {
+                val row = listOf(null, null)
+                csvWriter {
+                    nullCode = "NULL"
+                }.writeTo(testFileName) {
+                    writeRow(row)
+                }
+                val actual = readTestFile()
+                actual shouldBe "NULL,NULL\r\n"
+            }
+            "write csv with \n line terminator" {
+                val row1 = listOf("a", "b")
+                val row2 = listOf("c", "d")
+                val expected = "a,b\nc,d\n"
+                csvWriter{
+                    lineTerminator = "\n"
+                }.writeTo(File(testFileName)) {
+                    writeAll(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+            "write csv with WriteQuoteMode.ALL mode" {
+                val row1 = listOf("a", "b")
+                val row2 = listOf("c", "d")
+                val expected = "\"a\",\"b\"\r\n\"c\",\"d\"\r\n"
+                csvWriter{
+                    quote {
+                        mode = WriteQuoteMode.ALL
+                    }
+                }.writeTo(File(testFileName)) {
+                    writeAll(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+            "write csv with custom quote character" {
+                val row1 = listOf("a'", "b")
+                val row2 = listOf("'c", "d")
+                val expected = "'a''',b\r\n'''c',d\r\n"
+                csvWriter{
+                    quote {
+                        char = '\''
+                    }
+                }.writeTo(File(testFileName)) {
+                    writeAll(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
             }
         }
     }

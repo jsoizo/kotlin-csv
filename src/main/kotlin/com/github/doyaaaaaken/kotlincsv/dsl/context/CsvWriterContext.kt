@@ -13,9 +13,9 @@ import java.nio.charset.Charset
 interface ICsvWriterContext {
     val charset: Charset
     val delimiter: Char
-//    val quoteChar: Char
     val nullCode: String
     val lineTerminator: String
+    val quote: CsvWriteQuoteContext
 }
 
 /**
@@ -29,4 +29,9 @@ class CsvWriterContext : ICsvWriterContext {
     override var delimiter: Char = ','
     override var nullCode: String = ""
     override var lineTerminator: String = "\r\n"
+    override val quote: CsvWriteQuoteContext = CsvWriteQuoteContext()
+
+    fun quote(init: CsvWriteQuoteContext.() -> Unit = {}) {
+        quote.init()
+    }
 }

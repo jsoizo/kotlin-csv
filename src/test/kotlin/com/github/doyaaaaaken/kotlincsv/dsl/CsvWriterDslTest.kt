@@ -4,6 +4,7 @@ import io.kotlintest.matchers.types.shouldBeTypeOf
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
+import com.github.doyaaaaaken.kotlincsv.dsl.context.WriteQuoteMode
 
 /**
  * @author doyaaaaaken
@@ -17,14 +18,18 @@ class CsvWriterDslTest : StringSpec({
         val writer = csvWriter {
             charset = Charsets.ISO_8859_1
             delimiter = '\t'
-//            quoteChar = '\''
             nullCode = "NULL"
             lineTerminator = "\n"
+            quote {
+                char = '\''
+                mode = WriteQuoteMode.ALL
+            }
         }
         writer.charset shouldBe Charsets.ISO_8859_1
         writer.delimiter shouldBe '\t'
-//        writer.quoteChar shouldBe '\''
         writer.nullCode shouldBe "NULL"
         writer.lineTerminator shouldBe "\n"
+        writer.quote.char shouldBe '\''
+        writer.quote.mode = WriteQuoteMode.ALL
     }
 })
