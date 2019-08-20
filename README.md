@@ -83,7 +83,7 @@ csvWriter().writeTo("test.csv") {
 
 #### Customize
 
-When you create CsvWriter, You can choose write options like charset.
+When you create CsvWriter, You can choose write options.
 ```kotlin
 val writer = csvWriter {
     charset = Charsets.ISO_8859_1
