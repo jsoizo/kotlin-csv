@@ -59,21 +59,21 @@ class CsvFileWriter internal constructor(
     }
 
     private fun attachQuote(field: String): String {
-        return when (ctx.quote.quoteMode) {
+        return when (ctx.quote.mode) {
             WriteQuoteMode.ALL -> "\"$field\""
             WriteQuoteMode.CANONICAL -> {
-                val quoteNeededChars = setOf('\r', '\n', ctx.quote.quoteChar, ctx.delimiter)
+                val quoteNeededChars = setOf('\r', '\n', ctx.quote.char, ctx.delimiter)
                 val shouldQuote = field.any { ch -> quoteNeededChars.contains(ch) }
 
                 buildString {
-                    if (shouldQuote) append(ctx.quote.quoteChar)
+                    if (shouldQuote) append(ctx.quote.char)
                     field.forEach { ch ->
-                        if (ch == ctx.quote.quoteChar) {
-                            append(ctx.quote.quoteChar)
+                        if (ch == ctx.quote.char) {
+                            append(ctx.quote.char)
                         }
                         append(ch)
                     }
-                    if (shouldQuote) append(ctx.quote.quoteChar)
+                    if (shouldQuote) append(ctx.quote.char)
                 }
             }
         }

@@ -21,15 +21,15 @@ class CsvWriterDslTest : StringSpec({
             nullCode = "NULL"
             lineTerminator = "\n"
             quote {
-                quoteChar = '\''
-                quoteMode = WriteQuoteMode.ALL
+                char = '\''
+                mode = WriteQuoteMode.ALL
             }
         }
         writer.charset shouldBe Charsets.ISO_8859_1
         writer.delimiter shouldBe '\t'
         writer.nullCode shouldBe "NULL"
         writer.lineTerminator shouldBe "\n"
-        writer.quote.quoteChar shouldBe '\''
-        writer.quote.quoteMode = WriteQuoteMode.ALL
+        writer.quote.char shouldBe '\''
+        writer.quote.mode = WriteQuoteMode.ALL
     }
 })

@@ -9,8 +9,8 @@ import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
  */
 @CsvDslMarker
 class CsvWriteQuoteContext {
-    var quoteChar: Char = '"'
-    var quoteMode: WriteQuoteMode = WriteQuoteMode.CANONICAL
+    var char: Char = '"'
+    var mode: WriteQuoteMode = WriteQuoteMode.CANONICAL
 }
 
 /**

@@ -40,8 +40,8 @@ class CsvWriterTest : WordSpec() {
                     nullCode = "NULL"
                     lineTerminator = "\n"
                     quote {
-                        quoteChar = '\''
-                        quoteMode = WriteQuoteMode.ALL
+                        char = '\''
+                        mode = WriteQuoteMode.ALL
                     }
                 }
                 val writer = CsvWriter(context)
@@ -49,8 +49,8 @@ class CsvWriterTest : WordSpec() {
                 writer.delimiter shouldBe '\t'
                 writer.nullCode shouldBe "NULL"
                 writer.lineTerminator shouldBe "\n"
-                writer.quote.quoteChar = '\''
-                writer.quote.quoteMode = WriteQuoteMode.ALL
+                writer.quote.char = '\''
+                writer.quote.mode = WriteQuoteMode.ALL
             }
         }
 
@@ -138,6 +138,34 @@ class CsvWriterTest : WordSpec() {
                 val expected = "a,b\nc,d\n"
                 csvWriter{
                     lineTerminator = "\n"
+                }.writeTo(File(testFileName)) {
+                    writeAll(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+            "write csv with WriteQuoteMode.ALL mode" {
+                val row1 = listOf("a", "b")
+                val row2 = listOf("c", "d")
+                val expected = "\"a\",\"b\"\r\n\"c\",\"d\"\r\n"
+                csvWriter{
+                    quote {
+                        mode = WriteQuoteMode.ALL
+                    }
+                }.writeTo(File(testFileName)) {
+                    writeAll(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+            "write csv with custom quote character" {
+                val row1 = listOf("a'", "b")
+                val row2 = listOf("'c", "d")
+                val expected = "'a''',b\r\n'''c',d\r\n"
+                csvWriter{
+                    quote {
+                        char = '\''
+                    }
                 }.writeTo(File(testFileName)) {
                     writeAll(listOf(row1, row2))
                 }
