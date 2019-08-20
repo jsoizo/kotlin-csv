@@ -1,6 +1,7 @@
 package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
+import com.github.doyaaaaaken.kotlincsv.dsl.context.WriteQuoteMode
 import java.io.Closeable
 import java.io.Flushable
 import java.io.IOException
@@ -46,10 +47,26 @@ class CsvFileWriter internal constructor(
     }
 
     private fun writeNext(row: List<Any?>) {
-        val rowStr = row.map {
-            if (it == null) ctx.nullCode else it.toString()
+        val rowStr = row.map { field ->
+            if (field == null) {
+                ctx.nullCode
+            } else {
+                attachQuote(field.toString())
+            }
         }.joinToString(ctx.delimiter.toString())
         writer.print(rowStr)
         writer.print(ctx.lineTerminator)
+    }
+
+    private fun attachQuote(field: String): String {
+        return when (ctx.quote.quoteMode) {
+            WriteQuoteMode.ALL -> "\"$field\""
+            WriteQuoteMode.NONE -> field
+            WriteQuoteMode.MINIMAL -> {
+                val quoteNeededChars = listOf('\r', '\n', ctx.quote.quoteChar, ctx.delimiter)
+                val shouldQuote = field.any { ch -> quoteNeededChars.contains(ch) }
+                if (shouldQuote) "\"$field\"" else field
+            }
+        }
     }
 }

@@ -51,43 +51,39 @@ class CsvFileWriterTest : WordSpec() {
                 val actual = readTestFile()
                 actual shouldBe expected
             }
-            //TODO: pass tests
-//            "write escaped field when a field contains quoteChar in it" {
-//                val row = listOf(listOf("a", "\"b", "c"), listOf("d", "e", "f\""))
-//                val expected = "a,\"\"\"b\",c\r\nd,e,\"f\"\"\"\r\n"
-//                csvWriter().writeTo(testFileName) {
-//                    writeRow(row)
-//                }
-//                val actual = readTestFile()
-//                actual shouldBe expected
-//            }
-//            "write escaped field when a field contains delimiter in it" {
-//                val row = listOf(listOf("a", ",b", "c"), listOf("d", "e", "f,"))
-//                val expected = "a,\",b\",c\r\nd,e,\"f,\"\r\n"
-//                csvWriter().writeTo(testFileName) {
-//                    writeRow(row)
-//                }
-//                val actual = readTestFile()
-//                actual shouldBe expected
-//            }
-//            "write quoted field when a field contains cr or lf in it" {
-//                val row = listOf(listOf("a", "\nb", "c"), listOf("d", "e", "f\r\n"))
-//                val expected = """a,"
-//                    |b",c
-//                    |d,e,f
-//                    |
-//                """.trimMargin()
-//                csvWriter().writeTo(testFileName) {
-//                    writeRow(row)
-//                }
-//                val actual = readTestFile()
-//                actual shouldBe expected
-//            }
         }
         "writeAll method" should {
             "write Sequence data" {
                 val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f")).asSequence()
                 val expected = "a,b,c\r\nd,e,f\r\n"
+                csvWriter().writeTo(testFileName) {
+                    writeAll(rows)
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+            //TODO: pass tests
+//            "write escaped field when a field contains quoteChar in it" {
+//                val rows = listOf(listOf("a", "\"b", "c"), listOf("d", "e", "f\""))
+//                val expected = "a,\"\"\"b\",c\r\nd,e,\"f\"\"\"\r\n"
+//                csvWriter().writeTo(testFileName) {
+//                    writeAll(rows)
+//                }
+//                val actual = readTestFile()
+//                actual shouldBe expected
+//            }
+            "write escaped field when a field contains delimiter in it" {
+                val rows = listOf(listOf("a", ",b", "c"), listOf("d", "e", "f,"))
+                val expected = "a,\",b\",c\r\nd,e,\"f,\"\r\n"
+                csvWriter().writeTo(testFileName) {
+                    writeAll(rows)
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+            "write quoted field when a field contains cr or lf in it" {
+                val rows = listOf(listOf("a", "\nb", "c"), listOf("d", "e", "f\r\n"))
+                val expected = "a,\"\nb\",c\r\nd,e,\"f\r\n\"\r\n"
                 csvWriter().writeTo(testFileName) {
                     writeAll(rows)
                 }
