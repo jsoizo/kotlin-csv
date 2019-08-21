@@ -113,7 +113,6 @@ class CsvReaderTest : WordSpec() {
                 val result = csvReader().read(readTestDataFile("unicode2028.csv"))
                 result shouldBe listOf(listOf("\u2028"))
             }
-            //TODO: pass test
             "throw exception when reading malformed csv" {
                 shouldThrow<MalformedCSVException> {
                     csvReader().read(readTestDataFile("malformed.csv"))
