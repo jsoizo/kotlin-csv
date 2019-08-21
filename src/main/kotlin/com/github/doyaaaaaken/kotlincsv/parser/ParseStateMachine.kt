@@ -130,7 +130,7 @@ internal class ParseStateMachine(
                 }
                 pos += 1
             }
-            ParseState.QUOTE_START -> {
+            ParseState.QUOTE_START, ParseState.QUOTED_FIELD -> {
                 if (ch == escapeChar && escapeChar != quoteChar) {
                     if (nextCh != null) {
                         if (nextCh == escapeChar
@@ -181,34 +181,6 @@ internal class ParseStateMachine(
                     else -> {
                         throw MalformedCSVException("$pos")
                     }
-                }
-                pos += 1
-            }
-            ParseState.QUOTED_FIELD -> {
-                if (ch == escapeChar && escapeChar != quoteChar) {
-                    if (nextCh != null) {
-                        if (nextCh == escapeChar
-                                || nextCh == quoteChar) {
-                            field.append(nextCh)
-                            state = ParseState.QUOTED_FIELD
-                            pos += 1
-                        } else {
-                            throw MalformedCSVException("$pos")
-                        }
-                    } else {
-                        throw MalformedCSVException("$pos")
-                    }
-                } else if (ch == quoteChar) {
-                    if (nextCh == quoteChar) {
-                        field.append(quoteChar)
-                        state = ParseState.QUOTED_FIELD
-                        pos += 1
-                    } else {
-                        state = ParseState.QUOTE_END
-                    }
-                } else {
-                    field.append(ch)
-                    state = ParseState.QUOTED_FIELD
                 }
                 pos += 1
             }
