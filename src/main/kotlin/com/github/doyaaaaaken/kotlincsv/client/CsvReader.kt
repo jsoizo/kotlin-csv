@@ -54,7 +54,7 @@ class CsvReader(ctx: CsvReaderContext = CsvReaderContext()) : ICsvReaderContext 
             } else {
                 "${leftOver}$lineSeparator${line}$lineSeparator"
             }
-            val parsedLine = parser.parseLine(value, quoteChar, delimiter, escapeChar)
+            val parsedLine = parser.parseRow(value, quoteChar, delimiter, escapeChar)
 
             //TODO: check if list size is valid as csv requirement
 
