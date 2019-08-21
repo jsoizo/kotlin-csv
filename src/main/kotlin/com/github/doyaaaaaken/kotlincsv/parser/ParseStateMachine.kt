@@ -35,19 +35,16 @@ internal class ParseStateMachine(
                     BOM -> Unit
                     quoteChar -> state = ParseState.QUOTE_START
                     delimiter -> {
-                        fields.add(field.toString())
-                        field = StringBuilder()
+                        flushField()
                         state = ParseState.DELIMITER
                     }
                     '\n', '\u2028', '\u2029', '\u0085' -> {
-                        fields.add(field.toString())
-                        field = StringBuilder()
+                        flushField()
                         state = ParseState.END
                     }
                     '\r' -> {
                         if (nextCh == '\n') pos += 1
-                        fields.add(field.toString())
-                        field = StringBuilder()
+                        flushField()
                         state = ParseState.END
                     }
                     else -> {
@@ -73,19 +70,16 @@ internal class ParseStateMachine(
                         }
                     }
                     delimiter -> {
-                        fields.add(field.toString())
-                        field = StringBuilder()
+                        flushField()
                         state = ParseState.DELIMITER
                     }
                     '\n', '\u2028', '\u2029', '\u0085' -> {
-                        fields.add(field.toString())
-                        field = StringBuilder()
+                        flushField()
                         state = ParseState.END
                     }
                     '\r' -> {
                         if (nextCh == '\n') pos += 1
-                        fields.add(field.toString())
-                        field = StringBuilder()
+                        flushField()
                         state = ParseState.END
                     }
                     else -> {
@@ -108,19 +102,16 @@ internal class ParseStateMachine(
                         }
                     }
                     delimiter -> {
-                        fields.add(field.toString())
-                        field = StringBuilder()
+                        flushField()
                         state = ParseState.DELIMITER
                     }
                     '\n', '\u2028', '\u2029', '\u0085' -> {
-                        fields.add(field.toString())
-                        field = StringBuilder()
+                        flushField()
                         state = ParseState.END
                     }
                     '\r' -> {
                         if (nextCh == '\n') pos += 1
-                        fields.add(field.toString())
-                        field = StringBuilder()
+                        flushField()
                         state = ParseState.END
                     }
                     else -> {
@@ -161,21 +152,16 @@ internal class ParseStateMachine(
             ParseState.QUOTE_END -> {
                 when (ch) {
                     delimiter -> {
-                        fields.add(field.toString())
-                        field = StringBuilder()
+                        flushField()
                         state = ParseState.DELIMITER
                     }
                     '\n', '\u2028', '\u2029', '\u0085' -> {
-                        fields.add(field.toString())
-                        field = StringBuilder()
+                        flushField()
                         state = ParseState.END
                     }
                     '\r' -> {
-                        if (nextCh == '\n') {
-                            pos += 1
-                        }
-                        fields.add(field.toString())
-                        field = StringBuilder()
+                        if (nextCh == '\n') pos += 1
+                        flushField()
                         state = ParseState.END
                     }
                     else -> {
@@ -210,6 +196,11 @@ internal class ParseStateMachine(
                 fields.toList()
             }
         }
+    }
+
+    private fun flushField() {
+        fields.add(field.toString())
+        field = StringBuilder()
     }
 }
 
