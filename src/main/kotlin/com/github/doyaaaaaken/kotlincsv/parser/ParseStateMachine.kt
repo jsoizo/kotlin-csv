@@ -22,6 +22,11 @@ internal class ParseStateMachine(
 
     private var pos = 0
 
+    /**
+     * Read character and change state
+     *
+     * @return read character count (1 or 2)
+     */
     fun read(ch: Char, nextCh: Char?): Int {
         val prevPos = pos
         when (state) {
@@ -214,6 +219,10 @@ internal class ParseStateMachine(
         return pos - prevPos
     }
 
+    /**
+     * @return return parsed CSV Fields.
+     *         return null, if current position is on the way of csv row.
+     */
     fun getResult(): List<String>? {
         return when (state) {
             ParseState.DELIMITER -> {

@@ -1,7 +1,5 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
-import java.util.*
-
 /**
  * Csv Parse logic while reading csv
  *
