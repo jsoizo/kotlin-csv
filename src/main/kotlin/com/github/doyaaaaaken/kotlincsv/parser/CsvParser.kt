@@ -7,6 +7,10 @@ package com.github.doyaaaaaken.kotlincsv.parser
  */
 internal class CsvParser {
 
+    /**
+     * @return return parsed row fields
+     *         return null, if passed line string is on the way of csv row.
+     */
     fun parseRow(line: String, quoteChar: Char, delimiter: Char, escapeChar: Char): List<String>? {
         val stateMachine = ParseStateMachine(quoteChar, delimiter, escapeChar)
         var lastCh: Char? = null
