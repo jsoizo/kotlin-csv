@@ -7,7 +7,7 @@ package com.github.doyaaaaaken.kotlincsv.parser
  */
 internal class CsvParser {
 
-    fun parseLine(line: String, quoteChar: Char, delimiter: Char, escapeChar: Char): List<String>? {
+    fun parseRow(line: String, quoteChar: Char, delimiter: Char, escapeChar: Char): List<String>? {
         val stateMachine = ParseStateMachine(quoteChar, delimiter, escapeChar)
         var lastCh: Char? = null
         var skipCount = 0
