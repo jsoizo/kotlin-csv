@@ -22,7 +22,8 @@ internal class ParseStateMachine(
 
     private var pos = 0
 
-    fun next(ch: Char, nextCh: Char?) {
+    fun read(ch: Char, nextCh: Char?): Int {
+        val prevPos = pos
         when (state) {
             ParseState.START -> {
                 when (ch) {
@@ -210,6 +211,7 @@ internal class ParseStateMachine(
                 throw MalformedCSVException("unexpected error")
             }
         }
+        return pos - prevPos
     }
 
     fun getResult(): List<String>? {
