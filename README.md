@@ -68,14 +68,14 @@ You can write csv simply, only one line.
 No need to call other methods (like `use` `close` `flush`) 
 ```kotlin
 val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
-csvWriter().writeTo("test.csv") { writeAll(rows) }
+csvWriter().open("test.csv") { writeAll(rows) }
 ```
 
 You can also write csv file per each line.
 ```kotlin
 val row1 = listOf("a", "b", "c")
 val row2 = listOf("d", "e", "f")
-csvWriter().writeTo("test.csv") { 
+csvWriter().open("test.csv") { 
     writeRow(row1)
     writeRow(row2)
 }

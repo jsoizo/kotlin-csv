@@ -33,7 +33,7 @@ class CsvFileWriterTest : WordSpec() {
             "write any primitive types" {
                 val row = listOf("String", 'C', 1, 2L, 3.45, true, null)
                 val expected = "String,C,1,2,3.45,true,\r\n"
-                csvWriter().writeTo(testFileName) {
+                csvWriter().open(testFileName) {
                     writeRow(row)
                 }
                 val actual = readTestFile()
@@ -45,7 +45,7 @@ class CsvFileWriterTest : WordSpec() {
                         LocalDateTime.of(2020, 9, 20, 14, 32, 21)
                 )
                 val expected = "2019-08-19,2020-09-20T14:32:21\r\n"
-                csvWriter().writeTo(testFileName) {
+                csvWriter().open(testFileName) {
                     writeRow(row)
                 }
                 val actual = readTestFile()
@@ -56,7 +56,7 @@ class CsvFileWriterTest : WordSpec() {
             "write Sequence data" {
                 val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f")).asSequence()
                 val expected = "a,b,c\r\nd,e,f\r\n"
-                csvWriter().writeTo(testFileName) {
+                csvWriter().open(testFileName) {
                     writeAll(rows)
                 }
                 val actual = readTestFile()
@@ -65,7 +65,7 @@ class CsvFileWriterTest : WordSpec() {
             "write escaped field when a field contains quoteChar in it" {
                 val rows = listOf(listOf("a", "\"b", "c"), listOf("d", "e", "f\""))
                 val expected = "a,\"\"\"b\",c\r\nd,e,\"f\"\"\"\r\n"
-                csvWriter().writeTo(testFileName) {
+                csvWriter().open(testFileName) {
                     writeAll(rows)
                 }
                 val actual = readTestFile()
@@ -74,7 +74,7 @@ class CsvFileWriterTest : WordSpec() {
             "write escaped field when a field contains delimiter in it" {
                 val rows = listOf(listOf("a", ",b", "c"), listOf("d", "e", "f,"))
                 val expected = "a,\",b\",c\r\nd,e,\"f,\"\r\n"
-                csvWriter().writeTo(testFileName) {
+                csvWriter().open(testFileName) {
                     writeAll(rows)
                 }
                 val actual = readTestFile()
@@ -83,7 +83,7 @@ class CsvFileWriterTest : WordSpec() {
             "write quoted field when a field contains cr or lf in it" {
                 val rows = listOf(listOf("a", "\nb", "c"), listOf("d", "e", "f\r\n"))
                 val expected = "a,\"\nb\",c\r\nd,e,\"f\r\n\"\r\n"
-                csvWriter().writeTo(testFileName) {
+                csvWriter().open(testFileName) {
                     writeAll(rows)
                 }
                 val actual = readTestFile()
@@ -94,7 +94,7 @@ class CsvFileWriterTest : WordSpec() {
             "throw Exception when stream is already closed" {
                 val row = listOf("a", "b")
                 shouldThrow<IOException> {
-                    csvWriter().writeTo(testFileName) {
+                    csvWriter().open(testFileName) {
                         close()
                         writeRow(row)
                     }
@@ -104,7 +104,7 @@ class CsvFileWriterTest : WordSpec() {
         "flush method" should {
             "flush stream" {
                 val row = listOf("a", "b")
-                csvWriter().writeTo(testFileName) {
+                csvWriter().open(testFileName) {
                     writeRow(row)
                     flush()
                     val actual = readTestFile()

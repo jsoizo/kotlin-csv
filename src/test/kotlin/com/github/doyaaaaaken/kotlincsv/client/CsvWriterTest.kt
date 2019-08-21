@@ -54,13 +54,13 @@ class CsvWriterTest : WordSpec() {
             }
         }
 
-        "writeTo method" should {
+        "open method" should {
             val row1 = listOf("a", "b", null)
             val row2 = listOf("d", "2", "1.0")
             val expected = "a,b,\r\nd,2,1.0\r\n"
 
             "write simple csv data into file with writing each rows" {
-                csvWriter().writeTo(testFileName) {
+                csvWriter().open(testFileName) {
                     writeRow(row1)
                     writeRow(row2)
                 }
@@ -69,17 +69,17 @@ class CsvWriterTest : WordSpec() {
             }
 
             "write simple csv data into file with writing all at one time" {
-                csvWriter().writeTo(testFileName) { writeAll(listOf(row1, row2)) }
+                csvWriter().open(testFileName) { writeAll(listOf(row1, row2)) }
                 val actual = readTestFile()
                 actual shouldBe expected
             }
 
             "write simple csv data to the tail of existing file with append = true" {
                 val writer = csvWriter()
-                writer.writeTo(File(testFileName), true) {
+                writer.open(File(testFileName), true) {
                     writeAll(listOf(row1, row2))
                 }
-                writer.writeTo(File(testFileName), true) {
+                writer.open(File(testFileName), true) {
                     writeAll(listOf(row1, row2))
                 }
                 val actual = readTestFile()
@@ -88,10 +88,10 @@ class CsvWriterTest : WordSpec() {
 
             "overwrite simple csv data with append = false" {
                 val writer = csvWriter()
-                writer.writeTo(File(testFileName), false) {
+                writer.open(File(testFileName), false) {
                     writeAll(listOf(row2, row2, row2))
                 }
-                writer.writeTo(File(testFileName), false) {
+                writer.open(File(testFileName), false) {
                     writeAll(listOf(row1, row2))
                 }
                 val actual = readTestFile()
@@ -104,7 +104,7 @@ class CsvWriterTest : WordSpec() {
                 val sjis = Charset.forName("SJIS")
                 csvWriter{
                     charset = sjis
-                }.writeTo(File(testFileName)) {
+                }.open(File(testFileName)) {
                     writeAll(listOf(listOf("あ", "い")))
                 }
                 val actual = readTestFile(sjis)
@@ -116,7 +116,7 @@ class CsvWriterTest : WordSpec() {
                 val expected = "a|b\r\nc|d\r\n"
                 csvWriter{
                     delimiter = '|'
-                }.writeTo(File(testFileName)) {
+                }.open(File(testFileName)) {
                     writeAll(listOf(row1, row2))
                 }
                 val actual = readTestFile()
@@ -126,7 +126,7 @@ class CsvWriterTest : WordSpec() {
                 val row = listOf(null, null)
                 csvWriter {
                     nullCode = "NULL"
-                }.writeTo(testFileName) {
+                }.open(testFileName) {
                     writeRow(row)
                 }
                 val actual = readTestFile()
@@ -138,7 +138,7 @@ class CsvWriterTest : WordSpec() {
                 val expected = "a,b\nc,d\n"
                 csvWriter{
                     lineTerminator = "\n"
-                }.writeTo(File(testFileName)) {
+                }.open(File(testFileName)) {
                     writeAll(listOf(row1, row2))
                 }
                 val actual = readTestFile()
@@ -152,7 +152,7 @@ class CsvWriterTest : WordSpec() {
                     quote {
                         mode = WriteQuoteMode.ALL
                     }
-                }.writeTo(File(testFileName)) {
+                }.open(File(testFileName)) {
                     writeAll(listOf(row1, row2))
                 }
                 val actual = readTestFile()
@@ -166,7 +166,7 @@ class CsvWriterTest : WordSpec() {
                     quote {
                         char = '\''
                     }
-                }.writeTo(File(testFileName)) {
+                }.open(File(testFileName)) {
                     writeAll(listOf(row1, row2))
                 }
                 val actual = readTestFile()
