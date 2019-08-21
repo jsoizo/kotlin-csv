@@ -19,12 +19,10 @@ class CsvReaderDslTest : StringSpec({
             quoteChar = '\''
             delimiter = '\t'
             escapeChar = '"'
-//            withHeader = false
         }
         reader.charset shouldBe Charsets.ISO_8859_1
         reader.quoteChar shouldBe '\''
         reader.delimiter shouldBe '\t'
         reader.escapeChar shouldBe '"'
-//        reader.withHeader shouldBe false
     }
 })
