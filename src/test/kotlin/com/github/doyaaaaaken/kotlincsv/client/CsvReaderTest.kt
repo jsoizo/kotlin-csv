@@ -117,6 +117,34 @@ class CsvReaderTest : WordSpec() {
                 }
             }
         }
+
+        "readWithHeader method" should {
+            val expected = listOf(
+                    mapOf("h1" to "a", "h2" to "b", "h3" to "c"),
+                    mapOf("h1" to "d", "h2" to "e", "h3" to "f")
+            )
+
+            "read simple csv file" {
+                val file = readTestDataFile("with-header.csv")
+                val result = csvReader().readWithHeader(file)
+                result shouldBe expected
+            }
+
+            "read from String" {
+                val data = """h1,h2,h3
+                    |a,b,c
+                    |d,e,f
+                """.trimMargin()
+                val result = csvReader().readWithHeader(data)
+                result shouldBe expected
+            }
+
+            "read from InputStream" {
+                val file = readTestDataFile("with-header.csv")
+                val result = csvReader().readWithHeader(file.inputStream())
+                result shouldBe expected
+            }
+        }
     }
 }
 
