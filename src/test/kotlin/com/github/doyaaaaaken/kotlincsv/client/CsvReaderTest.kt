@@ -144,6 +144,17 @@ class CsvReaderTest : WordSpec() {
                 val result = csvReader().readWithHeader(file.inputStream())
                 result shouldBe expected
             }
+
+            "read from String containing line break" {
+                val data = """h1,"h
+                    |2",h3
+                    |a,b,c
+                """.trimMargin()
+                val result = csvReader().readWithHeader(data)
+                val h2 = """h
+                    |2""".trimMargin()
+                result shouldBe listOf(mapOf("h1" to "a", h2 to "b", "h3" to "c"))
+            }
         }
     }
 }
