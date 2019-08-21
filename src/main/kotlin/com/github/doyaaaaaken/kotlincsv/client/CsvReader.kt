@@ -3,10 +3,10 @@ package com.github.doyaaaaaken.kotlincsv.client
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
+import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
-import kotlin.streams.asSequence
 
 /**
  * CSV Reader class, which decides where to read from and how to read.
@@ -16,6 +16,8 @@ import kotlin.streams.asSequence
 class CsvReader(ctx: CsvReaderContext = CsvReaderContext()) : ICsvReaderContext by ctx {
 
     private val parser = CsvParser()
+
+    private val lineSeparator = System.lineSeparator()
 
     fun read(data: String): List<List<String>> {
         return readAsSequence(data).toList()
@@ -45,22 +47,29 @@ class CsvReader(ctx: CsvReaderContext = CsvReaderContext()) : ICsvReaderContext 
     }
 
     private fun readWithBufferedReader(br: BufferedReader): Sequence<List<String>> {
-        var leftOver = ""
-        return br.lineSequence().mapNotNull { line ->
-            val lineSeparator = System.lineSeparator()
-            val value = if (leftOver.isEmpty()) {
-                "${line}$lineSeparator"
+        return generateSequence { readNext(br, "") }
+    }
+
+    private tailrec fun readNext(br: BufferedReader, leftOver: String): List<String>? {
+        val nextLine = br.readLine()
+        return if (nextLine == null) {
+            if (leftOver.isNotEmpty()) {
+                throw MalformedCSVException("Malformed format: leftOver \"$leftOver\" on the tail of file")
             } else {
-                "${leftOver}$lineSeparator${line}$lineSeparator"
+                null
+            }
+        } else {
+            val value = if (leftOver.isEmpty()) {
+                "$nextLine$lineSeparator"
+            } else {
+                "$leftOver$lineSeparator$nextLine$lineSeparator"
             }
             val parsedLine = parser.parseRow(value, quoteChar, delimiter, escapeChar)
-
             if (parsedLine == null) {
-                leftOver = "${leftOver}${line}"
+                readNext(br, "$leftOver$nextLine")
             } else {
-                leftOver = ""
+                parsedLine
             }
-            parsedLine
         }
     }
 }

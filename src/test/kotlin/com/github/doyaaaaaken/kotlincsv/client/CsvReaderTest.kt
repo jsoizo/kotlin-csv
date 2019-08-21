@@ -5,6 +5,8 @@ import io.kotlintest.specs.WordSpec
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.util.Const
+import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
+import io.kotlintest.shouldThrow
 import java.io.File
 
 /**
@@ -112,11 +114,11 @@ class CsvReaderTest : WordSpec() {
                 result shouldBe listOf(listOf("\u2028"))
             }
             //TODO: pass test
-//            "throw exception when reading malformed csv" {
-//                shouldThrow<MalformedCSVException> {
-//                    csvReader().read(readTestDataFile("malformed.csv"))
-//                }
-//            }
+            "throw exception when reading malformed csv" {
+                shouldThrow<MalformedCSVException> {
+                    csvReader().read(readTestDataFile("malformed.csv"))
+                }
+            }
         }
     }
 }
