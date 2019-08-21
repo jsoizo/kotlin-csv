@@ -46,7 +46,7 @@ class CsvReader(ctx: CsvReaderContext = CsvReaderContext()) : ICsvReaderContext 
 
     private fun readWithBufferedReader(br: BufferedReader): Sequence<List<String>> {
         var leftOver = ""
-        return br.lines().asSequence().mapNotNull { line ->
+        return br.lineSequence().mapNotNull { line ->
             val lineSeparator = System.lineSeparator()
             val value = if (leftOver.isEmpty()) {
                 "${line}$lineSeparator"
