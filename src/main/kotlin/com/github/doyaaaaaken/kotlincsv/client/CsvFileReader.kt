@@ -13,12 +13,12 @@ import java.io.Closeable
  */
 class CsvFileReader internal constructor(
         private val ctx: CsvReaderContext,
-        private val reader: BufferedReader
+        reader: BufferedReader
 ) : Closeable {
 
-    private val parser = CsvParser()
+    private val reader = BufferedLineReader(reader)
 
-    private val lineSeparator = System.lineSeparator()
+    private val parser = CsvParser()
 
     fun readAll(): List<List<String>> {
         return readAllAsSequence().toList()
@@ -46,7 +46,7 @@ class CsvFileReader internal constructor(
     }
 
     private tailrec fun readNext(leftOver: String = ""): List<String>? {
-        val nextLine = reader.readLine()
+        val nextLine = reader.readLineWithTerminator()
         return if (nextLine == null) {
             if (leftOver.isNotEmpty()) {
                 throw MalformedCSVException("Malformed format: leftOver \"$leftOver\" on the tail of file")
@@ -55,9 +55,9 @@ class CsvFileReader internal constructor(
             }
         } else {
             val value = if (leftOver.isEmpty()) {
-                "$nextLine$lineSeparator"
+                "$nextLine"
             } else {
-                "$leftOver$lineSeparator$nextLine$lineSeparator"
+                "$leftOver$nextLine"
             }
             val parsedLine = parser.parseRow(value, ctx.quoteChar, ctx.delimiter, ctx.escapeChar)
             if (parsedLine == null) {
