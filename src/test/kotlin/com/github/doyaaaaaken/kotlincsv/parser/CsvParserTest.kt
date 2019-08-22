@@ -5,9 +5,12 @@ import io.kotlintest.specs.StringSpec
 
 class CsvParserTest : StringSpec() {
     init {
+        val parser = CsvParser('"', ',', '"')
         "parseEmptyRow" {
-            val parser = CsvParser('"', ',', '"')
             parser.parseRow("") shouldBe emptyList()
+        }
+        "return null if line is on the way of csv row" {
+            parser.parseRow("a,\"b") shouldBe null
         }
     }
 }
