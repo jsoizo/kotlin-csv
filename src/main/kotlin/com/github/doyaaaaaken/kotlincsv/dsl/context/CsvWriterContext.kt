@@ -31,7 +31,7 @@ class CsvWriterContext : ICsvWriterContext {
     override var lineTerminator: String = "\r\n"
     override val quote: CsvWriteQuoteContext = CsvWriteQuoteContext()
 
-    fun quote(init: CsvWriteQuoteContext.() -> Unit = {}) {
+    fun quote(init: CsvWriteQuoteContext.() -> Unit) {
         quote.init()
     }
 }
