@@ -2,114 +2,132 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext
-import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
-import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
 
 /**
- * CSV Reader class, which decides where to read from and how to read.
+ * CSV Reader class
  *
  * @author doyaaaaaken
  */
-class CsvReader(ctx: CsvReaderContext = CsvReaderContext()) : ICsvReaderContext by ctx {
+class CsvReader(
+        private val ctx: CsvReaderContext = CsvReaderContext()
+) : ICsvReaderContext by ctx {
 
-    private val parser = CsvParser()
-
-    private val lineSeparator = System.lineSeparator()
-
-    fun read(data: String): List<List<String>> {
-        return readAsSequence(data).toList()
-    }
-
-    fun read(file: File): List<List<String>> {
-        return readAsSequence(file).toList()
-    }
-
-    fun read(ips: InputStream): List<List<String>> {
-        return readAsSequence(ips).toList()
-    }
-
-    fun readWithHeader(data: String): List<Map<String, String>> {
+    /**
+     * read csv data as String, and convert into List<List<String>>
+     *
+     * No need to close InputStream when calling this method.
+     */
+    fun readAll(data: String): List<List<String>> {
         val br = data.byteInputStream(charset).bufferedReader(charset)
-        return readWithHeader(br)
+        return open(br) { readAll() }
     }
 
-    fun readWithHeader(file: File): List<Map<String, String>> {
+    /**
+     * read csv data as File, and convert into List<List<String>>
+     *
+     * No need to close InputStream when calling this method.
+     */
+    fun readAll(file: File): List<List<String>> {
         val br = file.inputStream().bufferedReader(charset)
-        return readWithHeader(br)
+        return open(br) { readAll() }
     }
 
-    fun readWithHeader(ips: InputStream): List<Map<String, String>> {
+    /**
+     * read csv data as InputStream, and convert into List<List<String>>
+     *
+     * No need to close InputStream when calling this method.
+     */
+    fun readAll(ips: InputStream): List<List<String>> {
         val br = ips.bufferedReader(charset)
-        return readWithHeader(br)
+        return open(br) { readAll() }
     }
 
-    fun readAsSequence(data: String): Sequence<List<String>> {
+    /**
+     * read csv data with header, and convert into List<Map<String, String>>
+     *
+     * No need to close InputStream when calling this method.
+     */
+    fun readAllWithHeader(data: String): List<Map<String, String>> {
         val br = data.byteInputStream(charset).bufferedReader(charset)
-        return readWithBufferedReader(br)
+        return open(br) { readAllWithHeader() }
     }
 
-    fun readAsSequence(file: File): Sequence<List<String>> {
+    /**
+     * read csv data with header, and convert into List<Map<String, String>>
+     *
+     * No need to close InputStream when calling this method.
+     */
+    fun readAllWithHeader(file: File): List<Map<String, String>> {
         val br = file.inputStream().bufferedReader(charset)
-        return readWithBufferedReader(br)
+        return open(br) { readAllWithHeader() }
     }
 
-    fun readAsSequence(ips: InputStream): Sequence<List<String>> {
+    /**
+     * read csv data with header, and convert into List<Map<String, String>>
+     *
+     * No need to close InputStream when calling this method.
+     */
+    fun readAllWithHeader(ips: InputStream): List<Map<String, String>> {
         val br = ips.bufferedReader(charset)
-        return readWithBufferedReader(br)
+        return open(br) { readAllWithHeader() }
     }
 
-    private fun readWithBufferedReader(br: BufferedReader): Sequence<List<String>> {
-        return generateSequence { readNext(br) }
+    /**
+     * open inputStreamReader and execute reading process.
+     *
+     * If you want to control read flow precisely, use this method.
+     * Otherwise, use utility method (e.g. CsvReader.readAll ).
+     *
+     * Usage example:
+     * <pre>
+     *   val data: Sequence<List<String?>> = csvReader().open("test.csv") {
+     *       readAllAsSequence()
+     *           .map { fields -> fields.map { it.trim() } }
+     *           .map { fields -> fields.map { if(it.isBlank()) null else it } }
+     *   }
+     * </pre>
+     */
+    fun <T> open(data: String, read: CsvFileReader.() -> T): T {
+        val br = data.byteInputStream(charset).bufferedReader(charset)
+        return open(br, read)
     }
 
-    private fun readWithHeader(br: BufferedReader): List<Map<String, String>> {
-        val headers = readNext(br)
-        val duplicated = headers?.let(::findDuplicate)
-        if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
-
-        return readWithBufferedReader(br).map { fields ->
-            if (requireNotNull(headers).size != fields.size) {
-                throw MalformedCSVException("fields num  ${fields.size} is not matched with header num ${headers.size}")
-            }
-            headers.zip(fields).toMap()
-        }.toList()
+    /**
+     * open inputStreamReader and execute reading process.
+     *
+     * If you want to control read flow precisely, use this method.
+     * Otherwise, use utility method (e.g. CsvReader.readAll ).
+     *
+     * Usage example:
+     * @see open method
+     */
+    fun <T> open(file: File, read: CsvFileReader.() -> T): T {
+        val br = file.inputStream().bufferedReader(charset)
+        return open(br, read)
     }
 
-    private tailrec fun readNext(br: BufferedReader, leftOver: String = ""): List<String>? {
-        val nextLine = br.readLine()
-        return if (nextLine == null) {
-            if (leftOver.isNotEmpty()) {
-                throw MalformedCSVException("Malformed format: leftOver \"$leftOver\" on the tail of file")
-            } else {
-                null
-            }
-        } else {
-            val value = if (leftOver.isEmpty()) {
-                "$nextLine$lineSeparator"
-            } else {
-                "$leftOver$lineSeparator$nextLine$lineSeparator"
-            }
-            val parsedLine = parser.parseRow(value, quoteChar, delimiter, escapeChar)
-            if (parsedLine == null) {
-                readNext(br, "$leftOver$nextLine")
-            } else {
-                parsedLine
-            }
+    /**
+     * open inputStreamReader and execute reading process.
+     *
+     * If you want to control read flow precisely, use this method.
+     * Otherwise, use utility method (e.g. CsvReader.readAll ).
+     *
+     * Usage example:
+     * @see open method
+     */
+    fun <T> open(ips: InputStream, read: CsvFileReader.() -> T): T {
+        val br = ips.bufferedReader(charset)
+        return open(br, read)
+    }
+
+    private fun <T> open(br: BufferedReader, doRead: CsvFileReader.() -> T): T {
+        val reader = CsvFileReader(ctx, br)
+        return reader.use {
+            reader.doRead()
         }
-    }
-
-    private fun findDuplicate(headers: List<String>): String? {
-        val set = mutableSetOf<String>()
-        headers.forEach { h ->
-            if (set.contains(h)) {
-                return h
-            } else {
-                set.add(h)
-            }
-        }
-        return null
     }
 }

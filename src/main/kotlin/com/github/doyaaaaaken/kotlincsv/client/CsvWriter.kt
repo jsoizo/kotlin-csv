@@ -15,17 +15,17 @@ class CsvWriter(
         private val ctx: CsvWriterContext = CsvWriterContext()
 ) : ICsvWriterContext by ctx {
 
-    fun writeTo(targetFileName: String, append: Boolean = false, write: CsvFileWriter.() -> Unit) {
+    fun open(targetFileName: String, append: Boolean = false, write: CsvFileWriter.() -> Unit) {
         val targetFile = File(targetFileName)
-        writeTo(targetFile, append, write)
+        open(targetFile, append, write)
     }
 
-    fun writeTo(targetFile: File, append: Boolean = false, write: CsvFileWriter.() -> Unit) {
+    fun open(targetFile: File, append: Boolean = false, write: CsvFileWriter.() -> Unit) {
         val fos = FileOutputStream(targetFile, append)
-        writeTo(fos, write)
+        open(fos, write)
     }
 
-    fun writeTo(ops: OutputStream, write: CsvFileWriter.() -> Unit) {
+    fun open(ops: OutputStream, write: CsvFileWriter.() -> Unit) {
         val osw = OutputStreamWriter(ops, ctx.charset)
         val writer = CsvFileWriter(ctx, PrintWriter(osw))
         writer.use { it.write() }
