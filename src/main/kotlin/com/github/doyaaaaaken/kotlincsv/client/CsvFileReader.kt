@@ -20,11 +20,11 @@ class CsvFileReader internal constructor(
 
     private val lineSeparator = System.lineSeparator()
 
-    internal fun readAll(): List<List<String>> {
+    fun readAll(): List<List<String>> {
         return readAllAsSequence().toList()
     }
 
-    internal fun readAllWithHeader(): List<Map<String, String>> {
+    fun readAllWithHeader(): List<Map<String, String>> {
         return readWithHeader(reader)
     }
 

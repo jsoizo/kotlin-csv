@@ -2,6 +2,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext
+import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
@@ -75,16 +76,49 @@ class CsvReader(
         return open(br) { readAllWithHeader() }
     }
 
+    /**
+     * open inputStreamReader and execute reading process.
+     *
+     * If you want to control read flow precisely, use this method.
+     * Otherwise, use utility method (e.g. CsvReader.readAll ).
+     *
+     * Usage example:
+     * <pre>
+     *   val data: Sequence<List<String?>> = csvReader().open("test.csv") {
+     *       readAllAsSequence()
+     *           .map { fields -> fields.map { it.trim() } }
+     *           .map { fields -> fields.map { if(it.isBlank()) null else it } }
+     *   }
+     * </pre>
+     */
     fun <T> open(data: String, read: CsvFileReader.() -> T): T {
         val br = data.byteInputStream(charset).bufferedReader(charset)
         return open(br, read)
     }
 
+    /**
+     * open inputStreamReader and execute reading process.
+     *
+     * If you want to control read flow precisely, use this method.
+     * Otherwise, use utility method (e.g. CsvReader.readAll ).
+     *
+     * Usage example:
+     * @see open method
+     */
     fun <T> open(file: File, read: CsvFileReader.() -> T): T {
         val br = file.inputStream().bufferedReader(charset)
         return open(br, read)
     }
 
+    /**
+     * open inputStreamReader and execute reading process.
+     *
+     * If you want to control read flow precisely, use this method.
+     * Otherwise, use utility method (e.g. CsvReader.readAll ).
+     *
+     * Usage example:
+     * @see open method
+     */
     fun <T> open(ips: InputStream, read: CsvFileReader.() -> T): T {
         val br = ips.bufferedReader(charset)
         return open(br, read)
