@@ -5,13 +5,17 @@ package com.github.doyaaaaaken.kotlincsv.parser
  *
  * @author doyaaaaaken
  */
-internal class CsvParser {
+internal class CsvParser(
+        private val quoteChar: Char,
+        private val delimiter: Char,
+        private val escapeChar: Char
+) {
 
     /**
      * @return return parsed row fields
      *         return null, if passed line string is on the way of csv row.
      */
-    fun parseRow(line: String, quoteChar: Char, delimiter: Char, escapeChar: Char): List<String>? {
+    fun parseRow(line: String): List<String>? {
         val stateMachine = ParseStateMachine(quoteChar, delimiter, escapeChar)
         var lastCh: Char? = null
         var skipCount = 0

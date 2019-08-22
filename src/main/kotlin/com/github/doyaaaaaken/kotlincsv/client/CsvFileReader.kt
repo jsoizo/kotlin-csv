@@ -18,7 +18,7 @@ class CsvFileReader internal constructor(
 
     private val reader = BufferedLineReader(reader)
 
-    private val parser = CsvParser()
+    private val parser = CsvParser(ctx.quoteChar, ctx.delimiter, ctx.escapeChar)
 
     fun readAll(): List<List<String>> {
         return readAllAsSequence().toList()
@@ -59,7 +59,7 @@ class CsvFileReader internal constructor(
             } else {
                 "$leftOver$nextLine"
             }
-            val parsedLine = parser.parseRow(value, ctx.quoteChar, ctx.delimiter, ctx.escapeChar)
+            val parsedLine = parser.parseRow(value)
             if (parsedLine == null) {
                 readNext("$leftOver$nextLine")
             } else {
