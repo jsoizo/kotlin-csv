@@ -44,8 +44,8 @@ maven:
 
 You can read csv file by both String and java.io.File object.
 ```kotlin
-val data: String = "a,b,c"
-val rows: List<List<String>> = csvReader().read(data)
+val csvData: String = "a,b,c"
+val rows: List<List<String>> = csvReader().read(csvData)
 
 val file: File = File("test.csv")
 val rows: List<List<String>> = csvReader().read(file)
