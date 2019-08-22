@@ -13,35 +13,23 @@ import java.io.Closeable
  */
 class CsvFileReader internal constructor(
         private val ctx: CsvReaderContext,
-        private val reader: BufferedReader
+        reader: BufferedReader
 ) : Closeable {
 
-    private val parser = CsvParser()
+    private val reader = BufferedLineReader(reader)
 
-    private val lineSeparator = System.lineSeparator()
+    private val parser = CsvParser()
 
     fun readAll(): List<List<String>> {
         return readAllAsSequence().toList()
     }
 
     fun readAllWithHeader(): List<Map<String, String>> {
-        return readWithHeader(reader)
-    }
-
-    fun readAllAsSequence(): Sequence<List<String>> {
-        return generateSequence { readNext(reader) }
-    }
-
-    override fun close() {
-        reader.close()
-    }
-
-    private fun readWithHeader(br: BufferedReader): List<Map<String, String>> {
-        val headers = readNext(br)
+        val headers = readNext()
         val duplicated = headers?.let(::findDuplicate)
         if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
 
-        return generateSequence { readNext(reader) }.map { fields ->
+        return generateSequence { readNext() }.map { fields ->
             if (requireNotNull(headers).size != fields.size) {
                 throw MalformedCSVException("fields num  ${fields.size} is not matched with header num ${headers.size}")
             }
@@ -49,8 +37,16 @@ class CsvFileReader internal constructor(
         }.toList()
     }
 
-    private tailrec fun readNext(br: BufferedReader, leftOver: String = ""): List<String>? {
-        val nextLine = br.readLine()
+    fun readAllAsSequence(): Sequence<List<String>> {
+        return generateSequence { readNext() }
+    }
+
+    override fun close() {
+        reader.close()
+    }
+
+    private tailrec fun readNext(leftOver: String = ""): List<String>? {
+        val nextLine = reader.readLineWithTerminator()
         return if (nextLine == null) {
             if (leftOver.isNotEmpty()) {
                 throw MalformedCSVException("Malformed format: leftOver \"$leftOver\" on the tail of file")
@@ -59,13 +55,13 @@ class CsvFileReader internal constructor(
             }
         } else {
             val value = if (leftOver.isEmpty()) {
-                "$nextLine$lineSeparator"
+                "$nextLine"
             } else {
-                "$leftOver$lineSeparator$nextLine$lineSeparator"
+                "$leftOver$nextLine"
             }
             val parsedLine = parser.parseRow(value, ctx.quoteChar, ctx.delimiter, ctx.escapeChar)
             if (parsedLine == null) {
-                readNext(br, "$leftOver$nextLine")
+                readNext("$leftOver$nextLine")
             } else {
                 parsedLine
             }
