@@ -61,5 +61,13 @@ class BufferedLineReaderTest : StringSpec() {
             blr.readLineWithTerminator() shouldBe "d,e,f"
             blr.readLineWithTerminator() shouldBe null
         }
+
+        "deal with \\r at the end of file" {
+            val str = "a,b,c\r"
+            val br = str.byteInputStream().bufferedReader()
+            val blr = BufferedLineReader(br)
+            blr.readLineWithTerminator() shouldBe "a,b,c\r"
+            blr.readLineWithTerminator() shouldBe null
+        }
     }
 }
