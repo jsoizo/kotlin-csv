@@ -156,6 +156,21 @@ class CsvReaderTest : WordSpec() {
                 result shouldBe listOf(mapOf("h1" to "a", h2 to "b", "h3" to "c"))
             }
         }
+
+        "open method (with fileName argument)" should {
+            val rows = csvReader().open("src/test/resources/testdata/csv/simple.csv") {
+                readAll()
+            }
+            rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+        }
+
+        "open method (with InputStream argument)" should {
+            val file = readTestDataFile("simple.csv")
+            val rows = csvReader().open(file.inputStream()) {
+                readAll()
+            }
+            rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+        }
     }
 }
 

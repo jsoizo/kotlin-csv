@@ -90,9 +90,8 @@ class CsvReader(
      *   }
      * </pre>
      */
-    fun <T> open(data: String, read: CsvFileReader.() -> T): T {
-        val br = data.byteInputStream(charset).bufferedReader(charset)
-        return open(br, read)
+    fun <T> open(fileName: String, read: CsvFileReader.() -> T): T {
+        return open(File(fileName), read)
     }
 
     /**
