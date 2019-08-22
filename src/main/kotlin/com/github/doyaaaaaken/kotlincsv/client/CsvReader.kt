@@ -2,7 +2,6 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
