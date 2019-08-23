@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to kotlin-csv 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.5.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.6.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
@@ -17,16 +17,16 @@
 
 # Usage
 
-## Download
+## 🌐 Download
 
 gradle kotlin DSL:
 ```
-implementation("com.github.doyaaaaaken:kotlin-csv:0.5.0")
+implementation("com.github.doyaaaaaken:kotlin-csv:0.6.0")
 ```
 
 gradle groovy DSL:
 ```
-implementation 'com.github.doyaaaaaken:kotlin-csv:0.5.0'
+implementation 'com.github.doyaaaaaken:kotlin-csv:0.6.0'
 ```
 
 maven:
@@ -34,30 +34,37 @@ maven:
 <dependency>
   <groupId>com.github.doyaaaaaken</groupId>
   <artifactId>kotlin-csv</artifactId>
-  <version>0.5.0</version>
+  <version>0.6.0</version>
 </dependency>
 ```
 
-## Examples
+## 📓 Examples
 
 ### Reading examples
+
+#### Simple case
 
 You can read csv file by both String and java.io.File object.
 ```kotlin
 val csvData: String = "a,b,c"
-val rows: List<List<String>> = csvReader().read(csvData)
+val rows: List<List<String>> = csvReader().readAll(csvData)
 
 val file: File = File("test.csv")
-val rows: List<List<String>> = csvReader().read(file)
+val rows: List<List<String>> = csvReader().readAll(file)
 ```
-If you want to improve performance, you can use `readAsSequence` method instead of `read` method. It gets `Sequence<List<String>>` as return value type.
+If you want to get ``Sequence<List<String>>``, you can use `readAsSequence` method.
 
-You can also read tsv file by changing setting.
+#### Customize
+
+When you create CsvReader, you can choose read options.
 ```kotlin
-val file = File("test.csv")
-val rows = csvReader {
+// this is tsv reader's option
+val tsvReader = csvReader {
+    charset = Charsets.ISO_8859_1
+    quoteChar = '"'
     delimiter = '\t'
-}.read(file)
+    escapeChar = '\\'
+}
 ```
 
 ### Writing examples
@@ -65,13 +72,15 @@ val rows = csvReader {
 #### Simple case
 
 You can write csv simply, only one line.
-No need to call other methods (like `use` `close` `flush`) 
+No need to call other methods. 
+Also, **You don't have to call `use`, `close` and `flush` method.**
 ```kotlin
 val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
 csvWriter().open("test.csv") { writeAll(rows) }
 ```
 
 You can also write csv file per each line.
+Also, **You don't have to call `use`, `close` and `flush` method.**
 ```kotlin
 val row1 = listOf("a", "b", "c")
 val row2 = listOf("d", "e", "f")
@@ -83,12 +92,12 @@ csvWriter().open("test.csv") {
 
 #### Customize
 
-When you create CsvWriter, You can choose write options.
+When you create CsvWriter, you can choose write options.
 ```kotlin
 val writer = csvWriter {
     charset = Charsets.ISO_8859_1
-    nullCode = "NULL"
     delimiter = '\t'
+    nullCode = "NULL"
     lineTerminator = "\n"
     quote {
         mode = WriteQuoteMode.ALL
@@ -98,11 +107,12 @@ val writer = csvWriter {
 ```
 
 
-# Miscellaneousness
+# Miscellaneous
 
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/doyaaaaaken/kotlin-csv/issues).
+If you have question, feel free to ask in [Kotlin slack's](https://kotlinlang.slack.com/) `kotlin-csv` room.
 
 ## 💻 Development
 
@@ -112,7 +122,7 @@ $ cd kotlin-csv
 $ ./gradlew test
 ```
 
-## Show your support
+## 🥐 Show your support
 
 Give a ⭐️ if this project helped you!
 
