@@ -29,7 +29,7 @@ class CsvFileReader internal constructor(
         val duplicated = headers?.let(::findDuplicate)
         if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
 
-        return generateSequence { readNext() }.map { fields ->
+        return readAllAsSequence().map { fields ->
             if (requireNotNull(headers).size != fields.size) {
                 throw MalformedCSVException("fields num  ${fields.size} is not matched with header num ${headers.size}")
             }
