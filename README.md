@@ -17,7 +17,7 @@
 
 # Usage
 
-## 🌐 Download
+## Download
 
 gradle kotlin DSL:
 ```
@@ -38,7 +38,7 @@ maven:
 </dependency>
 ```
 
-## 📓 Examples
+## Examples
 
 ### Reading examples
 
