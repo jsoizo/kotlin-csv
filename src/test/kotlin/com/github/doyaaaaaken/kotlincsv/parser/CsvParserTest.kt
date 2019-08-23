@@ -26,5 +26,9 @@ class CsvParserTest : StringSpec() {
         "parse row with delimiter at the end" {
             parser.parseRow("a,") shouldBe listOf("a", "")
         }
+        "parse \\r\\n after quote end" {
+            parser.parseRow("""a,"b"${"\r"}""") shouldBe listOf("a", "b")
+            parser.parseRow("""a,"b"${"\r\n"}""") shouldBe listOf("a", "b")
+        }
     }
 }
