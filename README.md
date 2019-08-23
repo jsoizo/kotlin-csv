@@ -72,16 +72,14 @@ val tsvReader = csvReader {
 #### Simple case
 
 You can write csv simply, only one line.
-No need to call other methods. 
-
+No need to call other methods. <br />
 Also, **You don't have to call `use`, `close` and `flush` method.**
 ```kotlin
 val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
 csvWriter().open("test.csv") { writeAll(rows) }
 ```
 
-You can also write csv file per each line.
-
+You can also write csv file per each line.<br />
 Also, **You don't have to call `use`, `close` and `flush` method.**
 ```kotlin
 val row1 = listOf("a", "b", "c")
@@ -113,8 +111,7 @@ val writer = csvWriter {
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/doyaaaaaken/kotlin-csv/issues).
-
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/doyaaaaaken/kotlin-csv/issues).<br />
 If you have question, feel free to ask in [Kotlin slack's](https://kotlinlang.slack.com/) `kotlin-csv` room.
 
 ## 💻 Development
