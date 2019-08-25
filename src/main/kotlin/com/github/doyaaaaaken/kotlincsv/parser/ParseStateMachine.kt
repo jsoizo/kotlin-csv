@@ -88,15 +88,6 @@ internal class ParseStateMachine(
             ParseState.DELIMITER -> {
                 when (ch) {
                     quoteChar -> state = ParseState.QUOTE_START
-                    escapeChar -> {
-                        if (nextCh == escapeChar || nextCh == delimiter) {
-                            field.append(nextCh)
-                            state = ParseState.FIELD
-                            pos += 1
-                        } else {
-                            throw MalformedCSVException("$pos")
-                        }
-                    }
                     delimiter -> {
                         flushField()
                         state = ParseState.DELIMITER
