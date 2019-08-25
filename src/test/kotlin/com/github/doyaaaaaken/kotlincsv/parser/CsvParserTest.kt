@@ -43,6 +43,14 @@ class CsvParserTest : WordSpec() {
                 parser.parseRow("a,\r") shouldBe listOf("a", "")
                 parser.parseRow("a,\r\n") shouldBe listOf("a", "")
             }
+            "parse line terminator after field" {
+                parser.parseRow("a\n") shouldBe listOf("a")
+                parser.parseRow("a\u2028") shouldBe listOf("a")
+                parser.parseRow("a\u2029") shouldBe listOf("a")
+                parser.parseRow("a\u0085") shouldBe listOf("a")
+                parser.parseRow("a\r") shouldBe listOf("a")
+                parser.parseRow("a\r\n") shouldBe listOf("a")
+            }
         }
     }
 }
