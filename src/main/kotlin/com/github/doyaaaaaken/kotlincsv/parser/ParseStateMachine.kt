@@ -57,13 +57,10 @@ internal class ParseStateMachine(
             ParseState.FIELD -> {
                 when (ch) {
                     escapeChar -> {
-                        if (nextCh != null && nextCh == escapeChar) {
-                            field.append(nextCh)
-                            state = ParseState.FIELD
-                            pos += 1
-                        } else {
-                            throw MalformedCSVException("$pos")
-                        }
+                        if (nextCh != escapeChar) throw MalformedCSVException("$pos")
+                        field.append(nextCh)
+                        state = ParseState.FIELD
+                        pos += 1
                     }
                     delimiter -> {
                         flushField()
@@ -110,18 +107,11 @@ internal class ParseStateMachine(
             }
             ParseState.QUOTE_START, ParseState.QUOTED_FIELD -> {
                 if (ch == escapeChar && escapeChar != quoteChar) {
-                    if (nextCh != null) {
-                        if (nextCh == escapeChar
-                                || nextCh == quoteChar) {
-                            field.append(nextCh)
-                            state = ParseState.QUOTED_FIELD
-                            pos += 1
-                        } else {
-                            throw MalformedCSVException("$pos")
-                        }
-                    } else {
-                        throw MalformedCSVException("$pos")
-                    }
+                    if (nextCh == null) throw MalformedCSVException("$pos")
+                    if (nextCh != escapeChar && nextCh != quoteChar) throw MalformedCSVException("$pos")
+                    field.append(nextCh)
+                    state = ParseState.QUOTED_FIELD
+                    pos += 1
                 } else if (ch == quoteChar) {
                     if (nextCh == quoteChar) {
                         field.append(quoteChar)
@@ -151,15 +141,11 @@ internal class ParseStateMachine(
                         flushField()
                         state = ParseState.END
                     }
-                    else -> {
-                        throw MalformedCSVException("$pos")
-                    }
+                    else -> throw MalformedCSVException("$pos")
                 }
                 pos += 1
             }
-            ParseState.END -> {
-                throw MalformedCSVException("unexpected error")
-            }
+            ParseState.END -> throw MalformedCSVException("unexpected error")
         }
         return pos - prevPos
     }
@@ -175,13 +161,11 @@ internal class ParseStateMachine(
                 fields.toList()
             }
             ParseState.QUOTED_FIELD -> null
-            else -> {
-                // When no crlf at end of file
-                if (state == ParseState.FIELD || state == ParseState.QUOTE_END) {
-                    fields.add(field.toString())
-                }
+            ParseState.FIELD, ParseState.QUOTE_END -> {
+                fields.add(field.toString())
                 fields.toList()
             }
+            else -> fields.toList()
         }
     }
 

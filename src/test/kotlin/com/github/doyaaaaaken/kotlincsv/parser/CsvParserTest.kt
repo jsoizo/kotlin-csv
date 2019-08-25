@@ -1,11 +1,14 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
+import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import io.kotlintest.specs.WordSpec
 
 class CsvParserTest : WordSpec() {
     init {
         val parser = CsvParser('"', ',', '"')
+        val lineTerminators = listOf("\n", "\u2028", "\u2029", "\u0085", "\r", "\r\n")
 
         "CsvParser.parseRow" should {
             "parseEmptyRow" {
@@ -21,38 +24,37 @@ class CsvParserTest : WordSpec() {
                 parser.parseRow(",a") shouldBe listOf("", "a")
             }
             "parse line terminator at the start of row" {
-                parser.parseRow("\n") shouldBe listOf("")
-                parser.parseRow("\u2028") shouldBe listOf("")
-                parser.parseRow("\u2029") shouldBe listOf("")
-                parser.parseRow("\u0085") shouldBe listOf("")
-                parser.parseRow("\r") shouldBe listOf("")
-                parser.parseRow("\r\n") shouldBe listOf("")
+                lineTerminators.forEach { lt ->
+                    parser.parseRow(lt) shouldBe listOf("")
+                }
             }
             "parse row with delimiter at the end" {
                 parser.parseRow("a,") shouldBe listOf("a", "")
             }
-            "parse \\r\\n after quote end" {
-                parser.parseRow("""a,"b"${"\r"}""") shouldBe listOf("a", "b")
-                parser.parseRow("""a,"b"${"\r\n"}""") shouldBe listOf("a", "b")
+            "parse line terminator after quote end" {
+                lineTerminators.forEach { lt ->
+                    parser.parseRow("""a,"b"$lt""") shouldBe listOf("a", "b")
+                }
             }
             "parse line terminator after delimiter" {
-                parser.parseRow("a,\n") shouldBe listOf("a", "")
-                parser.parseRow("a,\u2028") shouldBe listOf("a", "")
-                parser.parseRow("a,\u2029") shouldBe listOf("a", "")
-                parser.parseRow("a,\u0085") shouldBe listOf("a", "")
-                parser.parseRow("a,\r") shouldBe listOf("a", "")
-                parser.parseRow("a,\r\n") shouldBe listOf("a", "")
+                lineTerminators.forEach { lt ->
+                    parser.parseRow("a,$lt") shouldBe listOf("a", "")
+                }
             }
             "parse line terminator after field" {
-                parser.parseRow("a\n") shouldBe listOf("a")
-                parser.parseRow("a\u2028") shouldBe listOf("a")
-                parser.parseRow("a\u2029") shouldBe listOf("a")
-                parser.parseRow("a\u0085") shouldBe listOf("a")
-                parser.parseRow("a\r") shouldBe listOf("a")
-                parser.parseRow("a\r\n") shouldBe listOf("a")
+                lineTerminators.forEach { lt ->
+                    parser.parseRow("a$lt") shouldBe listOf("a")
+                }
             }
             "parse escape character after field" {
                 parser.parseRow("a\"\"") shouldBe listOf("a\"")
+            }
+            "throw exception when parsing 2 rows" {
+                lineTerminators.forEach { lt ->
+                    shouldThrow<MalformedCSVException> {
+                        parser.parseRow("a${lt}b")
+                    }
+                }
             }
         }
     }
