@@ -51,6 +51,9 @@ class CsvParserTest : WordSpec() {
                 parser.parseRow("a\r") shouldBe listOf("a")
                 parser.parseRow("a\r\n") shouldBe listOf("a")
             }
+            "parse escape character after field" {
+                parser.parseRow("a\"\"") shouldBe listOf("a\"")
+            }
         }
     }
 }

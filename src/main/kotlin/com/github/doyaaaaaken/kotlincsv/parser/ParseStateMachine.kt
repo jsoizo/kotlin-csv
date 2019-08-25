@@ -57,16 +57,12 @@ internal class ParseStateMachine(
             ParseState.FIELD -> {
                 when (ch) {
                     escapeChar -> {
-                        if (nextCh != null) {
-                            if (nextCh == escapeChar || nextCh == delimiter) {
-                                field.append(nextCh)
-                                state = ParseState.FIELD
-                                pos += 1
-                            } else {
-                                throw MalformedCSVException("$pos")
-                            }
+                        if (nextCh != null && nextCh == escapeChar) {
+                            field.append(nextCh)
+                            state = ParseState.FIELD
+                            pos += 1
                         } else {
-                            state = ParseState.QUOTE_END
+                            throw MalformedCSVException("$pos")
                         }
                     }
                     delimiter -> {
