@@ -1,6 +1,8 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
+import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrow
 import io.kotlintest.specs.WordSpec
 
 class CsvParserTest : WordSpec() {
@@ -46,6 +48,13 @@ class CsvParserTest : WordSpec() {
             }
             "parse escape character after field" {
                 parser.parseRow("a\"\"") shouldBe listOf("a\"")
+            }
+            "throw exception when parsing 2 rows" {
+                lineTerminators.forEach { lt ->
+                    shouldThrow<MalformedCSVException> {
+                        parser.parseRow("a${lt}b")
+                    }
+                }
             }
         }
     }
