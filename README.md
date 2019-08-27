@@ -52,7 +52,24 @@ val rows: List<List<String>> = csvReader().readAll(csvData)
 val file: File = File("test.csv")
 val rows: List<List<String>> = csvReader().readAll(file)
 ```
-If you want to get ``Sequence<List<String>>``, you can use `readAsSequence` method.
+
+If you want to handle line-by-line, you can use `readAsSequence` method and get `Sequence<List<String>>`.
+```kotlin
+csvReader().open("test.csv") {
+    readAllAsSequence().forEach { row ->
+        //Do something
+        println(row) //[a, b, c]
+    }
+}
+```
+
+#### Read with header
+
+```kotlin
+val csvData: String = "a,b,c\nd,e,f"
+val rows: List<Map<String, String>> = csvReader().readAllWithHeader(csvData)
+println(rows) //[{a=d, b=e, c=f}]
+```
 
 #### Customize
 
