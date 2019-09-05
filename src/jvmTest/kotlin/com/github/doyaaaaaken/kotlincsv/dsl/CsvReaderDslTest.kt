@@ -2,6 +2,8 @@ package com.github.doyaaaaaken.kotlincsv.dsl
 
 import io.kotlintest.specs.StringSpec
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
+import io.kotlintest.matchers.types.shouldBeTypeOf
+import io.kotlintest.shouldBe
 
 /**
  * @author doyaaaaaken

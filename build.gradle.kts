@@ -31,6 +31,7 @@ kotlin {
 //            compileKotlinTask // get the Kotlin task 'compileKotlinJvm'
 //            output // get the main compilation output
         }
+
 //        compilations["test"].runtimeDependencyFiles // get the test runtime classpath
     }
     sourceSets {
@@ -59,10 +60,10 @@ kotlin {
     }
 }
 
-//val test by tasks.getting(Test::class) {
-//    useJUnitPlatform { }
-//}
-//
+val jvmTest by tasks.getting(Test::class) {
+    useJUnitPlatform { }
+}
+
 ////publishing settings
 ////https://docs.gradle.org/current/userguide/publishing_maven.html
 //val sourcesJar = task<Jar>("sourcesJar") {

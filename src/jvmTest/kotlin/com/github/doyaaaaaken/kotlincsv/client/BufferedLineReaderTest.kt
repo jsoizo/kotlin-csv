@@ -1,5 +1,6 @@
 package com.github.doyaaaaaken.kotlincsv.client
 
+import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 
 /**

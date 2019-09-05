@@ -5,6 +5,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.util.Const
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
+import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import java.io.File
 
@@ -157,7 +158,7 @@ class CsvReaderTest : WordSpec() {
         }
 
         "open method (with fileName argument)" should {
-            val rows = csvReader().open("src/test/resources/testdata/csv/simple.csv") {
+            val rows = csvReader().open("src/jvmTest/resources/testdata/csv/simple.csv") {
                 readAll()
             }
             rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
@@ -174,5 +175,5 @@ class CsvReaderTest : WordSpec() {
 }
 
 private fun readTestDataFile(fileName: String): File {
-    return File("src/test/resources/testdata/csv/$fileName")
+    return File("src/jvmTest/resources/testdata/csv/$fileName")
 }

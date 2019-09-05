@@ -1,6 +1,7 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
+import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.WordSpec
 
