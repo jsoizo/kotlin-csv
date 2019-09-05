@@ -25,6 +25,4 @@ jobs:
       - run:
           command: |
             ./gradlew test
-#           comment out temporarily
-#            ./gradlew jacocoTestReport
             bash <(curl -s https://codecov.io/bash)
