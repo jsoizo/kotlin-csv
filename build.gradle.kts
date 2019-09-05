@@ -1,5 +1,5 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm").version("1.3.41")
+    kotlin("multiplatform") version "1.3.50"
     id("org.jetbrains.dokka").version("0.9.18")
     jacoco
     `maven-publish`
@@ -22,15 +22,46 @@ repositories {
     jcenter()
 }
 
+kotlin {
+    jvm {
+        val main by compilations.getting {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+//            compileKotlinTask // get the Kotlin task 'compileKotlinJvm'
+//            output // get the main compilation output
+        }
+//        compilations["test"].runtimeDependencyFiles // get the test runtime classpath
+    }
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-common"))
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+            }
+        }
+
+        jvm().compilations["main"].defaultSourceSet {
+            dependencies {
+                implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+            }
+        }
+        jvm().compilations["test"].defaultSourceSet {
+            dependencies {
+                implementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
+            }
+        }
+    }
+}
+
 val test by tasks.getting(Test::class) {
     useJUnitPlatform { }
 }
-
-dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
-}
-
 
 //publishing settings
 //https://docs.gradle.org/current/userguide/publishing_maven.html
