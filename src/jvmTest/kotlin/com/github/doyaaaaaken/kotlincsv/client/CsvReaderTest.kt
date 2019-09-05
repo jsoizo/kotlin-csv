@@ -1,6 +1,5 @@
 package com.github.doyaaaaaken.kotlincsv.client
 
-import io.kotlintest.shouldBe
 import io.kotlintest.specs.WordSpec
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader

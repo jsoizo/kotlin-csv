@@ -1,7 +1,5 @@
 package com.github.doyaaaaaken.kotlincsv.dsl
 
-import io.kotlintest.matchers.types.shouldBeTypeOf
-import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.github.doyaaaaaken.kotlincsv.dsl.context.WriteQuoteMode
