@@ -2,7 +2,6 @@ package com.github.doyaaaaaken.kotlincsv.dsl.context
 
 import com.github.doyaaaaaken.kotlincsv.util.Const
 import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
-import java.nio.charset.Charset
 
 /**
  * Interface for CSV Writer settings
@@ -11,7 +10,7 @@ import java.nio.charset.Charset
  */
 @CsvDslMarker
 interface ICsvWriterContext {
-    val charset: Charset
+    val charset: String
     val delimiter: Char
     val nullCode: String
     val lineTerminator: String

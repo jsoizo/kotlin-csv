@@ -16,7 +16,7 @@ class CsvWriterDslTest : StringSpec({
     }
     "csvWriter method should work as dsl" {
         val writer = csvWriter {
-            charset = Charsets.ISO_8859_1
+            charset = Charsets.ISO_8859_1.name()
             delimiter = '\t'
             nullCode = "NULL"
             lineTerminator = "\n"
@@ -25,7 +25,7 @@ class CsvWriterDslTest : StringSpec({
                 mode = WriteQuoteMode.ALL
             }
         }
-        writer.charset shouldBe Charsets.ISO_8859_1
+        writer.charset shouldBe Charsets.ISO_8859_1.name()
         writer.delimiter shouldBe '\t'
         writer.nullCode shouldBe "NULL"
         writer.lineTerminator shouldBe "\n"

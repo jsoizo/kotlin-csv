@@ -35,7 +35,7 @@ class CsvWriterTest : WordSpec() {
             }
             "be created with CsvWriterContext argument" {
                 val context = CsvWriterContext().apply {
-                    charset = Charsets.ISO_8859_1
+                    charset = Charsets.ISO_8859_1.name()
                     delimiter = '\t'
                     nullCode = "NULL"
                     lineTerminator = "\n"
@@ -45,7 +45,7 @@ class CsvWriterTest : WordSpec() {
                     }
                 }
                 val writer = CsvWriter(context)
-                writer.charset shouldBe Charsets.ISO_8859_1
+                writer.charset shouldBe Charsets.ISO_8859_1.name()
                 writer.delimiter shouldBe '\t'
                 writer.nullCode shouldBe "NULL"
                 writer.lineTerminator shouldBe "\n"
@@ -101,13 +101,12 @@ class CsvWriterTest : WordSpec() {
 
         "Customized CsvWriter" should {
             "write csv with SJIS charset" {
-                val sjis = Charset.forName("SJIS")
                 csvWriter{
-                    charset = sjis
+                    charset = "SJIS"
                 }.open(File(testFileName)) {
                     writeAll(listOf(listOf("あ", "い")))
                 }
-                val actual = readTestFile(sjis)
+                val actual = readTestFile(Charset.forName("SJIS"))
                 actual shouldBe "あ,い\r\n"
             }
             "write csv with '|' demimiter" {

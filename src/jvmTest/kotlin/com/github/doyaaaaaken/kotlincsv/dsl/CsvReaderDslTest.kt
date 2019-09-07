@@ -15,12 +15,12 @@ class CsvReaderDslTest : StringSpec({
     }
     "csvReader method should work as dsl" {
         val reader = csvReader {
-            charset = Charsets.ISO_8859_1
+            charset = Charsets.ISO_8859_1.name()
             quoteChar = '\''
             delimiter = '\t'
             escapeChar = '"'
         }
-        reader.charset shouldBe Charsets.ISO_8859_1
+        reader.charset shouldBe Charsets.ISO_8859_1.name()
         reader.quoteChar shouldBe '\''
         reader.delimiter shouldBe '\t'
         reader.escapeChar shouldBe '"'

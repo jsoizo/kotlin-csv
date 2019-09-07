@@ -5,6 +5,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
+import java.nio.charset.Charset
 
 /**
  * CSV Reader class
@@ -15,13 +16,15 @@ class CsvReader(
         private val ctx: CsvReaderContext = CsvReaderContext()
 ) : ICsvReaderContext by ctx {
 
+    private val charsetCode = Charset.forName(charset)
+
     /**
      * read csv data as String, and convert into List<List<String>>
      *
      * No need to close InputStream when calling this method.
      */
     fun readAll(data: String): List<List<String>> {
-        val br = data.byteInputStream(charset).bufferedReader(charset)
+        val br = data.byteInputStream(charsetCode).bufferedReader(charsetCode)
         return open(br) { readAll() }
     }
 
@@ -31,7 +34,7 @@ class CsvReader(
      * No need to close InputStream when calling this method.
      */
     fun readAll(file: File): List<List<String>> {
-        val br = file.inputStream().bufferedReader(charset)
+        val br = file.inputStream().bufferedReader(charsetCode)
         return open(br) { readAll() }
     }
 
@@ -41,7 +44,7 @@ class CsvReader(
      * No need to close InputStream when calling this method.
      */
     fun readAll(ips: InputStream): List<List<String>> {
-        val br = ips.bufferedReader(charset)
+        val br = ips.bufferedReader(charsetCode)
         return open(br) { readAll() }
     }
 
@@ -51,7 +54,7 @@ class CsvReader(
      * No need to close InputStream when calling this method.
      */
     fun readAllWithHeader(data: String): List<Map<String, String>> {
-        val br = data.byteInputStream(charset).bufferedReader(charset)
+        val br = data.byteInputStream(charsetCode).bufferedReader(charsetCode)
         return open(br) { readAllWithHeader() }
     }
 
@@ -61,7 +64,7 @@ class CsvReader(
      * No need to close InputStream when calling this method.
      */
     fun readAllWithHeader(file: File): List<Map<String, String>> {
-        val br = file.inputStream().bufferedReader(charset)
+        val br = file.inputStream().bufferedReader(charsetCode)
         return open(br) { readAllWithHeader() }
     }
 
@@ -71,7 +74,7 @@ class CsvReader(
      * No need to close InputStream when calling this method.
      */
     fun readAllWithHeader(ips: InputStream): List<Map<String, String>> {
-        val br = ips.bufferedReader(charset)
+        val br = ips.bufferedReader(charsetCode)
         return open(br) { readAllWithHeader() }
     }
 
@@ -104,7 +107,7 @@ class CsvReader(
      * @see open method
      */
     fun <T> open(file: File, read: CsvFileReader.() -> T): T {
-        val br = file.inputStream().bufferedReader(charset)
+        val br = file.inputStream().bufferedReader(charsetCode)
         return open(br, read)
     }
 
@@ -118,7 +121,7 @@ class CsvReader(
      * @see open method
      */
     fun <T> open(ips: InputStream, read: CsvFileReader.() -> T): T {
-        val br = ips.bufferedReader(charset)
+        val br = ips.bufferedReader(charsetCode)
         return open(br, read)
     }
 

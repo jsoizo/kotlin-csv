@@ -6,5 +6,5 @@ package com.github.doyaaaaaken.kotlincsv.util
  * @author doyaaaaaken
  */
 internal object Const {
-    val defaultCharset = Charsets.UTF_8
+    val defaultCharset = "UTF-8"
 }
