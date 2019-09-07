@@ -1,7 +1,6 @@
 plugins {
     kotlin("multiplatform") version "1.3.50"
     id("org.jetbrains.dokka").version("0.9.18")
-    jacoco
     `maven-publish`
     signing
 }
@@ -141,12 +140,4 @@ publishing {
 
 signing {
     sign(publishing.publications)
-}
-
-tasks.withType<JacocoReport> {
-    reports {
-        xml.isEnabled = true
-        xml.destination = File("$buildDir/reports/jacoco/report.xml")
-        html.isEnabled = false
-    }
 }
