@@ -1,13 +1,12 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm").version("1.3.41")
+    kotlin("multiplatform") version "1.3.50"
     id("org.jetbrains.dokka").version("0.9.18")
-    jacoco
     `maven-publish`
     signing
 }
 
 group = "com.github.doyaaaaaken"
-version = "0.6.1"
+version = "0.7.0"
 
 buildscript {
     repositories {
@@ -22,64 +21,107 @@ repositories {
     jcenter()
 }
 
-val test by tasks.getting(Test::class) {
+kotlin {
+    jvm {
+        val main by compilations.getting {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-common"))
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+            }
+        }
+
+        jvm().compilations["main"].defaultSourceSet {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(kotlin("test-junit"))
+                implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+            }
+        }
+        jvm().compilations["test"].defaultSourceSet {
+            dependencies {
+                implementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
+            }
+        }
+    }
+}
+
+val jvmTest by tasks.getting(Test::class) {
     useJUnitPlatform { }
 }
 
-dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    testImplementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
-}
+////publishing settings
+////https://docs.gradle.org/current/userguide/publishing_maven.html
+//val sourcesJar = task<Jar>("sourcesJar") {
+//    from(sourceSets.main.get().allSource)
+//    archiveClassifier.set("sources")
+//}
+//val dokkaJar = task<Jar>("dokkaJar") {
+//    group = JavaBasePlugin.DOCUMENTATION_GROUP
+//    archiveClassifier.set("javadoc")
+//}
 
-
-//publishing settings
-//https://docs.gradle.org/current/userguide/publishing_maven.html
-val sourcesJar = task<Jar>("sourcesJar") {
-    from(sourceSets.main.get().allSource)
-    archiveClassifier.set("sources")
-}
-val dokkaJar = task<Jar>("dokkaJar") {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    archiveClassifier.set("javadoc")
-}
 
 publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            artifactId = "kotlin-csv"
-            from(components["java"])
-            artifacts {
-                artifact(sourcesJar)
-                artifact(dokkaJar)
-            }
-            pom {
-                name.set("kotlin-csv")
-                description.set("Kotlin CSV Reader/Writer")
-                url.set("https://github.com/doyaaaaaken/kotlin-csv")
+    //    publications["jvm"].apply {
+    //            artifactId = "kotlin-csv"
+//            from(components["java"])
+//        (this as MavenPublication).setArtifacts(dokkaJar)
 
-                organization {
-                    name.set("com.github.doyaaaaaken")
-                    url.set("https://github.com/doyaaaaaken")
+//        artifacts {
+//            artifact(sourcesJar)
+//            artifact(dokkaJar)
+//        }
+//    }
+    publications.all {
+        (this as MavenPublication).pom {
+            name.set("kotlin-csv")
+            description.set("Kotlin CSV Reader/Writer")
+            url.set("https://github.com/doyaaaaaken/kotlin-csv")
+
+            organization {
+                name.set("com.github.doyaaaaaken")
+                url.set("https://github.com/doyaaaaaken")
+            }
+            licenses {
+                license {
+                    name.set("Apache License 2.0")
+                    url.set("https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE")
                 }
-                licenses {
-                    license {
-                        name.set("Apache License 2.0")
-                        url.set("https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE")
-                    }
-                }
-                scm {
-                    url.set("https://github.com/doyaaaaaken/kotlin-csv")
-                    connection.set("scm:git:git://github.com/doyaaaaaken/kotlin-csv.git")
-                    developerConnection.set("https://github.com/doyaaaaaken/kotlin-csv")
-                }
-                developers {
-                    developer {
-                        name.set("doyaaaaaken")
-                    }
+            }
+            scm {
+                url.set("https://github.com/doyaaaaaken/kotlin-csv")
+                connection.set("scm:git:git://github.com/doyaaaaaken/kotlin-csv.git")
+                developerConnection.set("https://github.com/doyaaaaaken/kotlin-csv")
+            }
+            developers {
+                developer {
+                    name.set("doyaaaaaken")
                 }
             }
         }
     }
+//    publications {
+//        create<MavenPublication>("mavenJava") {
+//            artifactId = "kotlin-csv"
+//            from(components["java"])
+//            artifacts {
+//                artifact(sourcesJar)
+//                artifact(dokkaJar)
+//            }
+//        }
+//    }
     repositories {
         maven {
             credentials {
@@ -97,13 +139,5 @@ publishing {
 }
 
 signing {
-    sign(publishing.publications["mavenJava"])
-}
-
-tasks.withType<JacocoReport> {
-    reports {
-        xml.isEnabled = true
-        xml.destination = File("$buildDir/reports/jacoco/report.xml")
-        html.isEnabled = false
-    }
+    sign(publishing.publications)
 }
