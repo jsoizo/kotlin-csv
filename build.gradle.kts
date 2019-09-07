@@ -75,40 +75,51 @@ val jvmTest by tasks.getting(Test::class) {
 
 
 publishing {
+    //    publications["jvm"].apply {
+    //            artifactId = "kotlin-csv"
+//            from(components["java"])
+//        (this as MavenPublication).setArtifacts(dokkaJar)
+
+//        artifacts {
+//            artifact(sourcesJar)
+//            artifact(dokkaJar)
+//        }
+//    }
+    publications.all {
+        (this as MavenPublication).pom {
+            name.set("kotlin-csv")
+            description.set("Kotlin CSV Reader/Writer")
+            url.set("https://github.com/doyaaaaaken/kotlin-csv")
+
+            organization {
+                name.set("com.github.doyaaaaaken")
+                url.set("https://github.com/doyaaaaaken")
+            }
+            licenses {
+                license {
+                    name.set("Apache License 2.0")
+                    url.set("https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE")
+                }
+            }
+            scm {
+                url.set("https://github.com/doyaaaaaken/kotlin-csv")
+                connection.set("scm:git:git://github.com/doyaaaaaken/kotlin-csv.git")
+                developerConnection.set("https://github.com/doyaaaaaken/kotlin-csv")
+            }
+            developers {
+                developer {
+                    name.set("doyaaaaaken")
+                }
+            }
+        }
+    }
 //    publications {
-        //TODO: いらない説あり
 //        create<MavenPublication>("mavenJava") {
 //            artifactId = "kotlin-csv"
 //            from(components["java"])
 //            artifacts {
 //                artifact(sourcesJar)
 //                artifact(dokkaJar)
-//            }
-//            pom {
-//                name.set("kotlin-csv")
-//                description.set("Kotlin CSV Reader/Writer")
-//                url.set("https://github.com/doyaaaaaken/kotlin-csv")
-//
-//                organization {
-//                    name.set("com.github.doyaaaaaken")
-//                    url.set("https://github.com/doyaaaaaken")
-//                }
-//                licenses {
-//                    license {
-//                        name.set("Apache License 2.0")
-//                        url.set("https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE")
-//                    }
-//                }
-//                scm {
-//                    url.set("https://github.com/doyaaaaaken/kotlin-csv")
-//                    connection.set("scm:git:git://github.com/doyaaaaaken/kotlin-csv.git")
-//                    developerConnection.set("https://github.com/doyaaaaaken/kotlin-csv")
-//                }
-//                developers {
-//                    developer {
-//                        name.set("doyaaaaaken")
-//                    }
-//                }
 //            }
 //        }
 //    }
