@@ -28,11 +28,7 @@ kotlin {
             kotlinOptions {
                 jvmTarget = "1.8"
             }
-//            compileKotlinTask // get the Kotlin task 'compileKotlinJvm'
-//            output // get the main compilation output
         }
-
-//        compilations["test"].runtimeDependencyFiles // get the test runtime classpath
     }
     sourceSets {
         val commonMain by getting {
