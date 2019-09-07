@@ -45,6 +45,8 @@ kotlin {
 
         jvm().compilations["main"].defaultSourceSet {
             dependencies {
+                implementation(kotlin("test"))
+                implementation(kotlin("test-junit"))
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
             }
         }
