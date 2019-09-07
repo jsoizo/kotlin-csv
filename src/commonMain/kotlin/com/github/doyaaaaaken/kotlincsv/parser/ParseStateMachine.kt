@@ -1,7 +1,6 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
-import java.util.*
 
 /**
  * @author doyaaaaaaken
@@ -16,7 +15,7 @@ internal class ParseStateMachine(
 
     private var state = ParseState.START
 
-    private val fields = Vector<String>()
+    private val fields = ArrayList<String>()
 
     private var field = StringBuilder()
 
