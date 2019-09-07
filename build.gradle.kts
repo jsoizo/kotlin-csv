@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.doyaaaaaken"
-version = "0.6.1"
+version = "0.7.0"
 
 buildscript {
     repositories {
@@ -128,9 +128,9 @@ publishing {
     }
 }
 
-//signing {
-//    sign(publishing.publications["mavenJava"])
-//}
+signing {
+    sign(publishing.publications)
+}
 
 tasks.withType<JacocoReport> {
     reports {
