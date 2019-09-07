@@ -77,7 +77,7 @@ When you create CsvReader, you can choose read options.
 ```kotlin
 // this is tsv reader's option
 val tsvReader = csvReader {
-    charset = Charsets.ISO_8859_1
+    charset = "ISO_8859_1"
     quoteChar = '"'
     delimiter = '\t'
     escapeChar = '\\'
@@ -112,7 +112,7 @@ csvWriter().open("test.csv") {
 When you create CsvWriter, you can choose write options.
 ```kotlin
 val writer = csvWriter {
-    charset = Charsets.ISO_8859_1
+    charset = "ISO_8859_1"
     delimiter = '\t'
     nullCode = "NULL"
     lineTerminator = "\n"
