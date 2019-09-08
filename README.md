@@ -13,7 +13,16 @@
   </a>
 </p>
 
-> Kotlin DSL CSV Reader/Writer
+> Pure Kotlin CSV Reader/Writer
+
+# Principals
+
+### 1. Simple interface
+  * easy to setup
+  * use DSL so easy to read
+
+### 2. Multiplatform
+  * kotlin multiplatform project
 
 # Usage
 
