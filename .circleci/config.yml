@@ -25,4 +25,3 @@ jobs:
       - run:
           command: |
             ./gradlew check
-            bash <(curl -s https://codecov.io/bash)
