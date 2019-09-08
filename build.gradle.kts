@@ -22,12 +22,21 @@ repositories {
     jcenter()
 }
 
+val dokkaJar = task<Jar>("dokkaJar") {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    archiveClassifier.set("javadoc")
+}
+
 kotlin {
     jvm {
         val main by compilations.getting {
             kotlinOptions {
                 jvmTarget = "1.8"
             }
+        }
+        //https://docs.gradle.org/current/userguide/publishing_maven.html
+        mavenPublication {
+            artifact(dokkaJar)
         }
     }
     sourceSets {
@@ -62,29 +71,8 @@ val jvmTest by tasks.getting(Test::class) {
     useJUnitPlatform { }
 }
 
-////publishing settings
-////https://docs.gradle.org/current/userguide/publishing_maven.html
-//val sourcesJar = task<Jar>("sourcesJar") {
-//    from(sourceSets.main.get().allSource)
-//    archiveClassifier.set("sources")
-//}
-//val dokkaJar = task<Jar>("dokkaJar") {
-//    group = JavaBasePlugin.DOCUMENTATION_GROUP
-//    archiveClassifier.set("javadoc")
-//}
-
 
 publishing {
-    //    publications["jvm"].apply {
-    //            artifactId = "kotlin-csv"
-//            from(components["java"])
-//        (this as MavenPublication).setArtifacts(dokkaJar)
-
-//        artifacts {
-//            artifact(sourcesJar)
-//            artifact(dokkaJar)
-//        }
-//    }
     publications.all {
         (this as MavenPublication).pom {
             name.set("kotlin-csv")
@@ -113,16 +101,6 @@ publishing {
             }
         }
     }
-//    publications {
-//        create<MavenPublication>("mavenJava") {
-//            artifactId = "kotlin-csv"
-//            from(components["java"])
-//            artifacts {
-//                artifact(sourcesJar)
-//                artifact(dokkaJar)
-//            }
-//        }
-//    }
     repositories {
         maven {
             credentials {
