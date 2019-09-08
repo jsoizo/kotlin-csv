@@ -21,6 +21,9 @@
 ### 2. Multiplatform
   * kotlin multiplatform project
 
+### 3. Pluggable Parser (WIP in [#32](https://github.com/doyaaaaaken/kotlin-csv/issues/32))
+  * Choose parser from existing library (for example in Java, [commons CSV](https://commons.apache.org/proper/commons-csv/)) or kotlin-csv's native parser
+
 # Usage
 
 ## Download
