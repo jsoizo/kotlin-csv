@@ -12,8 +12,8 @@ import java.nio.charset.Charset
  *
  * @author doyaaaaaken
  */
-class CsvReader(
-        private val ctx: CsvReaderContext = CsvReaderContext()
+actual class CsvReader actual constructor(
+        private val ctx: CsvReaderContext
 ) : ICsvReaderContext by ctx {
 
     private val charsetCode = Charset.forName(charset)
@@ -23,7 +23,7 @@ class CsvReader(
      *
      * No need to close InputStream when calling this method.
      */
-    fun readAll(data: String): List<List<String>> {
+    actual fun readAll(data: String): List<List<String>> {
         val br = data.byteInputStream(charsetCode).bufferedReader(charsetCode)
         return open(br) { readAll() }
     }
@@ -53,7 +53,7 @@ class CsvReader(
      *
      * No need to close InputStream when calling this method.
      */
-    fun readAllWithHeader(data: String): List<Map<String, String>> {
+    actual fun readAllWithHeader(data: String): List<Map<String, String>> {
         val br = data.byteInputStream(charsetCode).bufferedReader(charsetCode)
         return open(br) { readAllWithHeader() }
     }
