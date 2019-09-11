@@ -15,23 +15,23 @@ import java.io.PrintWriter
 class CsvFileWriter internal constructor(
         private val ctx: CsvWriterContext,
         private val writer: PrintWriter
-) : Closeable, Flushable {
+) : ICsvFileWriter, Closeable, Flushable {
 
-    fun writeRow(row: List<Any?>) {
+    override fun writeRow(row: List<Any?>) {
         writeNext(row)
         if (writer.checkError()) {
             throw IOException("Failed to write")
         }
     }
 
-    fun writeAll(rows: List<List<Any?>>) {
+    override fun writeAll(rows: List<List<Any?>>) {
         rows.forEach { writeNext(it) }
         if (writer.checkError()) {
             throw IOException("Failed to write")
         }
     }
 
-    fun writeAll(rows: Sequence<List<Any?>>) {
+    override fun writeAll(rows: Sequence<List<Any?>>) {
         rows.forEach { writeNext(it) }
         if (writer.checkError()) {
             throw IOException("Failed to write")
