@@ -59,12 +59,7 @@ class CsvFileReader internal constructor(
             } else {
                 "$leftOver$nextLine"
             }
-            val parsedLine = parser.parseRow(value)
-            if (parsedLine == null) {
-                readNext("$leftOver$nextLine")
-            } else {
-                parsedLine
-            }
+            parser.parseRow(value) ?: readNext("$leftOver$nextLine")
         }
     }
 

@@ -38,6 +38,12 @@ kotlin {
             artifact(dokkaJar)
         }
     }
+    js {
+        browser {
+        }
+        nodejs {
+        }
+    }
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -61,6 +67,16 @@ kotlin {
         jvm().compilations["test"].defaultSourceSet {
             dependencies {
                 implementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
+            }
+        }
+        js().compilations["main"].defaultSourceSet {
+            dependencies {
+                implementation(kotlin("stdlib-js"))
+            }
+        }
+        js().compilations["test"].defaultSourceSet {
+            dependencies {
+                implementation(kotlin("test-js"))
             }
         }
     }

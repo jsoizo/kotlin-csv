@@ -13,7 +13,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
  * 1. Use default setting
  *  <pre>
  *  val reader: CsvReader = csvReader()
- *  reader.read(File("test.csv"))
+ *  reader.read("a,b,c\nd,e,f))
  *  </pre>
  *
  * 2. Customize Setting
