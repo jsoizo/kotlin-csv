@@ -26,10 +26,7 @@ internal class ParseStateMachine(
      *
      * @return read character count (1 or 2)
      */
-    fun read(ch: Char, nextCh: Char?): Long {
-        //TODO: set correct number
-        val rowNum = 1L
-
+    fun read(ch: Char, nextCh: Char?, rowNum: Long): Long {
         val prevPos = pos
         when (state) {
             ParseState.START -> {

@@ -25,7 +25,7 @@ class CsvFileReader internal constructor(
     }
 
     fun readAllWithHeader(): List<Map<String, String>> {
-        val headers = readNext()
+        val headers = readNext("", 1)
         val duplicated = headers?.let(::findDuplicate)
         if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
 
@@ -38,14 +38,14 @@ class CsvFileReader internal constructor(
     }
 
     fun readAllAsSequence(): Sequence<List<String>> {
-        return generateSequence { readNext() }
+        return generateSequence { readNext("", 1) }
     }
 
     override fun close() {
         reader.close()
     }
 
-    private tailrec fun readNext(leftOver: String = ""): List<String>? {
+    private tailrec fun readNext(leftOver: String, rowNum: Long): List<String>? {
         val nextLine = reader.readLineWithTerminator()
         return if (nextLine == null) {
             if (leftOver.isNotEmpty()) {
@@ -59,7 +59,7 @@ class CsvFileReader internal constructor(
             } else {
                 "$leftOver$nextLine"
             }
-            parser.parseRow(value) ?: readNext("$leftOver$nextLine")
+            parser.parseRow(value, rowNum) ?: readNext("$leftOver$nextLine", rowNum)
         }
     }
 
