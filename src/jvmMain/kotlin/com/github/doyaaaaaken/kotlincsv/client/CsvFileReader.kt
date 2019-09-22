@@ -48,6 +48,12 @@ class CsvFileReader internal constructor(
         reader.close()
     }
 
+    /**
+     * read next csv row (which may contain multiple lines)
+     *
+     * @return return fields in row as List<String>.
+     *         or return null, if all line are already read.
+     */
     private tailrec fun readNext(leftOver: String = ""): List<String>? {
         val nextLine = reader.readLineWithTerminator()
         rowNum++
