@@ -155,6 +155,11 @@ class CsvReaderTest : WordSpec() {
                     csvReader().readAll(readTestDataFile("malformed.csv"))
                 }
             }
+            "throw exception when reading csv with different fields num on each row" {
+                shouldThrow<MalformedCSVException> {
+                    csvReader().readAll(readTestDataFile("different-fields-num.csv"))
+                }
+            }
         }
 
         "readAllWithHeader method" should {
