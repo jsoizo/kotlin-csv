@@ -59,7 +59,7 @@ internal class ParseStateMachine(
             ParseState.FIELD -> {
                 when (ch) {
                     escapeChar -> {
-                        if (nextCh != escapeChar) throw CSVParseFormatException("$pos", rowNum, pos)
+                        if (nextCh != escapeChar) throw CSVParseFormatException(rowNum, pos)
                         field.append(nextCh)
                         state = ParseState.FIELD
                         pos += 1
@@ -109,8 +109,8 @@ internal class ParseStateMachine(
             }
             ParseState.QUOTE_START, ParseState.QUOTED_FIELD -> {
                 if (ch == escapeChar && escapeChar != quoteChar) {
-                    if (nextCh == null) throw CSVParseFormatException("$pos", rowNum, pos)
-                    if (nextCh != escapeChar && nextCh != quoteChar) throw CSVParseFormatException("$pos", rowNum, pos)
+                    if (nextCh == null) throw CSVParseFormatException(rowNum, pos)
+                    if (nextCh != escapeChar && nextCh != quoteChar) throw CSVParseFormatException(rowNum, pos)
                     field.append(nextCh)
                     state = ParseState.QUOTED_FIELD
                     pos += 1
@@ -143,11 +143,11 @@ internal class ParseStateMachine(
                         flushField()
                         state = ParseState.END
                     }
-                    else -> throw CSVParseFormatException("$pos", rowNum, pos)
+                    else -> throw CSVParseFormatException(rowNum, pos)
                 }
                 pos += 1
             }
-            ParseState.END -> throw CSVParseFormatException("unexpected error", rowNum, pos)
+            ParseState.END -> throw CSVParseFormatException(rowNum, pos, "unexpected error")
         }
         return pos - prevPos
     }

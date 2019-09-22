@@ -6,7 +6,7 @@ package com.github.doyaaaaaken.kotlincsv.util
 open class MalformedCSVException(message: String) : RuntimeException(message)
 
 class CSVParseFormatException(
-        message: String = "Exception happened on parsing csv",
         val rowNum: Long,
-        val colIndex: Long
+        val colIndex: Long,
+        message: String = "Exception happened on parsing csv"
 ) : MalformedCSVException("$message [rowNum = $rowNum, colIndex = $colIndex]")
