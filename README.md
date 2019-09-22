@@ -18,7 +18,7 @@
   * easy to setup
   * use DSL so easy to read
 
-### 2. Multiplatform
+### 2. Multiplatform (Planned in #15)
   * kotlin multiplatform project
 
 # Usage
