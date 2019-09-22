@@ -1,7 +1,6 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
-import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.WordSpec
@@ -59,11 +58,17 @@ class CsvParserTest : WordSpec() {
                 }
             }
             "thrown exception message contains correct rowNum and colIndex" {
-                val ex = shouldThrow<CSVParseFormatException> {
+                val ex1 = shouldThrow<CSVParseFormatException> {
                     parser.parseRow("a,\"\"b")
                 }
-                assertEquals(1, ex.rowNum)
-                assertEquals(4, ex.colIndex)
+                assertEquals(1, ex1.rowNum)
+                assertEquals(4, ex1.colIndex)
+
+                val ex2 = shouldThrow<CSVParseFormatException> {
+                    parser.parseRow("a,\"\"b", 2)
+                }
+                assertEquals(2, ex2.rowNum)
+                assertEquals(4, ex2.colIndex)
             }
         }
     }
