@@ -12,6 +12,9 @@ internal class CsvParser(
 ) {
 
     /**
+     * parse line (or lines if there is any quoted field containing line terminator)
+     * and return csv row's fields as List<String>.
+     *
      * @return return parsed row fields
      *         return null, if passed line string is on the way of csv row.
      */

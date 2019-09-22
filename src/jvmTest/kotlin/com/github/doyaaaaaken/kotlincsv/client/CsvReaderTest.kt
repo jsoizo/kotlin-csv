@@ -28,12 +28,14 @@ class CsvReaderTest : WordSpec() {
                     quoteChar = '\''
                     delimiter = '\t'
                     escapeChar = '"'
+                    skipEmptyLine = true
                 }
                 val reader = CsvReader(context)
                 reader.charset shouldBe Charsets.ISO_8859_1.name()
                 reader.quoteChar shouldBe '\''
                 reader.delimiter shouldBe '\t'
                 reader.escapeChar shouldBe '"'
+                reader.skipEmptyLine shouldBe true
             }
         }
 
@@ -135,6 +137,18 @@ class CsvReaderTest : WordSpec() {
             "read csv with \u2028 field" {
                 val result = csvReader().readAll(readTestDataFile("unicode2028.csv"))
                 result shouldBe listOf(listOf("\u2028"))
+            }
+            "read csv with empty lines" {
+                val result = csvReader {
+                    skipEmptyLine = true
+                }.readAll(readTestDataFile("empty-line.csv"))
+                result shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+            }
+            "read csv with quoted empty line field" {
+                val result = csvReader {
+                    skipEmptyLine = true
+                }.readAll(readTestDataFile("quoted-empty-line.csv"))
+                result shouldBe listOf(listOf("a", "b", "c\n\nc"), listOf("d", "e", "f"))
             }
             "throw exception when reading malformed csv" {
                 shouldThrow<MalformedCSVException> {
