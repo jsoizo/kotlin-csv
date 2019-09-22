@@ -3,6 +3,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 import io.kotlintest.specs.WordSpec
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
 import com.github.doyaaaaaken.kotlincsv.util.Const
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
@@ -154,6 +155,14 @@ class CsvReaderTest : WordSpec() {
                 shouldThrow<MalformedCSVException> {
                     csvReader().readAll(readTestDataFile("malformed.csv"))
                 }
+            }
+            "throw exception when reading csv with different fields num on each row" {
+                val ex = shouldThrow<CSVFieldNumDifferentException> {
+                    csvReader().readAll(readTestDataFile("different-fields-num.csv"))
+                }
+                ex.fieldNum shouldBe 3
+                ex.fieldNumOnFailedRow shouldBe 2
+                ex.csvRowNum shouldBe 2
             }
         }
 

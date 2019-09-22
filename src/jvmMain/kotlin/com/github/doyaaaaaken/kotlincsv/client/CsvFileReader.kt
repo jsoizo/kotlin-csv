@@ -2,6 +2,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
+import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import java.io.BufferedReader
 import java.io.Closeable
@@ -39,8 +40,13 @@ class CsvFileReader internal constructor(
     }
 
     fun readAllAsSequence(): Sequence<List<String>> {
+        var fieldsNum: Int? = null
         return generateSequence {
             readNext()
+        }.mapIndexed { idx, row ->
+            if (fieldsNum == null) fieldsNum = row.size
+            if (fieldsNum != row.size) throw CSVFieldNumDifferentException(requireNotNull(fieldsNum), row.size, idx + 1)
+            row
         }
     }
 
@@ -59,7 +65,7 @@ class CsvFileReader internal constructor(
         rowNum++
         return if (nextLine == null) {
             if (leftOver.isNotEmpty()) {
-                throw MalformedCSVException("Malformed format: leftOver \"$leftOver\" on the tail of file")
+                throw MalformedCSVException("\"$leftOver\" on the tail of file is left on the way of parsing row")
             } else {
                 null
             }
