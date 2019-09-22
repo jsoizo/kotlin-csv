@@ -63,18 +63,21 @@ class CsvReaderTest : WordSpec() {
                 }
                 assertEquals(1, ex1.rowNum)
                 assertEquals(4, ex1.colIndex)
+                assertEquals('f', ex1.char)
 
                 val ex2 = shouldThrow<CSVParseFormatException> {
                     reader.readAll("a,b\nc,\"\"failed")
                 }
                 assertEquals(2, ex2.rowNum)
                 assertEquals(4, ex2.colIndex)
+                assertEquals('f', ex2.char)
 
                 val ex3 = shouldThrow<CSVParseFormatException> {
                     reader.readAll("a,\"b\nb\"\nc,\"\"failed")
                 }
                 assertEquals(3, ex3.rowNum)
                 assertEquals(4, ex3.colIndex)
+                assertEquals('f', ex3.char)
             }
         }
 

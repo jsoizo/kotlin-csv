@@ -59,16 +59,18 @@ class CsvParserTest : WordSpec() {
             }
             "thrown exception message contains correct rowNum and colIndex" {
                 val ex1 = shouldThrow<CSVParseFormatException> {
-                    parser.parseRow("a,\"\"b")
+                    parser.parseRow("a,\"\"failed")
                 }
                 assertEquals(1, ex1.rowNum)
                 assertEquals(4, ex1.colIndex)
+                assertEquals('f', ex1.char)
 
                 val ex2 = shouldThrow<CSVParseFormatException> {
-                    parser.parseRow("a,\"\"b", 2)
+                    parser.parseRow("a,\"\"failed", 2)
                 }
                 assertEquals(2, ex2.rowNum)
                 assertEquals(4, ex2.colIndex)
+                assertEquals('f', ex2.char)
             }
         }
     }
