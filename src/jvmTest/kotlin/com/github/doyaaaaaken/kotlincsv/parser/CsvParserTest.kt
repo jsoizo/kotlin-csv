@@ -1,9 +1,11 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
+import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import io.kotlintest.specs.WordSpec
+import kotlin.test.assertEquals
 
 class CsvParserTest : WordSpec() {
     init {
@@ -51,10 +53,17 @@ class CsvParserTest : WordSpec() {
             }
             "throw exception when parsing 2 rows" {
                 lineTerminators.forEach { lt ->
-                    shouldThrow<MalformedCSVException> {
+                    shouldThrow<CSVParseFormatException> {
                         parser.parseRow("a${lt}b")
                     }
                 }
+            }
+            "thrown exception message contains correct rowNum and colIndex" {
+                val ex = shouldThrow<CSVParseFormatException> {
+                    parser.parseRow("a,\"\"b")
+                }
+                assertEquals(1, ex.rowNum)
+                assertEquals(4, ex.colIndex)
             }
         }
     }

@@ -18,7 +18,7 @@ internal class CsvParser(
     fun parseRow(line: String): List<String>? {
         val stateMachine = ParseStateMachine(quoteChar, delimiter, escapeChar)
         var lastCh: Char? = line.firstOrNull()
-        var skipCount = 0
+        var skipCount = 0L
         line.zipWithNext { ch, nextCh ->
             if (skipCount > 0) {
                 skipCount--
@@ -27,7 +27,7 @@ internal class CsvParser(
             }
             lastCh = nextCh
         }
-        if (lastCh != null && skipCount == 0) {
+        if (lastCh != null && skipCount == 0L) {
             stateMachine.read(requireNotNull(lastCh), null)
         }
         return stateMachine.getResult()
