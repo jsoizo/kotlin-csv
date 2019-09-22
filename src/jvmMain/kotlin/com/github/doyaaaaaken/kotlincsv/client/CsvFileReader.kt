@@ -63,6 +63,8 @@ class CsvFileReader internal constructor(
             } else {
                 null
             }
+        } else if (ctx.skipEmptyLine && nextLine.isBlank() && leftOver.isBlank()) {
+            readNext(leftOver)
         } else {
             val value = if (leftOver.isEmpty()) {
                 "$nextLine"
