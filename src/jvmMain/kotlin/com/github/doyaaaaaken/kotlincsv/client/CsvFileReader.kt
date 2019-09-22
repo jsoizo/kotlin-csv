@@ -59,7 +59,7 @@ class CsvFileReader internal constructor(
         rowNum++
         return if (nextLine == null) {
             if (leftOver.isNotEmpty()) {
-                throw MalformedCSVException("Malformed format: leftOver \"$leftOver\" on the tail of file")
+                throw MalformedCSVException("\"$leftOver\" on the tail of file is left on the way of parsing row")
             } else {
                 null
             }
