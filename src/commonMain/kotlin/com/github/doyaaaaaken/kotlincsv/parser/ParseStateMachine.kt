@@ -1,6 +1,6 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
-import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
+import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
 
 /**
  * @author doyaaaaaaken
@@ -19,14 +19,14 @@ internal class ParseStateMachine(
 
     private var field = StringBuilder()
 
-    private var pos = 0
+    private var pos = 0L
 
     /**
      * Read character and change state
      *
      * @return read character count (1 or 2)
      */
-    fun read(ch: Char, nextCh: Char?): Int {
+    fun read(ch: Char, nextCh: Char?, rowNum: Long): Long {
         val prevPos = pos
         when (state) {
             ParseState.START -> {
@@ -56,7 +56,7 @@ internal class ParseStateMachine(
             ParseState.FIELD -> {
                 when (ch) {
                     escapeChar -> {
-                        if (nextCh != escapeChar) throw MalformedCSVException("$pos")
+                        if (nextCh != escapeChar) throw CSVParseFormatException(rowNum, pos, ch, "must appear escapeChar($escapeChar) after escapeChar($escapeChar)")
                         field.append(nextCh)
                         state = ParseState.FIELD
                         pos += 1
@@ -106,8 +106,8 @@ internal class ParseStateMachine(
             }
             ParseState.QUOTE_START, ParseState.QUOTED_FIELD -> {
                 if (ch == escapeChar && escapeChar != quoteChar) {
-                    if (nextCh == null) throw MalformedCSVException("$pos")
-                    if (nextCh != escapeChar && nextCh != quoteChar) throw MalformedCSVException("$pos")
+                    if (nextCh == null) throw CSVParseFormatException(rowNum, pos, ch, "end of quote doesn't exist")
+                    if (nextCh != escapeChar && nextCh != quoteChar) throw CSVParseFormatException(rowNum, pos, ch, "escape character must appear consecutively twice")
                     field.append(nextCh)
                     state = ParseState.QUOTED_FIELD
                     pos += 1
@@ -140,11 +140,11 @@ internal class ParseStateMachine(
                         flushField()
                         state = ParseState.END
                     }
-                    else -> throw MalformedCSVException("$pos")
+                    else -> throw CSVParseFormatException(rowNum, pos, ch, "must appear delimiter or line terminator after quote end")
                 }
                 pos += 1
             }
-            ParseState.END -> throw MalformedCSVException("unexpected error")
+            ParseState.END -> throw CSVParseFormatException(rowNum, pos, ch, "unexpected error")
         }
         return pos - prevPos
     }

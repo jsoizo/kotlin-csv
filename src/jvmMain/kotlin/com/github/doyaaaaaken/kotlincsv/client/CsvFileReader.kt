@@ -17,6 +17,7 @@ class CsvFileReader internal constructor(
 ) : Closeable {
 
     private val reader = BufferedLineReader(reader)
+    private var rowNum = 0L
 
     private val parser = CsvParser(ctx.quoteChar, ctx.delimiter, ctx.escapeChar)
 
@@ -38,7 +39,9 @@ class CsvFileReader internal constructor(
     }
 
     fun readAllAsSequence(): Sequence<List<String>> {
-        return generateSequence { readNext() }
+        return generateSequence {
+            readNext()
+        }
     }
 
     override fun close() {
@@ -47,6 +50,7 @@ class CsvFileReader internal constructor(
 
     private tailrec fun readNext(leftOver: String = ""): List<String>? {
         val nextLine = reader.readLineWithTerminator()
+        rowNum++
         return if (nextLine == null) {
             if (leftOver.isNotEmpty()) {
                 throw MalformedCSVException("Malformed format: leftOver \"$leftOver\" on the tail of file")
@@ -59,7 +63,7 @@ class CsvFileReader internal constructor(
             } else {
                 "$leftOver$nextLine"
             }
-            parser.parseRow(value) ?: readNext("$leftOver$nextLine")
+            parser.parseRow(value, rowNum) ?: readNext("$leftOver$nextLine")
         }
     }
 

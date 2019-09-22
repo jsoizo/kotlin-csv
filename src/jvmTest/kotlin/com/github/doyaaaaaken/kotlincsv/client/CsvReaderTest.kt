@@ -3,11 +3,13 @@ package com.github.doyaaaaaken.kotlincsv.client
 import io.kotlintest.specs.WordSpec
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
 import com.github.doyaaaaaken.kotlincsv.util.Const
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import java.io.File
+import kotlin.test.assertEquals
 
 /**
  * @author doyaaaaaken
@@ -53,6 +55,29 @@ class CsvReaderTest : WordSpec() {
                 )
                 result shouldBe listOf(listOf("a", "b", "c", "x", """y
                     | hoge""".trimMargin()), listOf("d", "e", "f", "g", "h"))
+            }
+            "get failed rowNum and colIndex when exception happened on parsing CSV" {
+                val reader = csvReader()
+                val ex1 = shouldThrow<CSVParseFormatException> {
+                    reader.readAll("a,\"\"failed")
+                }
+                assertEquals(1, ex1.rowNum)
+                assertEquals(4, ex1.colIndex)
+                assertEquals('f', ex1.char)
+
+                val ex2 = shouldThrow<CSVParseFormatException> {
+                    reader.readAll("a,b\nc,\"\"failed")
+                }
+                assertEquals(2, ex2.rowNum)
+                assertEquals(4, ex2.colIndex)
+                assertEquals('f', ex2.char)
+
+                val ex3 = shouldThrow<CSVParseFormatException> {
+                    reader.readAll("a,\"b\nb\"\nc,\"\"failed")
+                }
+                assertEquals(3, ex3.rowNum)
+                assertEquals(4, ex3.colIndex)
+                assertEquals('f', ex3.char)
             }
         }
 
