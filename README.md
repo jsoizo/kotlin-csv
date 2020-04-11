@@ -141,7 +141,7 @@ If you have question, feel free to ask in [Kotlin slack's](https://kotlinlang.sl
 ```
 $ git clone git@github.com:doyaaaaaken/kotlin-csv.git
 $ cd kotlin-csv
-$ ./gradlew test
+$ ./gradlew check
 ```
 
 ## Show your support
