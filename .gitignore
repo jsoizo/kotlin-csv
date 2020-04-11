@@ -10,3 +10,7 @@ out
 # Ignore kotlintest tmp file
 .kotlintest
 test.csv
+
+# Project definition file
+*.iml
+.idea/*
