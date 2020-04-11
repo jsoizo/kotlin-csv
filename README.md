@@ -18,7 +18,11 @@
   * easy to setup
   * use DSL so easy to read
 
-### 2. Multiplatform (Planned in #15)
+### 2. No need to be aware of file close
+  * on Java, we always need to close file. but it's boilerplate code and not friendly for non-JVM user.
+  * provide interfaces which automatically close file without being aware.
+
+### 3. Multiplatform (Planned in #15)
   * kotlin multiplatform project
 
 # Usage
