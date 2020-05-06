@@ -1,8 +1,10 @@
 plugins {
+    java
     kotlin("multiplatform") version "1.3.50"
     id("org.jetbrains.dokka").version("0.9.18")
     `maven-publish`
     signing
+    jacoco
 }
 
 group = "com.github.doyaaaaaken"
@@ -134,4 +136,31 @@ publishing {
 
 signing {
     sign(publishing.publications)
+}
+
+/////////////////////////////////////////
+//         Jacoco setting              //
+/////////////////////////////////////////
+jacoco {
+    toolVersion = "0.8.5"
+}
+tasks.jacocoTestReport {
+    val coverageSourceDirs = arrayOf(
+            "commonMain/src",
+            "jvmMain/src"
+    )
+    val classFiles = File("${buildDir}/classes/kotlin/jvm/")
+            .walkBottomUp()
+            .toSet()
+    classDirectories.setFrom(classFiles)
+    sourceDirectories.setFrom(files(coverageSourceDirs))
+    additionalSourceDirs.setFrom(files(coverageSourceDirs))
+
+    executionData
+            .setFrom(files("${buildDir}/jacoco/jvmTest.exec"))
+
+    reports {
+        xml.isEnabled = true
+        html.isEnabled = false
+    }
 }
