@@ -1,6 +1,7 @@
 package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
+import com.github.doyaaaaaken.kotlincsv.parser.CsvHeader
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
@@ -47,6 +48,17 @@ class CsvFileReader internal constructor(
             if (fieldsNum == null) fieldsNum = row.size
             if (fieldsNum != row.size) throw CSVFieldNumDifferentException(requireNotNull(fieldsNum), row.size, idx + 1)
             row
+        }
+    }
+
+    fun readAllWithHeaderFromSequence( body: CsvHeader.(index: Int, list: List<String>) -> Unit) {
+        var header = CsvHeader()
+        readAllAsSequence().forEachIndexed { index, line ->
+            if (index == 0) {
+                header = CsvHeader(line)
+            } else {
+                header.body(index, line)
+            }
         }
     }
 

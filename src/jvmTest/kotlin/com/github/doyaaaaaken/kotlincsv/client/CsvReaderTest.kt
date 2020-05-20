@@ -205,6 +205,34 @@ class CsvReaderTest : WordSpec() {
             }
         }
 
+        "read all with header from sequence" should {
+            val expected = listOf(
+                    listOf("h1", "h2", "h3"),
+                    listOf("a", "b", "c"),
+                    listOf("d", "e", "f")
+            )
+            "validate header object" {
+                val file = readTestDataFile("with-header.csv")
+                csvReader().open(file) {
+                    readAllWithHeaderFromSequence { _, _ ->
+                       expected[0] shouldBe header
+                    }
+                }
+            }
+            "validate header to content"  {
+                val file = readTestDataFile("with-header.csv")
+                csvReader().open(file) {
+                    readAllWithHeaderFromSequence { index, line ->
+                        val result = mutableListOf<String>()
+                        for (column in header) {
+                           result.add(line[header.indexOf(column)])
+                        }
+                        expected[index] shouldBe result
+                    }
+                }
+            }
+        }
+
         "open method (with fileName argument)" should {
             val rows = csvReader().open("src/jvmTest/resources/testdata/csv/simple.csv") {
                 readAll()
