@@ -26,7 +26,7 @@ class CsvFileReader internal constructor(
         return readAllAsSequence().toList()
     }
 
-    fun readAllWithHeader(): List<Map<String, String>> {
+    fun readAllWithHeaderAsSequence(): Sequence<Map<String, String>> {
         val headers = readNext()
         val duplicated = headers?.let(::findDuplicate)
         if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
@@ -36,7 +36,11 @@ class CsvFileReader internal constructor(
                 throw MalformedCSVException("fields num  ${fields.size} is not matched with header num ${headers.size}")
             }
             headers.zip(fields).toMap()
-        }.toList()
+        }
+    }
+
+    fun readAllWithHeader(): List<Map<String, String>> {
+        return readAllWithHeaderAsSequence().toList()
     }
 
     fun readAllAsSequence(): Sequence<List<String>> {
