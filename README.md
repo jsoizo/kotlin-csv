@@ -81,7 +81,7 @@ println(rows) //[{a=d, b=e, c=f}]
 It starts to process each rows before reading all row data.
 
 See detail about `Sequence` type on [Kotlin official document](https://kotlinlang.org/docs/reference/sequences.html).
-
+ 
 ```kotlin
 csvReader().open("test1.csv") {
     readAllAsSequence().forEach { row: List<String> ->
@@ -98,9 +98,8 @@ csvReader().open("test2.csv") {
 }
 ```
 
-**NOTE:**
-`readAllAsSequence` and `readAllWithHeaderAsSequence` methods can be only called inside `open` method lambda block.
-Because, input stream is closed outside `open` method lambda block. 
+NOTE:`readAllAsSequence` and `readAllWithHeaderAsSequence` methods can be only called inside `open` method lambda block.
+Because, input stream is closed outside `open` method lambda block.
 
 #### Read line by line
 
