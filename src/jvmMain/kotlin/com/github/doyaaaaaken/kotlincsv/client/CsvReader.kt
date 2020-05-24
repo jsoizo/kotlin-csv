@@ -25,7 +25,7 @@ actual class CsvReader actual constructor(
      */
     actual fun readAll(data: String): List<List<String>> {
         val br = data.byteInputStream(charsetCode).bufferedReader(charsetCode)
-        return open(br) { readAll() }
+        return open(br) { readAllAsSequence().toList() }
     }
 
     /**
@@ -35,7 +35,7 @@ actual class CsvReader actual constructor(
      */
     fun readAll(file: File): List<List<String>> {
         val br = file.inputStream().bufferedReader(charsetCode)
-        return open(br) { readAll() }
+        return open(br) { readAllAsSequence().toList() }
     }
 
     /**
@@ -45,7 +45,7 @@ actual class CsvReader actual constructor(
      */
     fun readAll(ips: InputStream): List<List<String>> {
         val br = ips.bufferedReader(charsetCode)
-        return open(br) { readAll() }
+        return open(br) { readAllAsSequence().toList() }
     }
 
     /**
@@ -55,7 +55,7 @@ actual class CsvReader actual constructor(
      */
     actual fun readAllWithHeader(data: String): List<Map<String, String>> {
         val br = data.byteInputStream(charsetCode).bufferedReader(charsetCode)
-        return open(br) { readAllWithHeader() }
+        return open(br) { readAllWithHeaderAsSequence().toList() }
     }
 
     /**
@@ -65,7 +65,7 @@ actual class CsvReader actual constructor(
      */
     fun readAllWithHeader(file: File): List<Map<String, String>> {
         val br = file.inputStream().bufferedReader(charsetCode)
-        return open(br) { readAllWithHeader() }
+        return open(br) { readAllWithHeaderAsSequence().toList() }
     }
 
     /**
@@ -75,7 +75,7 @@ actual class CsvReader actual constructor(
      */
     fun readAllWithHeader(ips: InputStream): List<Map<String, String>> {
         val br = ips.bufferedReader(charsetCode)
-        return open(br) { readAllWithHeader() }
+        return open(br) { readAllWithHeaderAsSequence().toList() }
     }
 
     /**

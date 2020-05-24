@@ -59,22 +59,12 @@ maven:
 You can read csv file from `String`, `java.io.File` or `java.io.InputStream` object.
 ```kotlin
 // read from `String`
-val csvData: String = "a,b,c"
+val csvData: String = "a,b,c\nd,e,f"
 val rows: List<List<String>> = csvReader().readAll(csvData)
 
 // read from `java.io.File`
 val file: File = File("test.csv")
 val rows: List<List<String>> = csvReader().readAll(file)
-```
-
-If you want to handle line-by-line, you can use `readAsSequence` method and get `Sequence<List<String>>`.
-```kotlin
-csvReader().open("test.csv") {
-    readAllAsSequence().forEach { row ->
-        //Do something
-        println(row) //[a, b, c]
-    }
-}
 ```
 
 #### Read with header
@@ -83,6 +73,44 @@ csvReader().open("test.csv") {
 val csvData: String = "a,b,c\nd,e,f"
 val rows: List<Map<String, String>> = csvReader().readAllWithHeader(csvData)
 println(rows) //[{a=d, b=e, c=f}]
+```
+
+#### Read as `Sequence`
+
+`Sequence` type allows to execute lazily.<br />
+It starts to process each rows before reading all row data.
+
+See detail about `Sequence` type on [Kotlin official document](https://kotlinlang.org/docs/reference/sequences.html).
+
+```kotlin
+csvReader().open("test1.csv") {
+    readAllAsSequence().forEach { row: List<String> ->
+        //Do something
+        println(row) //[a, b, c]
+    }
+}
+
+csvReader().open("test2.csv") {
+    readAllWithHeaderAsSequence().forEach { row: Map<String, String> ->
+        //Do something
+        println(row) //{id=1, name=doyaaaaaken}
+    }
+}
+```
+
+**NOTE:**
+`readAllAsSequence` and `readAllWithHeaderAsSequence` methods can be only called inside `open` method lambda block.
+Because, input stream is closed outside `open` method lambda block. 
+
+#### Read line by line
+
+If you want to handle line-by-line, you can do it by using `open` method.<br />
+Use `open` method and then use `readNext` method inside nested block to read row.
+
+```kotlin
+csvReader().open("test.csv") {
+    readNext()
+}
 ```
 
 #### Customize
