@@ -17,6 +17,9 @@ class CsvFileWriter internal constructor(
         private val writer: PrintWriter
 ) : ICsvFileWriter, Closeable, Flushable {
 
+    /**
+     * write one row
+     */
     override fun writeRow(row: List<Any?>) {
         writeNext(row)
         if (writer.checkError()) {
@@ -24,14 +27,20 @@ class CsvFileWriter internal constructor(
         }
     }
 
-    override fun writeAll(rows: List<List<Any?>>) {
+    /**
+     * write rows
+     */
+    override fun writeRows(rows: List<List<Any?>>) {
         rows.forEach { writeNext(it) }
         if (writer.checkError()) {
             throw IOException("Failed to write")
         }
     }
 
-    override fun writeAll(rows: Sequence<List<Any?>>) {
+    /**
+     * write rows from Sequence
+     */
+    override fun writeRows(rows: Sequence<List<Any?>>) {
         rows.forEach { writeNext(it) }
         if (writer.checkError()) {
             throw IOException("Failed to write")

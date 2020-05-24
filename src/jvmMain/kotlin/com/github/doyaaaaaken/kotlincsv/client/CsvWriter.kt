@@ -35,20 +35,20 @@ actual class CsvWriter actual constructor(
      * write all rows on assigned target file
      */
     actual fun writeAll(rows: List<List<Any?>>, targetFileName: String, append: Boolean) {
-        open(targetFileName, append) { writeAll(rows) }
+        open(targetFileName, append) { writeRows(rows) }
     }
 
     /**
      * write all rows on assigned target file
      */
     fun writeAll(rows: List<List<Any?>>, targetFile: File, append: Boolean = false) {
-        open(targetFile, append) { writeAll(rows) }
+        open(targetFile, append) { writeRows(rows) }
     }
 
     /**
      * write all rows on assigned output stream
      */
     fun writeAll(rows: List<List<Any?>>, ops: OutputStream) {
-        open(ops) { writeAll(rows) }
+        open(ops) { writeRows(rows) }
     }
 }

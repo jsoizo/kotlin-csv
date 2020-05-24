@@ -121,6 +121,7 @@ val row2 = listOf("d", "e", "f")
 csvWriter().open("test.csv") { 
     writeRow(row1)
     writeRow(row2)
+    writeRows(listOf(row1, row2))
 }
 ```
 
