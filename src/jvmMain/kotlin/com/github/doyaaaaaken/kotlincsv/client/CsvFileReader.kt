@@ -33,6 +33,23 @@ class CsvFileReader internal constructor(
         return readUntilNextCsvRow("")
     }
 
+    /**
+     * read all csv rows as Sequence
+     */
+    fun readAllAsSequence(): Sequence<List<String>> {
+        var fieldsNum: Int? = null
+        return generateSequence {
+            readNext()
+        }.mapIndexed { idx, row ->
+            if (fieldsNum == null) fieldsNum = row.size
+            if (fieldsNum != row.size) throw CSVFieldNumDifferentException(requireNotNull(fieldsNum), row.size, idx + 1)
+            row
+        }
+    }
+
+    /**
+     * read all csv rows as Sequence with header information
+     */
     fun readAllWithHeaderAsSequence(): Sequence<Map<String, String>> {
         val headers = readNext()
         val duplicated = headers?.let(::findDuplicate)
@@ -43,17 +60,6 @@ class CsvFileReader internal constructor(
                 throw MalformedCSVException("fields num  ${fields.size} is not matched with header num ${headers.size}")
             }
             headers.zip(fields).toMap()
-        }
-    }
-
-    fun readAllAsSequence(): Sequence<List<String>> {
-        var fieldsNum: Int? = null
-        return generateSequence {
-            readNext()
-        }.mapIndexed { idx, row ->
-            if (fieldsNum == null) fieldsNum = row.size
-            if (fieldsNum != row.size) throw CSVFieldNumDifferentException(requireNotNull(fieldsNum), row.size, idx + 1)
-            row
         }
     }
 
