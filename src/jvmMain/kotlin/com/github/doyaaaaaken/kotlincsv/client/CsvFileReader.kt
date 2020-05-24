@@ -22,8 +22,15 @@ class CsvFileReader internal constructor(
 
     private val parser = CsvParser(ctx.quoteChar, ctx.delimiter, ctx.escapeChar)
 
-    fun readAll(): List<List<String>> {
-        return readAllAsSequence().toList()
+    /**
+     * read next csv row
+     * (which may contain multiple lines, because csv fields may contain line feed)
+     *
+     * @return return fields in row as List<String>.
+     *         or return null, if all line are already read.
+     */
+    fun readNext(): List<String>? {
+        return readUntilNextCsvRow("")
     }
 
     fun readAllWithHeaderAsSequence(): Sequence<Map<String, String>> {
@@ -37,10 +44,6 @@ class CsvFileReader internal constructor(
             }
             headers.zip(fields).toMap()
         }
-    }
-
-    fun readAllWithHeader(): List<Map<String, String>> {
-        return readAllWithHeaderAsSequence().toList()
     }
 
     fun readAllAsSequence(): Sequence<List<String>> {
@@ -64,7 +67,7 @@ class CsvFileReader internal constructor(
      * @return return fields in row as List<String>.
      *         or return null, if all line are already read.
      */
-    private tailrec fun readNext(leftOver: String = ""): List<String>? {
+    private tailrec fun readUntilNextCsvRow(leftOver: String = ""): List<String>? {
         val nextLine = reader.readLineWithTerminator()
         rowNum++
         return if (nextLine == null) {
@@ -74,14 +77,14 @@ class CsvFileReader internal constructor(
                 null
             }
         } else if (ctx.skipEmptyLine && nextLine.isBlank() && leftOver.isBlank()) {
-            readNext(leftOver)
+            readUntilNextCsvRow(leftOver)
         } else {
             val value = if (leftOver.isEmpty()) {
                 "$nextLine"
             } else {
                 "$leftOver$nextLine"
             }
-            parser.parseRow(value, rowNum) ?: readNext("$leftOver$nextLine")
+            parser.parseRow(value, rowNum) ?: readUntilNextCsvRow("$leftOver$nextLine")
         }
     }
 
