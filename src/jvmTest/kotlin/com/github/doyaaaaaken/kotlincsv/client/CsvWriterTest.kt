@@ -99,6 +99,29 @@ class CsvWriterTest : WordSpec() {
             }
         }
 
+        "writeAll method without calling `open` method" should {
+            val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+            val expected = "a,b,c\r\nd,e,f\r\n"
+
+            "write data with target file name" {
+                csvWriter().writeAll(rows, testFileName)
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+
+            "write data with target file (java.io.File)" {
+                csvWriter().writeAll(rows, File(testFileName))
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+
+            "write data with target output stream (java.io.OutputStream)" {
+                csvWriter().writeAll(rows, File(testFileName).outputStream())
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+        }
+
         "Customized CsvWriter" should {
             "write csv with SJIS charset" {
                 csvWriter{

@@ -52,15 +52,17 @@ maven:
 
 ## Examples
 
-### Reading examples
+### CSV Read examples
 
 #### Simple case
 
-You can read csv file by both String and java.io.File object.
+You can read csv file from `String`, `java.io.File` or `java.io.InputStream` object.
 ```kotlin
+// read from `String`
 val csvData: String = "a,b,c"
 val rows: List<List<String>> = csvReader().readAll(csvData)
 
+// read from `java.io.File`
 val file: File = File("test.csv")
 val rows: List<List<String>> = csvReader().readAll(file)
 ```
@@ -96,7 +98,7 @@ val tsvReader = csvReader {
 }
 ```
 
-### Writing examples
+### CSV Write examples
 
 #### Simple case
 
@@ -105,7 +107,10 @@ No need to call other methods. <br />
 Also, **You don't have to call `use`, `close` and `flush` method.**
 ```kotlin
 val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
-csvWriter().open("test.csv") { writeAll(rows) }
+csvWriter().writeAll(rows, "test.csv")
+
+// if you'd append data on the tail of the file, assign `append = true`.
+csvWriter().writeAll(rows, "test.csv", append = true)
 ```
 
 You can also write csv file per each line.<br />
