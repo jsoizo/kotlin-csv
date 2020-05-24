@@ -30,4 +30,25 @@ actual class CsvWriter actual constructor(
         val writer = CsvFileWriter(ctx, PrintWriter(osw))
         writer.use { it.write() }
     }
+
+    /**
+     * write all rows on assigned target file
+     */
+    actual fun writeAll(rows: List<List<Any?>>, targetFileName: String, append: Boolean) {
+        open(targetFileName, append) { writeRows(rows) }
+    }
+
+    /**
+     * write all rows on assigned target file
+     */
+    fun writeAll(rows: List<List<Any?>>, targetFile: File, append: Boolean = false) {
+        open(targetFile, append) { writeRows(rows) }
+    }
+
+    /**
+     * write all rows on assigned output stream
+     */
+    fun writeAll(rows: List<List<Any?>>, ops: OutputStream) {
+        open(ops) { writeRows(rows) }
+    }
 }

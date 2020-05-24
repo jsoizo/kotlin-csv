@@ -57,7 +57,7 @@ class CsvFileWriterTest : WordSpec() {
                 val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f")).asSequence()
                 val expected = "a,b,c\r\nd,e,f\r\n"
                 csvWriter().open(testFileName) {
-                    writeAll(rows)
+                    writeRows(rows)
                 }
                 val actual = readTestFile()
                 actual shouldBe expected
@@ -66,7 +66,7 @@ class CsvFileWriterTest : WordSpec() {
                 val rows = listOf(listOf("a", "\"b", "c"), listOf("d", "e", "f\""))
                 val expected = "a,\"\"\"b\",c\r\nd,e,\"f\"\"\"\r\n"
                 csvWriter().open(testFileName) {
-                    writeAll(rows)
+                    writeRows(rows)
                 }
                 val actual = readTestFile()
                 actual shouldBe expected
@@ -75,7 +75,7 @@ class CsvFileWriterTest : WordSpec() {
                 val rows = listOf(listOf("a", ",b", "c"), listOf("d", "e", "f,"))
                 val expected = "a,\",b\",c\r\nd,e,\"f,\"\r\n"
                 csvWriter().open(testFileName) {
-                    writeAll(rows)
+                    writeRows(rows)
                 }
                 val actual = readTestFile()
                 actual shouldBe expected
@@ -84,7 +84,7 @@ class CsvFileWriterTest : WordSpec() {
                 val rows = listOf(listOf("a", "\nb", "c"), listOf("d", "e", "f\r\n"))
                 val expected = "a,\"\nb\",c\r\nd,e,\"f\r\n\"\r\n"
                 csvWriter().open(testFileName) {
-                    writeAll(rows)
+                    writeRows(rows)
                 }
                 val actual = readTestFile()
                 actual shouldBe expected

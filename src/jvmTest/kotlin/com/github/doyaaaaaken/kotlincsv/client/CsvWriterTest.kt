@@ -69,7 +69,7 @@ class CsvWriterTest : WordSpec() {
             }
 
             "write simple csv data into file with writing all at one time" {
-                csvWriter().open(testFileName) { writeAll(listOf(row1, row2)) }
+                csvWriter().open(testFileName) { writeRows(listOf(row1, row2)) }
                 val actual = readTestFile()
                 actual shouldBe expected
             }
@@ -77,10 +77,10 @@ class CsvWriterTest : WordSpec() {
             "write simple csv data to the tail of existing file with append = true" {
                 val writer = csvWriter()
                 writer.open(File(testFileName), true) {
-                    writeAll(listOf(row1, row2))
+                    writeRows(listOf(row1, row2))
                 }
                 writer.open(File(testFileName), true) {
-                    writeAll(listOf(row1, row2))
+                    writeRows(listOf(row1, row2))
                 }
                 val actual = readTestFile()
                 actual shouldBe expected + expected
@@ -89,11 +89,34 @@ class CsvWriterTest : WordSpec() {
             "overwrite simple csv data with append = false" {
                 val writer = csvWriter()
                 writer.open(File(testFileName), false) {
-                    writeAll(listOf(row2, row2, row2))
+                    writeRows(listOf(row2, row2, row2))
                 }
                 writer.open(File(testFileName), false) {
-                    writeAll(listOf(row1, row2))
+                    writeRows(listOf(row1, row2))
                 }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+        }
+
+        "writeAll method without calling `open` method" should {
+            val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+            val expected = "a,b,c\r\nd,e,f\r\n"
+
+            "write data with target file name" {
+                csvWriter().writeAll(rows, testFileName)
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+
+            "write data with target file (java.io.File)" {
+                csvWriter().writeAll(rows, File(testFileName))
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+
+            "write data with target output stream (java.io.OutputStream)" {
+                csvWriter().writeAll(rows, File(testFileName).outputStream())
                 val actual = readTestFile()
                 actual shouldBe expected
             }
@@ -104,7 +127,7 @@ class CsvWriterTest : WordSpec() {
                 csvWriter{
                     charset = "SJIS"
                 }.open(File(testFileName)) {
-                    writeAll(listOf(listOf("あ", "い")))
+                    writeRows(listOf(listOf("あ", "い")))
                 }
                 val actual = readTestFile(Charset.forName("SJIS"))
                 actual shouldBe "あ,い\r\n"
@@ -116,7 +139,7 @@ class CsvWriterTest : WordSpec() {
                 csvWriter{
                     delimiter = '|'
                 }.open(File(testFileName)) {
-                    writeAll(listOf(row1, row2))
+                    writeRows(listOf(row1, row2))
                 }
                 val actual = readTestFile()
                 actual shouldBe expected
@@ -138,7 +161,7 @@ class CsvWriterTest : WordSpec() {
                 csvWriter{
                     lineTerminator = "\n"
                 }.open(File(testFileName)) {
-                    writeAll(listOf(row1, row2))
+                    writeRows(listOf(row1, row2))
                 }
                 val actual = readTestFile()
                 actual shouldBe expected
@@ -152,7 +175,7 @@ class CsvWriterTest : WordSpec() {
                         mode = WriteQuoteMode.ALL
                     }
                 }.open(File(testFileName)) {
-                    writeAll(listOf(row1, row2))
+                    writeRows(listOf(row1, row2))
                 }
                 val actual = readTestFile()
                 actual shouldBe expected
@@ -166,7 +189,7 @@ class CsvWriterTest : WordSpec() {
                         char = '\''
                     }
                 }.open(File(testFileName)) {
-                    writeAll(listOf(row1, row2))
+                    writeRows(listOf(row1, row2))
                 }
                 val actual = readTestFile()
                 actual shouldBe expected

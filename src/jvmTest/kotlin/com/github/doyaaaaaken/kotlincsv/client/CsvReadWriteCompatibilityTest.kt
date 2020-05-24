@@ -27,7 +27,7 @@ class CsvReadWriteCompatibilityTest : StringSpec() {
                     listOf("d", "ee", "fff")
             )
             csvWriter().open(testFileName) {
-                writeAll(data)
+                writeRows(data)
             }
             val actual = csvReader().readAll(File(testFileName))
             actual shouldBe data
