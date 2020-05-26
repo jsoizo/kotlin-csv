@@ -18,10 +18,19 @@ class CsvFileWriter internal constructor(
 ) : ICsvFileWriter, Closeable, Flushable {
 
     /**
+     * state handling to write terminator for next line
+     */
+    private val stateHandler = CsVWriterStateHandler()
+
+
+    /**
      * write one row
      */
     override fun writeRow(row: List<Any?>) {
+        willWritePreTerminator()
         writeNext(row)
+        willWriteEndTerminator()
+
         if (writer.checkError()) {
             throw IOException("Failed to write")
         }
@@ -31,7 +40,15 @@ class CsvFileWriter internal constructor(
      * write rows
      */
     override fun writeRows(rows: List<List<Any?>>) {
-        rows.forEach { writeNext(it) }
+        val size = rows.size
+        willWritePreTerminator()
+        rows.forEachIndexed{ index, list ->
+            writeNext(list)
+            if (index < size-1) {
+                writeTerminator()
+            }
+        }
+        willWriteEndTerminator()
         if (writer.checkError()) {
             throw IOException("Failed to write")
         }
@@ -41,7 +58,14 @@ class CsvFileWriter internal constructor(
      * write rows from Sequence
      */
     override fun writeRows(rows: Sequence<List<Any?>>) {
-        rows.forEach { writeNext(it) }
+        val size = rows.count()
+        willWritePreTerminator()
+        rows.forEachIndexed {index, list ->  writeNext(list)
+            if (index < size-1) {
+                writeTerminator()
+            }
+        }
+        willWriteEndTerminator()
         if (writer.checkError()) {
             throw IOException("Failed to write")
         }
@@ -64,7 +88,34 @@ class CsvFileWriter internal constructor(
             }
         }.joinToString(ctx.delimiter.toString())
         writer.print(rowStr)
+    }
+
+    private fun willWriteEndTerminator() {
+        if (ctx.outputLastLineTerminator) {
+            writeTerminator()
+            stateHandler.wroteLastLineTerminatorState()
+        } else {
+            stateHandler.notWroteTerminatorState()
+        }
+    }
+
+    /**
+     * Will write terminator if and only if
+     *  1. has wrote first line
+     *  2. state is set to has not wrote last line terminator
+     */
+    private fun willWritePreTerminator() {
+        if (stateHandler.hasWroteFirstLine() && !stateHandler.hasWroteLastLineTerminator()) {
+            writeTerminator()
+        }
+    }
+
+    /**
+     * write terminator for next line
+     */
+    private fun writeTerminator() {
         writer.print(ctx.lineTerminator)
+        stateHandler.wroteLastLineTerminatorState()
     }
 
     private fun attachQuote(field: String): String {
