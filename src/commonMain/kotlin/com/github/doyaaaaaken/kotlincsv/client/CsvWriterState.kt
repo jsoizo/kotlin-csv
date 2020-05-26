@@ -7,10 +7,10 @@ package com.github.doyaaaaaken.kotlincsv.client
 sealed class CsvWriterState(val wroteFirstLine: Boolean, val wroteLastLineTerminator: Boolean)
 
 object DefaultState: CsvWriterState(wroteFirstLine = false, wroteLastLineTerminator =  false)
-object HasNotWroteLastLineTerminator: CsvWriterState(true, wroteLastLineTerminator = false)
-object HasWroteLastLineTerminator: CsvWriterState(true, wroteLastLineTerminator = true)
+object HasNotWroteLastLineTerminator: CsvWriterState(wroteFirstLine = true, wroteLastLineTerminator = false)
+object HasWroteLastLineTerminator: CsvWriterState(wroteFirstLine = true, wroteLastLineTerminator = true)
 
-class CsVWriterStateHandler {
+class CsvWriterStateHandler {
     private var state: CsvWriterState = DefaultState
 
     fun hasWroteFirstLine(): Boolean {
@@ -25,7 +25,7 @@ class CsVWriterStateHandler {
         state = HasWroteLastLineTerminator
     }
 
-    fun notWroteTerminatorState() {
+    fun notWroteLastLineTerminatorState() {
         state = HasNotWroteLastLineTerminator
     }
 }

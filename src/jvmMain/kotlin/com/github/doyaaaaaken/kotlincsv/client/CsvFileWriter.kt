@@ -20,7 +20,7 @@ class CsvFileWriter internal constructor(
     /**
      * state handling to write terminator for next line
      */
-    private val stateHandler = CsVWriterStateHandler()
+    private val stateHandler = CsvWriterStateHandler()
 
 
     /**
@@ -95,7 +95,7 @@ class CsvFileWriter internal constructor(
             writeTerminator()
             stateHandler.wroteLastLineTerminatorState()
         } else {
-            stateHandler.notWroteTerminatorState()
+            stateHandler.notWroteLastLineTerminatorState()
         }
     }
 

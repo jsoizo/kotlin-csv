@@ -234,7 +234,6 @@ class CsvWriterTest : WordSpec() {
                     writeRows(listOf(row2, row3))
                     writeRow(row4)
                     writeRows(listOf(row5, row6))
-
                 }
                 val actual = readTestFile()
                 actual shouldBe expected
