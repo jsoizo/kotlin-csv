@@ -4,12 +4,6 @@ package com.github.doyaaaaaken.kotlincsv.client
  * CSV writer state and handler
  * @author blacmko18
  */
-sealed class CsvWriterState(val wroteFirstLine: Boolean, val wroteLastLineTerminator: Boolean)
-
-object DefaultState: CsvWriterState(wroteFirstLine = false, wroteLastLineTerminator =  false)
-object HasNotWroteLastLineTerminator: CsvWriterState(wroteFirstLine = true, wroteLastLineTerminator = false)
-object HasWroteLastLineTerminator: CsvWriterState(wroteFirstLine = true, wroteLastLineTerminator = true)
-
 class CsvWriterStateHandler {
 
     internal sealed class CsvWriterState(val wroteFirstLine: Boolean, val wroteLineEndTerminator: Boolean) {
