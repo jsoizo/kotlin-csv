@@ -15,6 +15,7 @@ interface ICsvWriterContext {
     val nullCode: String
     val lineTerminator: String
     val quote: CsvWriteQuoteContext
+    val outputLastLineTerminator: Boolean
 }
 
 /**
@@ -29,6 +30,7 @@ class CsvWriterContext : ICsvWriterContext {
     override var nullCode: String = ""
     override var lineTerminator: String = "\r\n"
     override val quote: CsvWriteQuoteContext = CsvWriteQuoteContext()
+    override var outputLastLineTerminator = true
 
     fun quote(init: CsvWriteQuoteContext.() -> Unit) {
         quote.init()

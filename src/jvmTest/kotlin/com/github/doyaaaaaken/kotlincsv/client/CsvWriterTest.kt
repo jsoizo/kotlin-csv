@@ -194,6 +194,63 @@ class CsvWriterTest : WordSpec() {
                 val actual = readTestFile()
                 actual shouldBe expected
             }
+            "write simple csv with disabled last line terminator with custom terminator" {
+                val row1 = listOf("a", "b")
+                val row2 = listOf("c", "d")
+                val expected = "a,b\nc,d"
+                csvWriter{
+                    lineTerminator = "\n"
+                    outputLastLineTerminator = false
+                }.open(File(testFileName)) {
+                    writeRows(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+            "write simple csv with enabled last line and custom terminator" {
+                val row1 = listOf("a", "b")
+                val row2 = listOf("c", "d")
+                val expected = "a,b\nc,d\n"
+                csvWriter{
+                    lineTerminator = "\n"
+                    outputLastLineTerminator = true
+                }.open(File(testFileName)) {
+                    writeRows(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+            "write simple csv with disabled last line terminator" {
+                val row1 = listOf("a", "b")
+                val row2 = listOf("c", "d")
+                val expected = "a,b\r\nc,d"
+                csvWriter{
+                    outputLastLineTerminator = false
+                }.open(File(testFileName)) {
+                    writeRows(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+            "write simple csv with disabled last line terminator multiple writes" {
+                val row1 = listOf("a", "b")
+                val row2 = listOf("c", "d")
+                val row3 = listOf("e", "f")
+                val row4 = listOf("g", "h")
+                val row5 = listOf("1", "2")
+                val row6 = listOf("3", "4")
+                val expected = "a,b\r\nc,d\r\ne,f\r\ng,h\r\n1,2\r\n3,4"
+                csvWriter{
+                    outputLastLineTerminator = false
+                }.open(File(testFileName)) {
+                    writeRow(row1)
+                    writeRows(listOf(row2, row3))
+                    writeRow(row4)
+                    writeRows(listOf(row5, row6))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
         }
     }
 }
