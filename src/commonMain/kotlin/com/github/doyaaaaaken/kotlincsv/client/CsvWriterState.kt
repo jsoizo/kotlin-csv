@@ -11,21 +11,28 @@ object HasNotWroteLastLineTerminator: CsvWriterState(wroteFirstLine = true, wrot
 object HasWroteLastLineTerminator: CsvWriterState(wroteFirstLine = true, wroteLastLineTerminator = true)
 
 class CsvWriterStateHandler {
-    private var state: CsvWriterState = DefaultState
+
+    internal sealed class CsvWriterState(val wroteFirstLine: Boolean, val wroteLineEndTerminator: Boolean) {
+        object InitialState: CsvWriterState(wroteFirstLine = false, wroteLineEndTerminator =  false)
+        object HasNotWroteLineEndTerminator: CsvWriterState(wroteFirstLine = true, wroteLineEndTerminator = false)
+        object HasWroteLineEndTerminator: CsvWriterState(wroteFirstLine = true, wroteLineEndTerminator = true)
+    }
+
+    private var state: CsvWriterState = CsvWriterState.InitialState
 
     fun hasWroteFirstLine(): Boolean {
         return state.wroteFirstLine
     }
 
-    fun hasWroteLastLineTerminator(): Boolean {
-        return state.wroteLastLineTerminator
+    fun hasWroteLineEndTerminator(): Boolean {
+        return state.wroteLineEndTerminator
     }
 
-    fun wroteLastLineTerminatorState() {
-        state = HasWroteLastLineTerminator
+    fun wroteLineEndTerminatorState() {
+        state = CsvWriterState.HasWroteLineEndTerminator
     }
 
-    fun notWroteLastLineTerminatorState() {
-        state = HasNotWroteLastLineTerminator
+    fun notWroteLineEndTerminatorState() {
+        state = CsvWriterState.HasNotWroteLineEndTerminator
     }
 }
