@@ -207,6 +207,19 @@ class CsvWriterTest : WordSpec() {
                 val actual = readTestFile()
                 actual shouldBe expected
             }
+            "write simple csv with enabled last line and custom terminator" {
+                val row1 = listOf("a", "b")
+                val row2 = listOf("c", "d")
+                val expected = "a,b\nc,d\n"
+                csvWriter{
+                    lineTerminator = "\n"
+                    outputLastLineTerminator = true
+                }.open(File(testFileName)) {
+                    writeRows(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
             "write simple csv with disabled last line terminator" {
                 val row1 = listOf("a", "b")
                 val row2 = listOf("c", "d")

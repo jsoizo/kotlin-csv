@@ -20,6 +20,7 @@ class CsvWriterDslTest : StringSpec({
             delimiter = '\t'
             nullCode = "NULL"
             lineTerminator = "\n"
+            outputLastLineTerminator = false
             quote {
                 char = '\''
                 mode = WriteQuoteMode.ALL
@@ -29,6 +30,7 @@ class CsvWriterDslTest : StringSpec({
         writer.delimiter shouldBe '\t'
         writer.nullCode shouldBe "NULL"
         writer.lineTerminator shouldBe "\n"
+        writer.outputLastLineTerminator shouldBe false
         writer.quote.char shouldBe '\''
         writer.quote.mode = WriteQuoteMode.ALL
     }
