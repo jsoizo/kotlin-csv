@@ -58,10 +58,13 @@ class CsvFileWriter internal constructor(
      * write rows from Sequence
      */
     override fun writeRows(rows: Sequence<List<Any?>>) {
-        val size = rows.count()
+        val itr = rows.iterator()
+
         willWritePreTerminator()
-        rows.forEachIndexed {index, list ->  writeNext(list)
-            if (index < size-1) {
+        rows.forEach {
+            itr.next()
+            writeNext(it)
+            if (itr.hasNext()) {
                 writeTerminator()
             }
         }
@@ -93,9 +96,9 @@ class CsvFileWriter internal constructor(
     private fun willWriteEndTerminator() {
         if (ctx.outputLastLineTerminator) {
             writeTerminator()
-            stateHandler.wroteLastLineTerminatorState()
+            stateHandler.wroteLineEndTerminatorState()
         } else {
-            stateHandler.notWroteLastLineTerminatorState()
+            stateHandler.notWroteLineEndTerminatorState()
         }
     }
 
@@ -105,7 +108,7 @@ class CsvFileWriter internal constructor(
      *  2. state is set to has not wrote last line terminator
      */
     private fun willWritePreTerminator() {
-        if (stateHandler.hasWroteFirstLine() && !stateHandler.hasWroteLastLineTerminator()) {
+        if (stateHandler.hasWroteFirstLine() && !stateHandler.hasWroteLineEndTerminator()) {
             writeTerminator()
         }
     }
@@ -115,7 +118,7 @@ class CsvFileWriter internal constructor(
      */
     private fun writeTerminator() {
         writer.print(ctx.lineTerminator)
-        stateHandler.wroteLastLineTerminatorState()
+        stateHandler.wroteLineEndTerminatorState()
     }
 
     private fun attachQuote(field: String): String {
