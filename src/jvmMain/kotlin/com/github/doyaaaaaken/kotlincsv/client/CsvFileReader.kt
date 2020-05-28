@@ -4,6 +4,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
+import mu.KotlinLogging
 import java.io.BufferedReader
 import java.io.Closeable
 
@@ -17,6 +18,7 @@ class CsvFileReader internal constructor(
         reader: BufferedReader
 ) : Closeable {
 
+    private val logger = KotlinLogging.logger {  }
     private val reader = BufferedLineReader(reader)
     private var rowNum = 0L
 
@@ -41,8 +43,8 @@ class CsvFileReader internal constructor(
         return generateSequence {
             readNext()
         }.mapIndexed { idx, row ->
-            if (fieldsNum == null) fieldsNum = row.size
-            if (fieldsNum != row.size) throw CSVFieldNumDifferentException(requireNotNull(fieldsNum), row.size, idx + 1)
+            if (fieldsNum == null) fieldsNum = ctx.numberOfColumns ?: row.size
+            if (fieldsNum != row.size && !ctx.skipMissMatchedRow) throw CSVFieldNumDifferentException(requireNotNull(fieldsNum), row.size, idx + 1)
             row
         }
     }
@@ -55,16 +57,37 @@ class CsvFileReader internal constructor(
         val duplicated = headers?.let(::findDuplicate)
         if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
 
-        return readAllAsSequence().map { fields ->
-            if (requireNotNull(headers).size != fields.size) {
-                throw MalformedCSVException("fields num  ${fields.size} is not matched with header num ${headers.size}")
-            }
-            headers.zip(fields).toMap()
+        return when(ctx.skipMissMatchedRow) {
+            true -> readAllAsSequence().skipMissMatchRow(requireNotNull(headers))
+            else -> readAllAsSequence().validateMatchingRows(requireNotNull(headers))
         }
     }
 
     override fun close() {
         reader.close()
+    }
+
+    private fun <T>Sequence<List<T>>.skipMissMatchRow(headers: List<T>): Sequence<Map<T, T>> {
+       return mapIndexedNotNull {index, fields ->
+           if (headers.size != fields.size) {
+               performWithLog {
+                   logger.warn { "skipped at  ${index+1}, no. of columns ${fields.size}, value : $fields" }
+               }
+               null
+           }
+           else fields
+       }.map { fields ->
+           headers.zip(fields).toMap()
+       }
+    }
+
+    private fun <T>Sequence<List<T>>.validateMatchingRows(headers: List<T>): Sequence<Map<T, T>> {
+        return map { fields ->
+            if (headers.size != fields.size) {
+                throw MalformedCSVException("fields num  ${fields.size} is not matched with header num ${headers.size}")
+            }
+            headers.zip(fields).toMap()
+        }
     }
 
     /**
@@ -104,5 +127,8 @@ class CsvFileReader internal constructor(
             }
         }
         return null
+    }
+    private inline fun performWithLog( action: () -> Unit) {
+        if(ctx.enableLogging) action()
     }
 }

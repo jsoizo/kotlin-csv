@@ -2,6 +2,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext
+import mu.KotlinLogging
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
@@ -17,6 +18,7 @@ actual class CsvReader actual constructor(
 ) : ICsvReaderContext by ctx {
 
     private val charsetCode = Charset.forName(charset)
+    private val logger = KotlinLogging.logger {  }
 
     /**
      * read csv data as String, and convert into List<List<String>>
@@ -35,7 +37,22 @@ actual class CsvReader actual constructor(
      */
     fun readAll(file: File): List<List<String>> {
         val br = file.inputStream().bufferedReader(charsetCode)
-        return open(br) { readAllAsSequence().toList() }
+        return open(br) {
+             if (ctx.numberOfColumns != null) {
+                 readAllAsSequence().mapIndexedNotNull{index, fields ->
+                      if (fields.size != ctx.numberOfColumns){
+                          performWithLog {
+                              logger.warn { "skipped at  ${index+1}, no. of columns ${fields.size}, value : $fields" }
+                          }
+                          null
+                      }
+                     else fields
+                 }.toList()
+
+            } else {
+                readAllAsSequence().toList()
+            }
+        }
     }
 
     /**
@@ -130,5 +147,9 @@ actual class CsvReader actual constructor(
         return reader.use {
             reader.doRead()
         }
+    }
+
+    private inline fun performWithLog( action: () -> Unit) {
+       if(enableLogging) action()
     }
 }
