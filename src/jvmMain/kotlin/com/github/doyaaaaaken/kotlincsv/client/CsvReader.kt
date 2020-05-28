@@ -40,7 +40,7 @@ actual class CsvReader actual constructor(
             val firstRowCols = list.first().size
 
             list.filterIndexed {  index, fields ->
-                (firstRowCols == fields.size)
+                firstRowCols == fields.size
 //                TODO - apply logging here
 
 //                        .also { retain ->
