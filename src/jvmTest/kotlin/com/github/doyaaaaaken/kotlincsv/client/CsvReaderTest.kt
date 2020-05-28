@@ -167,9 +167,7 @@ class CsvReaderTest : WordSpec() {
             "should not throw exception when reading csv with different fields num on each row with expected number of columns" {
                 val expected = listOf(listOf("a", "b", "c"))
                 val ex  = csvReader {
-                    enableLogging = true
                     skipMissMatchedRow = true
-                    numberOfColumns = 3
                 }.readAll(readTestDataFile("different-fields-num.csv"))
 
                 ex shouldBe expected
@@ -177,9 +175,7 @@ class CsvReaderTest : WordSpec() {
 
                 val expected2 = listOf(listOf("a", "b"))
                 val ex2  = csvReader {
-                    enableLogging = true
                     skipMissMatchedRow = true
-                    numberOfColumns = 2
                 }.readAll(readTestDataFile("different-fields-num2.csv"))
 
                 ex2 shouldBe expected2
@@ -193,7 +189,6 @@ class CsvReaderTest : WordSpec() {
                 )
                 val ex  = csvReader {
                     skipMissMatchedRow = true
-                    enableLogging = true
                 }.readAllWithHeader(readTestDataFile("with-header-different-size-row.csv"))
 
                 ex.size shouldBe  2
