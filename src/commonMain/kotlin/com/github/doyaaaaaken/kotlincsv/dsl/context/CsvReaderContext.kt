@@ -16,8 +16,6 @@ interface ICsvReaderContext {
     val escapeChar: Char
     val skipEmptyLine: Boolean
     val skipMissMatchedRow: Boolean
-    val numberOfColumns: Int?
-    val enableLogging: Boolean
 }
 
 /**
@@ -33,6 +31,4 @@ class CsvReaderContext : ICsvReaderContext {
     override var escapeChar: Char = '"'
     override var skipEmptyLine: Boolean = false
     override var skipMissMatchedRow: Boolean = false
-    override var numberOfColumns: Int? = null
-    override var enableLogging: Boolean = false
 }
