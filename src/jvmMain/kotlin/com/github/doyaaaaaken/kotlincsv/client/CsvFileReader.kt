@@ -4,7 +4,6 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
-import mu.KotlinLogging
 import java.io.BufferedReader
 import java.io.Closeable
 
@@ -18,7 +17,6 @@ class CsvFileReader internal constructor(
         reader: BufferedReader
 ) : Closeable {
 
-    private val logger = KotlinLogging.logger {  }
     private val reader = BufferedLineReader(reader)
     private var rowNum = 0L
 
@@ -43,7 +41,7 @@ class CsvFileReader internal constructor(
         return generateSequence {
             readNext()
         }.mapIndexed { idx, row ->
-            if (fieldsNum == null) fieldsNum = ctx.numberOfColumns ?: row.size
+            if (fieldsNum == null) fieldsNum = row.size
             if (fieldsNum != row.size && !ctx.skipMissMatchedRow) throw CSVFieldNumDifferentException(requireNotNull(fieldsNum), row.size, idx + 1)
             row
         }
@@ -70,14 +68,11 @@ class CsvFileReader internal constructor(
     private fun <T>Sequence<List<T>>.skipMissMatchRow(headers: List<T>): Sequence<Map<T, T>> {
        return mapIndexedNotNull {index, fields ->
            if (headers.size != fields.size) {
-               performWithLog {
-                   logger.warn { "skipped at  ${index+1}, no. of columns ${fields.size}, value : $fields" }
-               }
+//             TODO - log skipped row
                null
+           } else {
+               headers.zip(fields).toMap()
            }
-           else fields
-       }.map { fields ->
-           headers.zip(fields).toMap()
        }
     }
 
@@ -127,8 +122,5 @@ class CsvFileReader internal constructor(
             }
         }
         return null
-    }
-    private inline fun performWithLog( action: () -> Unit) {
-        if(ctx.enableLogging) action()
     }
 }
