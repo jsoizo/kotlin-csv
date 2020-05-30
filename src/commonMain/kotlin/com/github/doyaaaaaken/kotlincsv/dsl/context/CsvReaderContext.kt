@@ -15,6 +15,7 @@ interface ICsvReaderContext {
     val delimiter: Char
     val escapeChar: Char
     val skipEmptyLine: Boolean
+    val skipMissMatchedRow: Boolean
 }
 
 /**
@@ -29,4 +30,5 @@ class CsvReaderContext : ICsvReaderContext {
     override var delimiter: Char = ','
     override var escapeChar: Char = '"'
     override var skipEmptyLine: Boolean = false
+    override var skipMissMatchedRow: Boolean = false
 }

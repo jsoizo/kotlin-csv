@@ -42,7 +42,7 @@ class CsvFileReader internal constructor(
             readNext()
         }.mapIndexed { idx, row ->
             if (fieldsNum == null) fieldsNum = row.size
-            if (fieldsNum != row.size) throw CSVFieldNumDifferentException(requireNotNull(fieldsNum), row.size, idx + 1)
+            if (fieldsNum != row.size && !ctx.skipMissMatchedRow) throw CSVFieldNumDifferentException(requireNotNull(fieldsNum), row.size, idx + 1)
             row
         }
     }
@@ -55,16 +55,34 @@ class CsvFileReader internal constructor(
         val duplicated = headers?.let(::findDuplicate)
         if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
 
-        return readAllAsSequence().map { fields ->
-            if (requireNotNull(headers).size != fields.size) {
-                throw MalformedCSVException("fields num  ${fields.size} is not matched with header num ${headers.size}")
-            }
-            headers.zip(fields).toMap()
+        return when(ctx.skipMissMatchedRow) {
+            true -> readAllAsSequence().skipMissMatchRow(requireNotNull(headers))
+            else -> readAllAsSequence().validateMatchingRows(requireNotNull(headers))
         }
     }
 
     override fun close() {
         reader.close()
+    }
+
+    private fun <T>Sequence<List<T>>.skipMissMatchRow(headers: List<T>): Sequence<Map<T, T>> {
+       return mapIndexedNotNull {index, fields ->
+           if (headers.size != fields.size) {
+//             TODO - log skipped row
+               null
+           } else {
+               headers.zip(fields).toMap()
+           }
+       }
+    }
+
+    private fun <T>Sequence<List<T>>.validateMatchingRows(headers: List<T>): Sequence<Map<T, T>> {
+        return map { fields ->
+            if (headers.size != fields.size) {
+                throw MalformedCSVException("fields num  ${fields.size} is not matched with header num ${headers.size}")
+            }
+            headers.zip(fields).toMap()
+        }
     }
 
     /**

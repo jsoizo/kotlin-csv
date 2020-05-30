@@ -35,7 +35,21 @@ actual class CsvReader actual constructor(
      */
     fun readAll(file: File): List<List<String>> {
         val br = file.inputStream().bufferedReader(charsetCode)
-        return open(br) { readAllAsSequence().toList() }
+        return open(br) {
+            val list = readAllAsSequence().toList()
+            val firstRowCols = list.first().size
+
+            list.filterIndexed {  index, fields ->
+                firstRowCols == fields.size
+//                TODO - apply logging here
+
+//                        .also { retain ->
+//                            if (!retain) {
+//                                // log skipped value here
+//                            }
+//                        }
+            }
+        }
     }
 
     /**
