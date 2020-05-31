@@ -39,7 +39,7 @@ class CsvFileWriter internal constructor(
     /**
      * write one row
      */
-    override fun writeRow(vararg entry: Any) {
+    override fun writeRow(vararg entry: Any?) {
         writeRow(entry.toList())
     }
 

@@ -3,7 +3,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 interface ICsvFileWriter {
     fun writeRow(row: List<Any?>)
 
-    fun writeRow(vararg entry: Any)
+    fun writeRow(vararg entry: Any?)
 
     fun writeRows(rows: List<List<Any?>>)
 
