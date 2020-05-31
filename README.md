@@ -122,10 +122,17 @@ val tsvReader = csvReader {
     quoteChar = '"'
     delimiter = '\t'
     escapeChar = '\\'
-    skipEmptyLine = false
-    skipMissMatchedRow = false
 }
 ```
+
+| Opton | default value | description                         |
+|------------|---------------|-------------------------------------|
+| charset |`UTF-8`| Charset encoding. The value must be supported by [java.nio.charset.Charset](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html). |
+| quoteChar | `"` | Character used as quote between each fields. |
+| delimiter | `,` | Character used as delimiter between each fields. Use `"\t"` if reading TSV file. |
+| escapeChar | `"` | Character to escape quote inside field string. Normally, you don't have to change this option. See detail comment on `ICsvReaderContext`. |
+| skipEmptyLine | `false` | If empty line is found, skip it or not (=throw an exception). |
+| skipMissMatchedRow | `false` | If a invalid row which has different number of fields from other rows is found, skip it or not (=throw an exception). |
 
 ### CSV Write examples
 
