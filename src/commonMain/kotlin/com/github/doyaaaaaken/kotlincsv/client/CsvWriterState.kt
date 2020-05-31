@@ -22,11 +22,11 @@ internal class CsvWriterStateHandler {
         return state.wroteLineEndTerminator
     }
 
-    fun wroteLineEndTerminatorState() {
+    fun setStateOfWroteLineEndTerminator() {
         state = CsvWriterState.HasWroteLineEndTerminator
     }
 
-    fun notWroteLineEndTerminatorState() {
+    fun setStateOfNotWroteLineEndTerminator() {
         state = CsvWriterState.HasNotWroteLineEndTerminator
     }
 }
