@@ -57,16 +57,14 @@ class CsvFileWriter internal constructor(
      * write rows from Sequence
      */
     override fun writeRows(rows: Sequence<List<Any?>>) {
-        val itr = rows.iterator()
-
         willWritePreTerminator()
-        rows.forEach {
-            itr.next()
-            writeNext(it)
-            if (itr.hasNext()) {
-                writeTerminator()
-            }
+
+        val itr = rows.iterator()
+        while(itr.hasNext()) {
+            writeNext(itr.next())
+            if(itr.hasNext()) writeTerminator()
         }
+
         willWriteEndTerminator()
         if (writer.checkError()) {
             throw IOException("Failed to write")
