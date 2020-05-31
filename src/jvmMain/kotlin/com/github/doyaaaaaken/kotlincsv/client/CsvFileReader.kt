@@ -51,13 +51,13 @@ class CsvFileReader internal constructor(
      * read all csv rows as Sequence with header information
      */
     fun readAllWithHeaderAsSequence(): Sequence<Map<String, String>> {
-        val headers = readNext()
-        val duplicated = headers?.let(::findDuplicate)
+        val headers = readNext() ?: return emptySequence()
+        val duplicated = findDuplicate(headers)
         if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
 
         return when(ctx.skipMissMatchedRow) {
-            true -> readAllAsSequence().skipMissMatchRow(requireNotNull(headers))
-            else -> readAllAsSequence().map { fields -> requireNotNull(headers).zip(fields).toMap() }
+            true -> readAllAsSequence().skipMissMatchRow(headers)
+            else -> readAllAsSequence().map { fields -> headers.zip(fields).toMap() }
         }
     }
 
