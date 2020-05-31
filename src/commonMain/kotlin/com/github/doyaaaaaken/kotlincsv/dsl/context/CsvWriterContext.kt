@@ -10,12 +10,57 @@ import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
  */
 @CsvDslMarker
 interface ICsvWriterContext {
+    /**
+     * Charset encoding
+     *
+     * The name must be supported by [java.nio.charset.Charset].
+     *
+     * ex.)
+     *     "UTF-8"
+     *     "SJIS"
+     */
     val charset: String
+
+    /**
+     * Character used as delimiter between each fields
+     *
+     * ex.)
+     *     ","
+     *     "\t" (TSV file)
+     */
     val delimiter: Char
+
+    /**
+     * Character used as line terminator
+     *
+     * ex.)
+     *     "" (empty field)
+     *     "NULL"
+     *     "-"
+     */
     val nullCode: String
+
+    /**
+     * Character used as line terminator
+     *
+     * ex.)
+     *     "\r\n"
+     *     "\n"
+     */
     val lineTerminator: String
-    val quote: CsvWriteQuoteContext
+
+    /**
+     * Output line break at the end of file or not.
+     *
+     * According to [CSV specification](https://tools.ietf.org/html/rfc4180#section-2),
+     * > The last record in the file may or may not have an ending line break.
+     */
     val outputLastLineTerminator: Boolean
+
+    /**
+     * Options about quotes of each fields
+     */
+    val quote: CsvWriteQuoteContext
 }
 
 /**
@@ -29,8 +74,8 @@ class CsvWriterContext : ICsvWriterContext {
     override var delimiter: Char = ','
     override var nullCode: String = ""
     override var lineTerminator: String = "\r\n"
-    override val quote: CsvWriteQuoteContext = CsvWriteQuoteContext()
     override var outputLastLineTerminator = true
+    override val quote: CsvWriteQuoteContext = CsvWriteQuoteContext()
 
     fun quote(init: CsvWriteQuoteContext.() -> Unit) {
         quote.init()

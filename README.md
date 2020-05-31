@@ -161,6 +161,7 @@ val writer = csvWriter {
     delimiter = '\t'
     nullCode = "NULL"
     lineTerminator = "\n"
+    outputLastLineTerminator = true
     quote {
         mode = WriteQuoteMode.ALL
         char = '\''
