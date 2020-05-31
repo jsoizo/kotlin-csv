@@ -40,11 +40,10 @@ class CsvFileWriter internal constructor(
      * write rows
      */
     override fun writeRows(rows: List<List<Any?>>) {
-        val size = rows.size
         willWritePreTerminator()
         rows.forEachIndexed{ index, list ->
             writeNext(list)
-            if (index < size-1) {
+            if (index < rows.size - 1) {
                 writeTerminator()
             }
         }
