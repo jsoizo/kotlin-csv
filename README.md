@@ -129,8 +129,8 @@ val tsvReader = csvReader {
 |------------|---------------|-------------------------------------|
 | charset |`UTF-8`| Charset encoding. The value must be supported by [java.nio.charset.Charset](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html). |
 | quoteChar | `"` | Character used as quote between each fields. |
-| delimiter | `,` | Character used as delimiter between each fields. Use `"\t"` if reading TSV file. |
-| escapeChar | `"` | Character to escape quote inside field string. Normally, you don't have to change this option. See detail comment on `ICsvReaderContext`. |
+| delimiter | `,` | Character used as delimiter between each fields.<br />Use `"\t"` if reading TSV file. |
+| escapeChar | `"` | Character to escape quote inside field string.<br />Normally, you don't have to change this option.<br />See detail comment on `ICsvReaderContext`. |
 | skipEmptyLine | `false` | If empty line is found, skip it or not (=throw an exception). |
 | skipMissMatchedRow | `false` | If a invalid row which has different number of fields from other rows is found, skip it or not (=throw an exception). |
 
@@ -178,6 +178,15 @@ val writer = csvWriter {
 }
 ```
 
+| Opton | default value | description                         |
+|------------|---------------|-------------------------------------|
+| charset |`UTF-8`| Charset encoding. The value must be supported by [java.nio.charset.Charset](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html). |
+| delimiter | `,` | Character used as delimiter between each fields.<br />Use `"\t"` if reading TSV file. |
+| nullCode | `(empty string)` | Character used when a written field is null value. |
+| lineTerminator | `\r\n` | Character used as line terminator. |
+| outputLastLineTerminator | `true` | Output line break at the end of file or not. |
+| quote.char  | `"` | Character to quote each fields. |
+| quote.mode  | `CANONICAL` | Quote mode. <br />- `CANONICAL`: Not quote normally, but quote special characters (quoteChar, delimiter, line feed). This is [the specification of CSV](https://tools.ietf.org/html/rfc4180#section-2).<br />- `ALL`: Quote all fields. |
 
 # Miscellaneous
 
