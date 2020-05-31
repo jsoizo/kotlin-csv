@@ -122,6 +122,8 @@ val tsvReader = csvReader {
     quoteChar = '"'
     delimiter = '\t'
     escapeChar = '\\'
+    skipEmptyLine = false
+    skipMissMatchedRow = false
 }
 ```
 
@@ -161,6 +163,7 @@ val writer = csvWriter {
     delimiter = '\t'
     nullCode = "NULL"
     lineTerminator = "\n"
+    outputLastLineTerminator = true
     quote {
         mode = WriteQuoteMode.ALL
         char = '\''
