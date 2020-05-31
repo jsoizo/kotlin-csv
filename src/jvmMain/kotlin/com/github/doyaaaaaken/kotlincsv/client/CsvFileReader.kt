@@ -57,7 +57,7 @@ class CsvFileReader internal constructor(
 
         return when(ctx.skipMissMatchedRow) {
             true -> readAllAsSequence().skipMissMatchRow(requireNotNull(headers))
-            else -> readAllAsSequence().validateMatchingRows(requireNotNull(headers))
+            else -> readAllAsSequence().map { fields -> requireNotNull(headers).zip(fields).toMap() }
         }
     }
 
@@ -74,15 +74,6 @@ class CsvFileReader internal constructor(
                headers.zip(fields).toMap()
            }
        }
-    }
-
-    private fun <T>Sequence<List<T>>.validateMatchingRows(headers: List<T>): Sequence<Map<T, T>> {
-        return map { fields ->
-            if (headers.size != fields.size) {
-                throw MalformedCSVException("fields num  ${fields.size} is not matched with header num ${headers.size}")
-            }
-            headers.zip(fields).toMap()
-        }
     }
 
     /**
