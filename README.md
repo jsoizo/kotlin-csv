@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to kotlin-csv 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.9.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.10.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
@@ -35,10 +35,10 @@
 gradle DSL:
 ```
 //gradle kotlin DSL
-implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.9.0")
+implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.10.0")
 
 //gradle groovy DSL
-implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:0.9.0'
+implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:0.10.0'
 ```
 
 maven:
@@ -46,7 +46,7 @@ maven:
 <dependency>
   <groupId>com.github.doyaaaaaken</groupId>
   <artifactId>kotlin-csv-jvm</artifactId>
-  <version>0.9.0</version>
+  <version>0.10.0</version>
 </dependency>
 ```
 
@@ -125,6 +125,15 @@ val tsvReader = csvReader {
 }
 ```
 
+| Opton | default value | description                         |
+|------------|---------------|-------------------------------------|
+| charset |`UTF-8`| Charset encoding. The value must be supported by [java.nio.charset.Charset](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html). |
+| quoteChar | `"` | Character used as quote between each fields. |
+| delimiter | `,` | Character used as delimiter between each fields.<br />Use `"\t"` if reading TSV file. |
+| escapeChar | `"` | Character to escape quote inside field string.<br />Normally, you don't have to change this option.<br />See detail comment on `ICsvReaderContext`. |
+| skipEmptyLine | `false` | If empty line is found, skip it or not (=throw an exception). |
+| skipMissMatchedRow | `false` | If a invalid row which has different number of fields from other rows is found, skip it or not (=throw an exception). |
+
 ### CSV Write examples
 
 #### Simple case
@@ -161,6 +170,7 @@ val writer = csvWriter {
     delimiter = '\t'
     nullCode = "NULL"
     lineTerminator = "\n"
+    outputLastLineTerminator = true
     quote {
         mode = WriteQuoteMode.ALL
         char = '\''
@@ -168,6 +178,15 @@ val writer = csvWriter {
 }
 ```
 
+| Opton | default value | description                         |
+|------------|---------------|-------------------------------------|
+| charset |`UTF-8`| Charset encoding. The value must be supported by [java.nio.charset.Charset](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html). |
+| delimiter | `,` | Character used as delimiter between each fields.<br />Use `"\t"` if reading TSV file. |
+| nullCode | `(empty string)` | Character used when a written field is null value. |
+| lineTerminator | `\r\n` | Character used as line terminator. |
+| outputLastLineTerminator | `true` | Output line break at the end of file or not. |
+| quote.char  | `"` | Character to quote each fields. |
+| quote.mode  | `CANONICAL` | Quote mode. <br />- `CANONICAL`: Not quote normally, but quote special characters (quoteChar, delimiter, line feed). This is [the specification of CSV](https://tools.ietf.org/html/rfc4180#section-2).<br />- `ALL`: Quote all fields. |
 
 # Miscellaneous
 
