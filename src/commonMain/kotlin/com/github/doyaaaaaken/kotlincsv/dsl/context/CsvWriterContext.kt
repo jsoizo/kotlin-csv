@@ -31,7 +31,7 @@ interface ICsvWriterContext {
     val delimiter: Char
 
     /**
-     * Character used as line terminator
+     * Character used when a written field is null value
      *
      * ex.)
      *     "" (empty field)
