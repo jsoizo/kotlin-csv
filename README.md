@@ -122,6 +122,8 @@ val tsvReader = csvReader {
     quoteChar = '"'
     delimiter = '\t'
     escapeChar = '\\'
+    skipEmptyLine = false
+    skipMissMatchedRow = false
 }
 ```
 
