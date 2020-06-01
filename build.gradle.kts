@@ -64,9 +64,7 @@ kotlin {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-//                TODO - investigation and approval
-//                implementation("io.github.microutils:kotlin-logging:1.7.9")
-//                implementation("ch.qos.logback:logback-classic:1.2.3")
+                implementation("io.github.microutils:kotlin-logging:1.7.9")
             }
         }
         jvm().compilations["test"].defaultSourceSet {

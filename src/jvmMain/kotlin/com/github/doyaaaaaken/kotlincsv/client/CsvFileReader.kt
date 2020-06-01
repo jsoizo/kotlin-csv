@@ -4,6 +4,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
+import mu.KotlinLogging
 import java.io.BufferedReader
 import java.io.Closeable
 
@@ -17,6 +18,7 @@ class CsvFileReader internal constructor(
         reader: BufferedReader
 ) : Closeable {
 
+    private val logger = KotlinLogging.logger {  }
     private val reader = BufferedLineReader(reader)
     private var rowNum = 0L
 
@@ -44,7 +46,7 @@ class CsvFileReader internal constructor(
             if (fieldsNum == null) fieldsNum = row.size
             if (fieldsNum != row.size) {
                 if (ctx.skipMissMatchedRow) {
-                    //TODO - log as info level about skipped row.
+                    logger.info("skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNum]")
                     null
                 } else {
                     throw CSVFieldNumDifferentException(requireNotNull(fieldsNum), row.size, idx + 1)
