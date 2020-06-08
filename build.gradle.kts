@@ -61,14 +61,14 @@ kotlin {
 
         jvm().compilations["main"].defaultSourceSet {
             dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
                 implementation("io.github.microutils:kotlin-logging:1.7.9")
             }
         }
         jvm().compilations["test"].defaultSourceSet {
             dependencies {
+                implementation(kotlin("test"))
+                implementation(kotlin("test-junit"))
                 implementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
             }
         }
