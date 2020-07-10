@@ -179,7 +179,7 @@ val writer = csvWriter {
 }
 ```
 
-| Opton | default value | description                         |
+| Option | default value | description                         |
 |------------|---------------|-------------------------------------|
 | charset |`UTF-8`| Charset encoding. The value must be supported by [java.nio.charset.Charset](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html). |
 | delimiter | `,` | Character used as delimiter between each fields.<br />Use `"\t"` if reading TSV file. |
