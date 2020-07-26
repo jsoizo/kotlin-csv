@@ -171,7 +171,7 @@ DO NOT forget to call `close` method manually.
 val row1 = listOf("a", "b", "c")
 @OptIn(KotlinCsvExperimental::class)
 val writer = csvWriter().openAndGetRawWriter("test.csv") 
-writeRow(row1)
+writer.writeRow(row1)
 writer.close()
 ```
 
