@@ -252,5 +252,45 @@ class CsvWriterTest : WordSpec() {
                 actual shouldBe expected
             }
         }
+
+        "openAndGetRawWriter method" should {
+            val row1 = listOf("a", "b", null)
+            val row2 = listOf("d", "2", "1.0")
+            val expected = "a,b,\r\nd,2,1.0\r\n"
+
+            "get raw writer from fileName string and can use it" {
+                @OptIn(KotlinCsvExperimental::class)
+                val writer = csvWriter().openAndGetRawWriter(testFileName)
+                writer.writeRow(row1)
+                writer.writeRow(row2)
+                writer.close()
+
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+
+            "get raw writer from java.io.File and can use it" {
+                @OptIn(KotlinCsvExperimental::class)
+                val writer = csvWriter().openAndGetRawWriter(File(testFileName))
+                writer.writeRow(row1)
+                writer.writeRow(row2)
+                writer.close()
+
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+
+            "get raw writer from OutputStream and can use it" {
+                val ops = File(testFileName).outputStream()
+                @OptIn(KotlinCsvExperimental::class)
+                val writer = csvWriter().openAndGetRawWriter(ops)
+                writer.writeRow(row1)
+                writer.writeRow(row2)
+                writer.close()
+
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
+        }
     }
 }

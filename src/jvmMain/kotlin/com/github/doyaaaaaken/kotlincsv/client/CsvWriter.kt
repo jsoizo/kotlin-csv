@@ -32,6 +32,48 @@ actual class CsvWriter actual constructor(
     }
 
     /**
+     * *** ONLY for long-running write case ***
+     *
+     * Get and use [CsvFileWriter] directly.
+     * MUST NOT forget to close [CsvFileWriter] after using it.
+     *
+     * Use this method If you want to close file writer manually (i.e. streaming scenario).
+     */
+    @KotlinCsvExperimental
+    fun openAndGetRawWriter(targetFileName: String, append: Boolean = false): CsvFileWriter {
+        val targetFile = File(targetFileName)
+        return openAndGetRawWriter(targetFile, append)
+    }
+
+    /**
+     * *** ONLY for long-running write case ***
+     *
+     * Get and use [CsvFileWriter] directly.
+     * MUST NOT forget to close [CsvFileWriter] after using it.
+     *
+     * Use this method If you want to close file writer manually (i.e. streaming scenario).
+     */
+    @KotlinCsvExperimental
+    fun openAndGetRawWriter(targetFile: File, append: Boolean = false): CsvFileWriter {
+        val fos = FileOutputStream(targetFile, append)
+        return openAndGetRawWriter(fos)
+    }
+
+    /**
+     * *** ONLY for long-running write case ***
+     *
+     * Get and use [CsvFileWriter] directly.
+     * MUST NOT forget to close [CsvFileWriter] after using it.
+     *
+     * Use this method If you want to close file writer manually (i.e. streaming scenario).
+     */
+    @KotlinCsvExperimental
+    fun openAndGetRawWriter(ops: OutputStream): CsvFileWriter {
+        val osw = OutputStreamWriter(ops, ctx.charset)
+        return CsvFileWriter(ctx, PrintWriter(osw))
+    }
+
+    /**
      * write all rows on assigned target file
      */
     actual fun writeAll(rows: List<List<Any?>>, targetFileName: String, append: Boolean) {

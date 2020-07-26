@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to kotlin-csv 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.10.4-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-0.11.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
@@ -35,10 +35,10 @@
 gradle DSL:
 ```
 //gradle kotlin DSL
-implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.10.4")
+implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.11.0")
 
 //gradle groovy DSL
-implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:0.10.4'
+implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:0.11.0'
 ```
 
 maven:
@@ -46,7 +46,7 @@ maven:
 <dependency>
   <groupId>com.github.doyaaaaaken</groupId>
   <artifactId>kotlin-csv-jvm</artifactId>
-  <version>0.10.4</version>
+  <version>0.11.0</version>
 </dependency>
 ```
 
@@ -160,6 +160,19 @@ csvWriter().open("test.csv") {
     writeRow("g", "h", "i")
     writeRows(listOf(row1, row2))
 }
+```
+
+#### long-running write
+
+If you want to close file writer manually for performance reason (i.e. streaming scenario), you can use `openAndGetRawWriter` and get raw `CsvFileWriter`.
+DO NOT forget to call `close` method manually.
+
+```kotlin
+val row1 = listOf("a", "b", "c")
+@OptIn(KotlinCsvExperimental::class)
+val writer = csvWriter().openAndGetRawWriter("test.csv") 
+writer.writeRow(row1)
+writer.close()
 ```
 
 #### Customize
