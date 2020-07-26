@@ -162,10 +162,10 @@ csvWriter().open("test.csv") {
 }
 ```
 
-#### long-running write
+#### long-running write (manual control for file close)
 
-If you want to close file writer manually for performance reason (i.e. streaming scenario), you can use `openAndGetRawWriter` and get raw `CsvFileWriter`.
-DO NOT forget to call `close` method manually.
+If you want to close file writer manually for performance reason (i.e. streaming scenario), you can use `openAndGetRawWriter` and get raw `CsvFileWriter`.  
+**DO NOT forget to call `close` method manually.**
 
 ```kotlin
 val row1 = listOf("a", "b", "c")
