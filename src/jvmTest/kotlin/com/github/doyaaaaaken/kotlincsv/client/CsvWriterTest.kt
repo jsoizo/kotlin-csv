@@ -194,6 +194,18 @@ class CsvWriterTest : WordSpec() {
                 val actual = readTestFile()
                 actual shouldBe expected
             }
+            "write csv with custom quote character on WriteQuoteMode.ALL mode" {
+                val rows = listOf(listOf("a1", "b1"), listOf("a2", "b2"))
+                val expected = "_a1_,_b1_\r\n_a2_,_b2_\r\n"
+                csvWriter{
+                    quote {
+                        mode = WriteQuoteMode.ALL
+                        char = '_'
+                    }
+                }.writeAll(rows, testFileName)
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
             "write simple csv with disabled last line terminator with custom terminator" {
                 val row1 = listOf("a", "b")
                 val row2 = listOf("c", "d")
