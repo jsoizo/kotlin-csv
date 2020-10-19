@@ -40,6 +40,7 @@ class CsvWriteQuoteContext {
  *      Quote all fields.
  */
 enum class WriteQuoteMode {
+    NON_NUMERIC,
     CANONICAL,
     ALL
 }
