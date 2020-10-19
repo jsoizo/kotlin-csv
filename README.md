@@ -200,7 +200,7 @@ val writer = csvWriter {
 | lineTerminator | `\r\n` | Character used as line terminator. |
 | outputLastLineTerminator | `true` | Output line break at the end of file or not. |
 | quote.char  | `"` | Character to quote each fields. |
-| quote.mode  | `CANONICAL` | Quote mode. <br />- `CANONICAL`: Not quote normally, but quote special characters (quoteChar, delimiter, line feed). This is [the specification of CSV](https://tools.ietf.org/html/rfc4180#section-2).<br />- `ALL`: Quote all fields. |
+| quote.mode  | `CANONICAL` | Quote mode. <br />- `CANONICAL`: Not quote normally, but quote special characters (quoteChar, delimiter, line feed). This is [the specification of CSV](https://tools.ietf.org/html/rfc4180#section-2).<br />- `ALL`: Quote all fields.<br />- `NON_NUMERIC`: Quote non-numeric fields. |
 
 # Links
 
