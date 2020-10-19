@@ -182,8 +182,8 @@ class CsvWriterTest : WordSpec() {
             }
             "write csv with WriteQuoteMode.NON_NUMERIC mode" {
                 val row1 = listOf("a", "b", 1)
-                val row2 = listOf(2.0, "e", "f")
-                val expected = "\"a\",\"b\",1\r\n2.0,\"e\",\"f\"\r\n"
+                val row2 = listOf(2.0, "03.0", "4.0.0")
+                val expected = "\"a\",\"b\",1\r\n2.0,03.0,\"4.0.0\"\r\n"
                 csvWriter{
                     quote {
                         mode = WriteQuoteMode.NON_NUMERIC
