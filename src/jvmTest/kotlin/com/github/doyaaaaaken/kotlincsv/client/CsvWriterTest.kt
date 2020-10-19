@@ -180,6 +180,20 @@ class CsvWriterTest : WordSpec() {
                 val actual = readTestFile()
                 actual shouldBe expected
             }
+            "write csv with WriteQuoteMode.NON_NUMERIC mode" {
+                val row1 = listOf("a", "b", 1)
+                val row2 = listOf(2.0, "e", "f")
+                val expected = "\"a\",\"b\",1\r\n2.0,\"e\",\"f\"\r\n"
+                csvWriter{
+                    quote {
+                        mode = WriteQuoteMode.NON_NUMERIC
+                    }
+                }.open(File(testFileName)) {
+                    writeRows(listOf(row1, row2))
+                }
+                val actual = readTestFile()
+                actual shouldBe expected
+            }
             "write csv with custom quote character" {
                 val row1 = listOf("a'", "b")
                 val row2 = listOf("'c", "d")
