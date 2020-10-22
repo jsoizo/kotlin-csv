@@ -41,5 +41,6 @@ class CsvWriteQuoteContext {
  */
 enum class WriteQuoteMode {
     CANONICAL,
-    ALL
+    ALL,
+    NON_NUMERIC
 }

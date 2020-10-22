@@ -127,7 +127,25 @@ class CsvFileWriter internal constructor(
     }
 
     private fun attachQuote(field: String): String {
-        val shouldQuote = ctx.quote.mode == WriteQuoteMode.ALL || field.any { ch -> quoteNeededChars.contains(ch) }
+        val shouldQuote = when (ctx.quote.mode) {
+            WriteQuoteMode.ALL -> true
+            WriteQuoteMode.CANONICAL -> field.any { ch -> quoteNeededChars.contains(ch) }
+            WriteQuoteMode.NON_NUMERIC -> {
+                var foundDot = false
+                field.any { ch ->
+                    if (ch == '.') {
+                        if (foundDot) {
+                            true
+                        } else {
+                            foundDot = true
+                            false
+                        }
+                    } else {
+                        ch < '0' || ch > '9'
+                    }
+                }
+            }
+        }
 
         return buildString {
             if (shouldQuote) append(ctx.quote.char)
