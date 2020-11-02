@@ -98,6 +98,25 @@ actual class CsvReader actual constructor(
     }
 
     /**
+     * open inputStreamReader and execute reading process on a **suspending** function.
+     *
+     * If you want to control read flow precisely, use this method.
+     * Otherwise, use utility method (e.g. CsvReader.readAll ).
+     *
+     * Usage example:
+     * <pre>
+     *   val data: Sequence<List<String?>> = csvReader().open("test.csv") {
+     *       readAllAsSequence()
+     *           .map { fields -> fields.map { it.trim() } }
+     *           .map { fields -> fields.map { if(it.isBlank()) null else it } }
+     *   }
+     * </pre>
+     */
+    suspend fun <T> openAsync(fileName: String, read: suspend CsvFileReader.() -> T): T {
+        return openAsync(File(fileName), read)
+    }
+
+    /**
      * open inputStreamReader and execute reading process.
      *
      * If you want to control read flow precisely, use this method.
@@ -112,7 +131,21 @@ actual class CsvReader actual constructor(
     }
 
     /**
-     * open inputStreamReader and execute reading process.
+     * open inputStreamReader and execute reading process on a **suspending** function.
+     *
+     * If you want to control read flow precisely, use this method.
+     * Otherwise, use utility method (e.g. CsvReader.readAll ).
+     *
+     * Usage example:
+     * @see openAsync method
+     */
+    suspend fun <T> openAsync(file: File, read: suspend CsvFileReader.() -> T): T {
+        val br = file.inputStream().bufferedReader(charsetCode)
+        return openAsync(br, read)
+    }
+
+    /**
+     * open inputStreamReader and execute reading process on a **suspending** function.
      *
      * If you want to control read flow precisely, use this method.
      * Otherwise, use utility method (e.g. CsvReader.readAll ).
@@ -125,7 +158,28 @@ actual class CsvReader actual constructor(
         return open(br, read)
     }
 
+    /**
+     * open inputStreamReader and execute reading process on a **suspending** function.
+     *
+     * If you want to control read flow precisely, use this method.
+     * Otherwise, use utility method (e.g. CsvReader.readAll ).
+     *
+     * Usage example:
+     * @see openAsync method
+     */
+    suspend fun <T> openAsync(ips: InputStream,  read: suspend CsvFileReader.()-> T): T {
+        val br = ips.bufferedReader(charsetCode)
+        return openAsync(br, read)
+    }
+
     private fun <T> open(br: BufferedReader, doRead: CsvFileReader.() -> T): T {
+        val reader = CsvFileReader(ctx, br)
+        return reader.use {
+            reader.doRead()
+        }
+    }
+
+    private suspend fun <T> openAsync(br: BufferedReader, doRead: suspend CsvFileReader.() -> T): T {
         val reader = CsvFileReader(ctx, br)
         return reader.use {
             reader.doRead()

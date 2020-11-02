@@ -9,6 +9,8 @@ import com.github.doyaaaaaken.kotlincsv.util.Const
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
 import java.io.File
 import kotlin.test.assertEquals
 
@@ -252,6 +254,44 @@ class CsvReaderTest : WordSpec() {
                 listOf(row1, row2)
             }
             rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+        }
+        "execute as suspending function" should {
+            "open suspending method (with fileName argument)" {
+                val rows = csvReader().openAsync("src/jvmTest/resources/testdata/csv/simple.csv") {
+                    val row1 = readNext()
+                    val row2 = readNext()
+                    listOf(row1, row2)
+                }
+                rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+            }
+            "open suspending method (with file argument)" {
+                val file = readTestDataFile("simple.csv")
+                val rows = csvReader().openAsync(file) {
+                    val row1 = readNext()
+                    val row2 = readNext()
+                    listOf(row1, row2)
+                }
+                rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+            }
+            "open suspending method (with InputStream argument)" {
+                val fileStream = readTestDataFile("simple.csv").inputStream()
+                val rows = csvReader().openAsync(fileStream) {
+                    val row1 = readNext()
+                    val row2 = readNext()
+                    listOf(row1, row2)
+                }
+                rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+            }
+            "validate test as flow" {
+                val fileStream = readTestDataFile("simple.csv").inputStream()
+                val rows =  mutableListOf<List<String>>()
+                csvReader().openAsync(fileStream) {
+                    readAllAsSequence().asFlow().collect {
+                        rows.add(it)
+                    }
+                }
+                rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+            }
         }
     }
 }
