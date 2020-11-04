@@ -105,7 +105,7 @@ actual class CsvReader actual constructor(
      *
      * Usage example:
      * <pre>
-     *   val data: Sequence<List<String?>> = csvReader().open("test.csv") {
+     *   val data: Sequence<List<String?>> = csvReader().openAsync("test.csv") {
      *       readAllAsSequence()
      *           .map { fields -> fields.map { it.trim() } }
      *           .map { fields -> fields.map { if(it.isBlank()) null else it } }
