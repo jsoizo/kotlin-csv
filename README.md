@@ -112,6 +112,19 @@ csvReader().open("test.csv") {
 }
 ```
 
+#### Read in a `Suspending Function`
+```kotlin
+csvReader().openAsync("test.csv") {
+    val container = mutalbeListOf<List<String>>()
+    delay(100) //other suspending task
+    readAllAsSequence().asFlow().collect { row ->
+       delay(100) // other suspending task
+       container(row) 
+    }
+}
+```
+Note: `openAsync` can be and only be accessed through a `coroutine` or another `suspending` function
+
 #### Customize
 
 When you create CsvReader, you can choose read options.

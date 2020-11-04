@@ -69,6 +69,7 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
                 implementation(kotlin("test-junit"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2")
                 implementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
             }
         }
