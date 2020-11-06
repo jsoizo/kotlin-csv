@@ -217,7 +217,10 @@ val writer = csvWriter {
 
 # Links
 
-**Libraries**
+**Documents**
+* [Change Logs](https://github.com/doyaaaaaken/kotlin-csv/releases)
+
+**Libraries which use kotlin-csv**
 * [kotlin-grass](https://github.com/blackmo18/kotlin-grass): Csv File to Kotlin Data Class Parser.
 
 # Miscellaneous
