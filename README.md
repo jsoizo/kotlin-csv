@@ -50,6 +50,11 @@ maven:
 </dependency>
 ```
 
+[kscript](https://github.com/holgerbrandl/kscript)
+```kotlin
+@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-jvm:0.13.0")
+```
+
 ## Examples
 
 ### CSV Read examples
