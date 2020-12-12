@@ -63,6 +63,7 @@ kotlin {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
                 implementation("io.github.microutils:kotlin-logging:1.7.9")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2")
             }
         }
         jvm().compilations["test"].defaultSourceSet {
