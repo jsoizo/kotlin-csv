@@ -76,12 +76,6 @@ actual class CsvWriter actual constructor(
         return openAndGetRawWriter(fos)
     }
 
-    @KotlinCsvExperimental
-    suspend fun openAndGetRawWriterAsync(targetFile: File, append: Boolean = false): CsvFileWriter = withContext(Dispatchers.IO) {
-        val fos = FileOutputStream(targetFile, append)
-        openAndGetRawWriter(fos)
-    }
-
     /**
      * *** ONLY for long-running write case ***
      *
@@ -94,20 +88,6 @@ actual class CsvWriter actual constructor(
     fun openAndGetRawWriter(ops: OutputStream): CsvFileWriter {
         val osw = OutputStreamWriter(ops, ctx.charset)
         return CsvFileWriter(ctx, PrintWriter(osw))
-    }
-
-    /**
-     * *** ONLY for long-running write case ***
-     *
-     * Get and use [CsvFileWriter] directly.
-     * MUST NOT forget to close [CsvFileWriter] after using it.
-     *
-     * Use this method If you want to close file writer manually (i.e. streaming scenario).
-     */
-    @KotlinCsvExperimental
-    suspend fun openAndGetRawWriterAsync(ops: OutputStream): CsvFileWriter = withContext(Dispatchers.IO) {
-        val osw = OutputStreamWriter(ops, ctx.charset)
-        CsvFileWriter(ctx, PrintWriter(osw))
     }
 
     /**
