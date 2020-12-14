@@ -143,18 +143,6 @@ class CsvFileWriterTest : WordSpec() {
                 val actual = readTestFile()
                 actual shouldBe expected
             }
-            "suspend write java.time.LocalDate and java.time.LocalDateTime types" {
-                val row = listOf(
-                    LocalDate.of(2019, 8, 19),
-                    LocalDateTime.of(2020, 9, 20, 14, 32, 21)
-                )
-                val expected = "2019-08-19,2020-09-20T14:32:21\r\n"
-                csvWriter().openAsync(testFileName) {
-                    writeRow(row)
-                }
-                val actual = readTestFile()
-                actual shouldBe expected
-            }
             "suspend write row from variable arguments" {
 
                 val date1 = LocalDate.of(2019, 8, 19)
