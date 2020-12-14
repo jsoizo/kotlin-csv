@@ -2,6 +2,8 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvWriterContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.*
 
 /**
@@ -20,9 +22,19 @@ actual class CsvWriter actual constructor(
         open(targetFile, append, write)
     }
 
+    actual suspend  fun openAsync(targetFileName: String, append: Boolean, write: suspend ICsvFileWriter.() -> Unit) {
+        val targetFile = File(targetFileName)
+        openAsync(targetFile, append, write)
+    }
+
     fun open(targetFile: File, append: Boolean = false, write: ICsvFileWriter.() -> Unit) {
         val fos = FileOutputStream(targetFile, append)
         open(fos, write)
+    }
+
+    suspend fun openAsync(targetFile: File, append: Boolean = false, write: suspend ICsvFileWriter.() -> Unit) = withContext(Dispatchers.IO) {
+        val fos = FileOutputStream(targetFile, append)
+        openAsync(fos, write)
     }
 
     fun open(ops: OutputStream, write: ICsvFileWriter.() -> Unit) {
@@ -31,6 +43,11 @@ actual class CsvWriter actual constructor(
         writer.use { it.write() }
     }
 
+    suspend fun openAsync(ops: OutputStream, write: suspend ICsvFileWriter.() -> Unit) = withContext(Dispatchers.IO) {
+        val osw = OutputStreamWriter(ops, ctx.charset)
+        val writer = CsvFileWriter(ctx, PrintWriter(osw))
+        writer.use { it.write() }
+    }
     /**
      * *** ONLY for long-running write case ***
      *
@@ -83,7 +100,21 @@ actual class CsvWriter actual constructor(
     /**
      * write all rows on assigned target file
      */
+    actual suspend fun writeAllAsync(rows: List<List<Any?>>, targetFileName: String, append: Boolean) {
+        open(targetFileName, append) { writeRows(rows) }
+    }
+
+    /**
+     * write all rows on assigned target file
+     */
     fun writeAll(rows: List<List<Any?>>, targetFile: File, append: Boolean = false) {
+        open(targetFile, append) { writeRows(rows) }
+    }
+
+    /**
+     * write all rows on assigned target file
+     */
+    suspend fun writeAllAsync(rows: List<List<Any?>>, targetFile: File, append: Boolean = false) {
         open(targetFile, append) { writeRows(rows) }
     }
 
@@ -91,6 +122,13 @@ actual class CsvWriter actual constructor(
      * write all rows on assigned output stream
      */
     fun writeAll(rows: List<List<Any?>>, ops: OutputStream) {
+        open(ops) { writeRows(rows) }
+    }
+
+    /**
+     * write all rows on assigned output stream
+     */
+    suspend fun writeAllAsync(rows: List<List<Any?>>, ops: OutputStream) {
         open(ops) { writeRows(rows) }
     }
 }

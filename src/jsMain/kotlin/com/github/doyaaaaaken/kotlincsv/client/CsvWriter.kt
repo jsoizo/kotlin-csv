@@ -16,4 +16,12 @@ actual class CsvWriter actual constructor(ctx: CsvWriterContext) {
     actual fun writeAll(rows: List<List<Any?>>, targetFileName: String, append: Boolean) {
         TODO("Not Implemented")
     }
+
+    actual suspend fun writeAllAsync(rows: List<List<Any?>>, targetFileName: String, append: Boolean) {
+        TODO("Not Implemented")
+    }
+
+    actual suspend fun openAsync(targetFileName: String, append: Boolean, write: suspend ICsvFileWriter.() -> Unit) {
+        TODO("Not Implemented")
+    }
 }

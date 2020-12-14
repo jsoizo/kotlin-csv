@@ -117,6 +117,17 @@ csvReader().open("test.csv") {
 }
 ```
 
+#### Write in a `Suspending Function`
+```kotlin
+val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f")).asSequence()
+csvWriter().openAsync(testFileName) {
+    delay(100) //other suspending task
+    rows.asFlow().collect {
+       delay(100) // other suspending task
+        writeRow(it)
+    }
+}
+```
 #### Read in a `Suspending Function`
 ```kotlin
 csvReader().openAsync("test.csv") {
@@ -124,7 +135,7 @@ csvReader().openAsync("test.csv") {
     delay(100) //other suspending task
     readAllAsSequence().asFlow().collect { row ->
        delay(100) // other suspending task
-       container(row) 
+       container.add(row) 
     }
 }
 ```
