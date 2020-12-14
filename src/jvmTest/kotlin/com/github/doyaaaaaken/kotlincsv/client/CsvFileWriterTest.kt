@@ -183,35 +183,6 @@ class CsvFileWriterTest : WordSpec() {
                 actual shouldBe expected
             }
         }
-        "suspeend writeAll method" should {
-            "suspend write all escaped field when a field contains quoteChar in it" {
-                val rows = listOf(listOf("a", "\"b", "c"), listOf("d", "e", "f\""))
-                val expected = "a,\"\"\"b\",c\r\nd,e,\"f\"\"\"\r\n"
-                csvWriter().openAsync(testFileName) {
-                    writeRows(rows)
-                }
-                val actual = readTestFile()
-                actual shouldBe expected
-            }
-            "suspend write all escaped field when a field contains delimiter in it" {
-                val rows = listOf(listOf("a", ",b", "c"), listOf("d", "e", "f,"))
-                val expected = "a,\",b\",c\r\nd,e,\"f,\"\r\n"
-                csvWriter().openAsync(testFileName) {
-                    writeRows(rows)
-                }
-                val actual = readTestFile()
-                actual shouldBe expected
-            }
-            "suspend write all quoted field when a field contains cr or lf in it" {
-                val rows = listOf(listOf("a", "\nb", "c"), listOf("d", "e", "f\r\n"))
-                val expected = "a,\"\nb\",c\r\nd,e,\"f\r\n\"\r\n"
-                csvWriter().openAsync(testFileName) {
-                    writeRows(rows)
-                }
-                val actual = readTestFile()
-                actual shouldBe expected
-            }
-        }
         "suspend close method" should {
             "throw Exception when stream is already closed" {
                 val row = listOf("a", "b")
