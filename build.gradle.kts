@@ -1,6 +1,6 @@
 plugins {
     java
-    kotlin("multiplatform") version "1.3.72"
+    kotlin("multiplatform") version "1.4.21"
     id("org.jetbrains.dokka").version("0.9.18")
     `maven-publish`
     signing
@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.github.doyaaaaaken"
-version = "0.14.0"
+version = "0.15.0"
 
 buildscript {
     repositories {
