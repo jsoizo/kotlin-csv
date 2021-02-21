@@ -170,7 +170,7 @@ internal class ParseStateMachine(
 
     private fun flushField() {
         fields.add(field.toString())
-        field = StringBuilder()
+        field.clear()
     }
 }
 
