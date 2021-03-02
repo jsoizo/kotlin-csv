@@ -2,35 +2,26 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
-import io.kotlintest.TestCase
-import io.kotlintest.TestResult
-import io.kotlintest.shouldBe
-import io.kotlintest.specs.StringSpec
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
 import java.io.File
 
-/**
- * Test if CSV written by CSVWriter can be read by CSVReader.
- */
-class CsvReadWriteCompatibilityTest : StringSpec() {
 
-    private val testFileName = "compatibility-test.csv"
+class CsvReadWriteCompatibilityTest : StringSpec({
 
-    override fun afterTest(testCase: TestCase, result: TestResult) {
-        File(testFileName).delete()
-        super.afterTest(testCase, result)
-    }
+    val testFileName = "compatibility-test.csv"
 
-    init {
-        "CSVReader and CSVWriter are compatible" {
-            val data = listOf(
-                    listOf("a", "bb", "ccc"),
-                    listOf("d", "ee", "fff")
-            )
-            csvWriter().open(testFileName) {
-                writeRows(data)
-            }
-            val actual = csvReader().readAll(File(testFileName))
-            actual shouldBe data
+    afterTest { File(testFileName).delete() }
+
+    "CSVReader and CSVWriter are compatible" {
+        val data = listOf(
+            listOf("a", "bb", "ccc"),
+            listOf("d", "ee", "fff")
+        )
+        csvWriter().open(testFileName) {
+            writeRows(data)
         }
+        val actual = csvReader().readAll(File(testFileName))
+        actual shouldBe data
     }
-}
+})
