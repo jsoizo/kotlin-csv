@@ -30,10 +30,8 @@ val dokkaJar = task<Jar>("dokkaJar") {
 
 kotlin {
     jvm {
-        val main by compilations.getting {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
+        compilations.forEach {
+            it.kotlinOptions.jvmTarget = "1.8"
         }
         //https://docs.gradle.org/current/userguide/publishing_maven.html
         mavenPublication {
@@ -68,10 +66,8 @@ kotlin {
         }
         jvm().compilations["test"].defaultSourceSet {
             dependencies {
-                implementation(kotlin("test"))
-                implementation(kotlin("test-junit"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2")
-                implementation("io.kotlintest:kotlintest-runner-junit5:3.3.2")
+                implementation("io.kotest:kotest-runner-junit5-jvm:4.4.1")
             }
         }
         js().compilations["main"].defaultSourceSet {
@@ -87,8 +83,8 @@ kotlin {
     }
 }
 
-val jvmTest by tasks.getting(Test::class) {
-    useJUnitPlatform { }
+tasks.withType<Test>() {
+    useJUnitPlatform()
 }
 
 

@@ -1,10 +1,10 @@
 package com.github.doyaaaaaken.kotlincsv.dsl
 
-import io.kotlintest.specs.StringSpec
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.github.doyaaaaaken.kotlincsv.dsl.context.WriteQuoteMode
-import io.kotlintest.matchers.types.shouldBeTypeOf
-import io.kotlintest.shouldBe
+import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeTypeOf
 
 /**
  * @author doyaaaaaken
