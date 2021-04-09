@@ -12,7 +12,7 @@ version = "0.15.1"
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath("org.jetbrains.dokka:dokka-gradle-plugin:0.9.18")
@@ -20,7 +20,7 @@ buildscript {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 val dokkaJar = task<Jar>("dokkaJar") {
