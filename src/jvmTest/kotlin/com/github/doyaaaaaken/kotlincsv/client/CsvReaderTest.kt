@@ -231,6 +231,14 @@ class CsvReaderTest : WordSpec({
                     |2""".trimMargin()
             result shouldBe listOf(mapOf("h1" to "a", h2 to "b", "h3" to "c"))
         }
+        "number of fields in a row has to be based on the header #82" {
+            val data = "1,2,3\na,b\nx,y,z"
+
+            val exception = shouldThrow<CSVFieldNumDifferentException> {
+                csvReader().readAllWithHeader(data)
+            }
+            exception.fieldNum shouldBe 3
+        }
     }
 
     "open method (with fileName argument)" should {

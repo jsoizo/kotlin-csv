@@ -38,18 +38,18 @@ class CsvFileReader internal constructor(
     /**
      * read all csv rows as Sequence
      */
-    fun readAllAsSequence(): Sequence<List<String>> {
-        var fieldsNum: Int? = null
+    fun readAllAsSequence(fieldsNum: Int? = null): Sequence<List<String>> {
+        var fieldsNumInRow: Int? = fieldsNum
         return generateSequence {
             readNext()
         }.mapIndexedNotNull { idx, row ->
-            if (fieldsNum == null) fieldsNum = row.size
-            if (fieldsNum != row.size) {
+            if (fieldsNumInRow == null) fieldsNumInRow = row.size
+            if (fieldsNumInRow != row.size) {
                 if (ctx.skipMissMatchedRow) {
-                    logger.info("skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNum]")
+                    logger.info("skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNumInRow]")
                     null
                 } else {
-                    throw CSVFieldNumDifferentException(requireNotNull(fieldsNum), row.size, idx + 1)
+                    throw CSVFieldNumDifferentException(requireNotNull(fieldsNumInRow), row.size, idx + 1)
                 }
             } else {
                 row
@@ -64,7 +64,7 @@ class CsvFileReader internal constructor(
         val headers = readNext() ?: return emptySequence()
         val duplicated = findDuplicate(headers)
         if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
-        return readAllAsSequence().map { fields -> headers.zip(fields).toMap() }
+        return readAllAsSequence(headers.size).map { fields -> headers.zip(fields).toMap() }
     }
 
     override fun close() {
