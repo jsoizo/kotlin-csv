@@ -1,4 +1,5 @@
-<h1 align="center">Welcome to kotlin-csv 👋</h1>
+<h1 align="center">kotlin-csv</h1>
+
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-0.15.2-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE">
