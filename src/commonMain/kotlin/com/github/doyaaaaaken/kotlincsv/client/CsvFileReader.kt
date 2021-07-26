@@ -5,8 +5,6 @@ import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import mu.KotlinLogging
-import java.io.BufferedReader
-import java.io.Closeable
 
 /**
  * CSV Reader class, which controls file I/O flow.
@@ -15,8 +13,8 @@ import java.io.Closeable
  */
 class CsvFileReader internal constructor(
         private val ctx: CsvReaderContext,
-        reader: BufferedReader
-) : Closeable {
+        reader: Reader
+) {
 
     private val logger = KotlinLogging.logger {  }
     private val reader = BufferedLineReader(reader)
@@ -46,7 +44,7 @@ class CsvFileReader internal constructor(
             if (fieldsNumInRow == null) fieldsNumInRow = row.size
             if (fieldsNumInRow != row.size) {
                 if (ctx.skipMissMatchedRow) {
-                    logger.info("skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNumInRow]")
+                    logger.info{"skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNumInRow]"}
                     null
                 } else {
                     throw CSVFieldNumDifferentException(requireNotNull(fieldsNumInRow), row.size, idx + 1)
@@ -67,7 +65,7 @@ class CsvFileReader internal constructor(
         return readAllAsSequence(headers.size).map { fields -> headers.zip(fields).toMap() }
     }
 
-    override fun close() {
+    fun close() {
         reader.close()
     }
 

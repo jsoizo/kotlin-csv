@@ -1,6 +1,6 @@
 plugins {
     java
-    kotlin("multiplatform") version "1.4.31"
+    kotlin("multiplatform") version "1.5.21"
     id("org.jetbrains.dokka").version("0.9.18")
     `maven-publish`
     signing
@@ -38,7 +38,7 @@ kotlin {
             artifact(dokkaJar)
         }
     }
-    js {
+    js(BOTH) {
         browser {
         }
         nodejs {
@@ -47,7 +47,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
+                implementation("io.github.microutils:kotlin-logging:2.0.10")
             }
         }
         val commonTest by getting {
@@ -59,20 +59,18 @@ kotlin {
 
         jvm().compilations["main"].defaultSourceSet {
             dependencies {
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-                implementation("io.github.microutils:kotlin-logging:1.7.9")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2")
+                implementation("io.github.microutils:kotlin-logging:2.0.10")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
             }
         }
         jvm().compilations["test"].defaultSourceSet {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
                 implementation("io.kotest:kotest-runner-junit5-jvm:4.4.1")
             }
         }
         js().compilations["main"].defaultSourceSet {
             dependencies {
-                implementation(kotlin("stdlib-js"))
             }
         }
         js().compilations["test"].defaultSourceSet {

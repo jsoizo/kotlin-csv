@@ -2,7 +2,6 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext
-import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
 import java.nio.charset.Charset
@@ -13,7 +12,7 @@ import java.nio.charset.Charset
  * @author doyaaaaaken
  */
 actual class CsvReader actual constructor(
-        private val ctx: CsvReaderContext
+    private val ctx: CsvReaderContext
 ) : ICsvReaderContext by ctx {
 
     private val charsetCode = Charset.forName(charset)
@@ -167,22 +166,42 @@ actual class CsvReader actual constructor(
      * Usage example:
      * @see openAsync method
      */
-    suspend fun <T> openAsync(ips: InputStream,  read: suspend CsvFileReader.()-> T): T {
+    suspend fun <T> openAsync(ips: InputStream, read: suspend CsvFileReader.() -> T): T {
         val br = ips.bufferedReader(charsetCode)
         return openAsync(br, read)
     }
 
-    private fun <T> open(br: BufferedReader, doRead: CsvFileReader.() -> T): T {
+    private fun <T> open(br: Reader, doRead: CsvFileReader.() -> T): T {
         val reader = CsvFileReader(ctx, br)
         return reader.use {
             reader.doRead()
         }
     }
 
-    private suspend fun <T> openAsync(br: BufferedReader, doRead: suspend CsvFileReader.() -> T): T {
+    private suspend fun <T> openAsync(br: Reader, doRead: suspend CsvFileReader.() -> T): T {
         val reader = CsvFileReader(ctx, br)
         return reader.use {
             reader.doRead()
+        }
+    }
+}
+
+private inline fun <R> CsvFileReader.use(block: (CsvFileReader) -> R): R {
+    var exception: Throwable? = null
+    try {
+        return block(this)
+    } catch (e: Throwable) {
+        exception = e
+        throw e
+    } finally {
+        when (exception) {
+            null -> close()
+            else ->
+                try {
+                    close()
+                } catch (t: Throwable) {
+                    exception.addSuppressed(t)
+                }
         }
     }
 }
