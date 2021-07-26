@@ -73,7 +73,7 @@ class StringReaderTest : WordSpec({
         }
         "read csv with line breaks enclosed in double quotes" {
             val result = readAll(readTestDataFile("line-breaks.csv"))
-            result shouldBe listOf(listOf("a", "b\r\nb", "c"), listOf("\r\nd", "e", "f"))
+            result shouldBe listOf(listOf("a", "b\nb", "c"), listOf("\nd", "e", "f"))
         }
         //refs https://github.com/tototoshi/scala-csv/issues/22
         "read csv with \u2028 field" {
