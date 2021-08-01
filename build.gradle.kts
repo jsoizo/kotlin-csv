@@ -59,7 +59,6 @@ kotlin {
 
         jvm().compilations["main"].defaultSourceSet {
             dependencies {
-                implementation("io.github.microutils:kotlin-logging:2.0.10")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
             }
         }
