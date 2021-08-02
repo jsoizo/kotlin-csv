@@ -1,14 +1,11 @@
 package com.github.doyaaaaaken.kotlincsv.client
 
-import java.io.BufferedReader
-import java.io.Closeable
-
 /**
  * buffered reader which can read line with line terminator
  */
 internal class BufferedLineReader(
-        private val br: BufferedReader
-) : Closeable {
+        private val br: Reader
+) {
 
     fun readLineWithTerminator(): String? {
         val sb = StringBuilder()
@@ -46,7 +43,7 @@ internal class BufferedLineReader(
         return sb.toString()
     }
 
-    override fun close() {
+    fun close() {
         br.close()
     }
 }
