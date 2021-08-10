@@ -62,7 +62,9 @@ implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2'
 
 #### Simple case
 
-You can read csv file from `String`, `java.io.File` or `java.io.InputStream` object.
+You can read csv file from `String`, `java.io.File` or `java.io.InputStream` object.  
+No need to do any I/O handling. (No need to call `use`, `close` and `flush` method.)
+
 ```kotlin
 // read from `String`
 val csvData: String = "a,b,c\nd,e,f"
@@ -119,18 +121,6 @@ csvReader().open("test.csv") {
 }
 ```
 
-#### Write in a `Suspending Function`
-```kotlin
-val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f")).asSequence()
-csvWriter().openAsync(testFileName) {
-    delay(100) //other suspending task
-    rows.asFlow().collect {
-       delay(100) // other suspending task
-        writeRow(it)
-    }
-}
-```
-
 #### Read in a `Suspending Function`
 ```kotlin
 csvReader().openAsync("test.csv") {
@@ -170,7 +160,7 @@ val tsvReader = csvReader {
 
 #### Simple case
 
-You can start writing csv in one line, no need to do any I/O handling:
+You can start writing csv in one line, no need to do any I/O handling (No need to call `use`, `close` and `flush` method.):
 ```kotlin
 val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
 csvWriter().writeAll(rows, "test.csv")
@@ -188,6 +178,18 @@ csvWriter().open("test.csv") {
     writeRow(row2)
     writeRow("g", "h", "i")
     writeRows(listOf(row1, row2))
+}
+```
+
+#### Write in a `Suspending Function`
+```kotlin
+val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f")).asSequence()
+csvWriter().openAsync(testFileName) {
+    delay(100) //other suspending task
+    rows.asFlow().collect {
+       delay(100) // other suspending task
+        writeRow(it)
+    }
 }
 ```
 
