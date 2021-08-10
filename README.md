@@ -14,16 +14,16 @@
   </a>
 </p>
 
-> Pure Kotlin CSV Reader/Writer
+Pure Kotlin CSV Reader/Writer.
 
-# Principals
+# Design goals
 
 ### 1. Simple interface
   * easy to setup
   * use DSL so easy to read
 
-### 2. No need to be aware of file close
-  * on Java, we always need to close file. but it's boilerplate code and not friendly for non-JVM user.
+### 2. Automatic handling of I/O
+  * in Java, we always need to close file. but it's boilerplate code and not friendly for non-JVM user.
   * provide interfaces which automatically close file without being aware.
 
 ### 3. Multiplatform (Planned in #15)
@@ -33,8 +33,8 @@
 
 ## Download
 
-gradle DSL:
-```
+### Gradle
+```gradle
 //gradle kotlin DSL
 implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
 
@@ -42,8 +42,8 @@ implementation("com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2")
 implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:0.15.2'
 ```
 
-maven:
-```
+### Maven
+```maven
 <dependency>
   <groupId>com.github.doyaaaaaken</groupId>
   <artifactId>kotlin-csv-jvm</artifactId>
@@ -104,12 +104,13 @@ csvReader().open("test2.csv") {
 }
 ```
 
-NOTE:`readAllAsSequence` and `readAllWithHeaderAsSequence` methods can be only called inside `open` method lambda block.
-Because, input stream is closed outside `open` method lambda block.
+NOTE:`readAllAsSequence` and `readAllWithHeaderAsSequence` methods
+can only be called within the `open` lambda block.
+The input stream is closed after the `open` lambda block.
 
 #### Read line by line
 
-If you want to handle line-by-line, you can do it by using `open` method.<br />
+If you want to handle line-by-line, you can do it by using `open` method.
 Use `open` method and then use `readNext` method inside nested block to read row.
 
 ```kotlin
@@ -129,6 +130,7 @@ csvWriter().openAsync(testFileName) {
     }
 }
 ```
+
 #### Read in a `Suspending Function`
 ```kotlin
 csvReader().openAsync("test.csv") {
@@ -144,7 +146,7 @@ Note: `openAsync` can be and only be accessed through a `coroutine` or another `
 
 #### Customize
 
-When you create CsvReader, you can choose read options.
+When you create CsvReader, you can choose read options:
 ```kotlin
 // this is tsv reader's option
 val tsvReader = csvReader {
@@ -158,19 +160,17 @@ val tsvReader = csvReader {
 | Opton | default value | description                         |
 |------------|---------------|-------------------------------------|
 | charset |`UTF-8`| Charset encoding. The value must be supported by [java.nio.charset.Charset](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html). |
-| quoteChar | `"` | Character used as quote between each fields. |
-| delimiter | `,` | Character used as delimiter between each fields.<br />Use `"\t"` if reading TSV file. |
-| escapeChar | `"` | Character to escape quote inside field string.<br />Normally, you don't have to change this option.<br />See detail comment on `ICsvReaderContext`. |
-| skipEmptyLine | `false` | If empty line is found, skip it or not (=throw an exception). |
-| skipMissMatchedRow | `false` | If a invalid row which has different number of fields from other rows is found, skip it or not (=throw an exception). |
+| quoteChar | `"` | Character used to quote fields. |
+| delimiter | `,` | Character used as delimiter between each field.<br />Use `"\t"` if reading TSV file. |
+| escapeChar | `"` | Character to escape quote inside field string.<br />Normally, you don't have to change this option.<br />See detail comment on [ICsvReaderContext](src/commonMain/kotlin/com/github/doyaaaaaken/kotlincsv/dsl/context/CsvReaderContext.kt). |
+| skipEmptyLine | `false` | Whether to skip or error out on empty lines. |
+| skipMissMatchedRow | `false` | Whether to skip an invalid row (different number of fields from other rows) or throw an exception. |
 
 ### CSV Write examples
 
 #### Simple case
 
-You can write csv simply, only one line.
-No need to call other methods. <br />
-Also, **You don't have to call `use`, `close` and `flush` method.**
+You can start writing csv in one line, no need to do any I/O handling:
 ```kotlin
 val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
 csvWriter().writeAll(rows, "test.csv")
@@ -179,8 +179,7 @@ csvWriter().writeAll(rows, "test.csv")
 csvWriter().writeAll(rows, "test.csv", append = true)
 ```
 
-You can also write csv file per each line.<br />
-Also, **You don't have to call `use`, `close` and `flush` method.**
+You can also write a csv file line by line:
 ```kotlin
 val row1 = listOf("a", "b", "c")
 val row2 = listOf("d", "e", "f")
@@ -194,8 +193,9 @@ csvWriter().open("test.csv") {
 
 #### long-running write (manual control for file close)
 
-If you want to close file writer manually for performance reason (i.e. streaming scenario), you can use `openAndGetRawWriter` and get raw `CsvFileWriter`.  
-**DO NOT forget to call `close` method manually.**
+If you want to close a file writer manually for performance reasons (e.g. streaming scenario),
+you can use `openAndGetRawWriter` and get a raw `CsvFileWriter`.  
+**DO NOT forget to `close` the writer!**
 
 ```kotlin
 val row1 = listOf("a", "b", "c")
@@ -207,7 +207,7 @@ writer.close()
 
 #### Customize
 
-When you create CsvWriter, you can choose write options.
+When you create a CsvWriter, you can choose write options.
 ```kotlin
 val writer = csvWriter {
     charset = "ISO_8859_1"
@@ -244,15 +244,15 @@ val writer = csvWriter {
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/doyaaaaaken/kotlin-csv/issues).<br />
-If you have question, feel free to ask in [Kotlin slack's](https://kotlinlang.slack.com/) `kotlin-csv` room.
+Contributions, [issues](https://github.com/doyaaaaaken/kotlin-csv/issues) and feature requests are welcome!
+If you have questions, ask away in [Kotlin Slack's](https://kotlinlang.slack.com) `kotlin-csv` room.
 
 ## 💻 Development
 
-```
-$ git clone git@github.com:doyaaaaaken/kotlin-csv.git
-$ cd kotlin-csv
-$ ./gradlew check
+```sh
+git clone git@github.com:doyaaaaaken/kotlin-csv.git
+cd kotlin-csv
+./gradlew check
 ```
 
 ## Show your support
@@ -261,8 +261,8 @@ Give a ⭐️ if this project helped you!
 
 ## 📝 License
 
-Copyright © 2019 [doyaaaaaken](https://github.com/doyaaaaaken).<br />
-This project is [Apache License 2.0](https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE) licensed.
+Copyright © 2019 [doyaaaaaken](https://github.com/doyaaaaaken).  
+This project is licensed under [Apache 2.0](LICENSE).
 
 ***
 _This project is inspired ❤️ by [scala-csv](https://github.com/tototoshi/scala-csv)_
