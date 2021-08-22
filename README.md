@@ -26,7 +26,7 @@
   * on Java, we always need to close file. but it's boilerplate code and not friendly for non-JVM user.
   * provide interfaces which automatically close file without being aware.
 
-### 3. Multiplatform (Planned in #15)
+### 3. Multiplatform
   * kotlin multiplatform project
 
 # Usage
