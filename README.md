@@ -175,12 +175,16 @@ csvWriter().writeAll(rows, "test.csv")
 
 // if you'd append data on the tail of the file, assign `append = true`.
 csvWriter().writeAll(rows, "test.csv", append = true)
+
+// You can also write into OutpusStream.
+csvWriter().writeAll(rows, File("test.csv").outputStream())
 ```
 
-You can also write a csv file line by line:
+You can also write a csv file line by line by `open` method:
 ```kotlin
 val row1 = listOf("a", "b", "c")
 val row2 = listOf("d", "e", "f")
+
 csvWriter().open("test.csv") { 
     writeRow(row1)
     writeRow(row2)
