@@ -206,6 +206,11 @@ class CsvReaderTest : WordSpec({
             result shouldBe expected
         }
 
+        "throw on duplicated headers" {
+            val file = readTestDataFile("with-duplicate-header.csv")
+            shouldThrow<MalformedCSVException> { csvReader().readAllWithHeader(file) }
+        }
+
         "read from String" {
             val data = """h1,h2,h3
                     |a,b,c
