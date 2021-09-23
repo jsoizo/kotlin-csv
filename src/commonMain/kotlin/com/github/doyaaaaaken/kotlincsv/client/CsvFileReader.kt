@@ -59,9 +59,13 @@ class CsvFileReader internal constructor(
      * read all csv rows as Sequence with header information
      */
     fun readAllWithHeaderAsSequence(): Sequence<Map<String, String>> {
-        val headers = readNext() ?: return emptySequence()
-        val duplicated = findDuplicate(headers)
-        if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
+        var headers = readNext() ?: return emptySequence()
+        if (ctx.autoRenameDuplicateHeaders) {
+            headers = deduplicateHeaders(headers)
+        } else {
+            val duplicated = findDuplicate(headers)
+            if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
+        }
         return readAllAsSequence(headers.size).map { fields -> headers.zip(fields).toMap() }
     }
 
@@ -106,5 +110,26 @@ class CsvFileReader internal constructor(
             }
         }
         return null
+    }
+
+    /**
+     * deduplicate headers based on occurrence by appending "_<NUM>"
+     * Ex: [a,b,b,c,a] => [a,b,b_2,c,a_2]
+     *
+     * @return return headers as List<String>.
+     *
+     */
+    private fun deduplicateHeaders(headers: List<String>): List<String> {
+        val occurrences = headers.toSet().associateWith { 1 }.toMutableMap()
+        return headers.map { header ->
+            occurrences[header]?.let { occurred ->
+                when {
+                    occurred > 1 -> "${header}_$occurred"
+                    else -> header
+                }.also {
+                    occurrences[header] = occurred + 1
+                }
+            } ?: throw RuntimeException("a")
+        }
     }
 }
