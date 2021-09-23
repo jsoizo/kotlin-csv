@@ -61,7 +61,7 @@ interface ICsvReaderContext {
     val skipMissMatchedRow: Boolean
 
     /**
-     * If a header occurs multiple times weather auto renaming should be applied when `readAllWithHeaderAsSequence()` (=throw an exception).
+     * If a header occurs multiple times whether auto renaming should be applied when `readAllWithHeaderAsSequence()` (=throw an exception).
      */
     val autoRenameDuplicateHeaders: Boolean
 }
