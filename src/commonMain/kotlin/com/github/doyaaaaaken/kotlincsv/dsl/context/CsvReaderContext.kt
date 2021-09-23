@@ -59,6 +59,11 @@ interface ICsvReaderContext {
      * If a invalid row which has different number of fields from other rows is found, skip it or not (=throw an exception).
      */
     val skipMissMatchedRow: Boolean
+
+    /**
+     * If a header occurs multiple times weather auto renaming should be applied when `readAllWithHeaderAsSequence()` (=throw an exception).
+     */
+    val autoRenameDuplicateHeaders: Boolean
 }
 
 /**
@@ -74,4 +79,5 @@ class CsvReaderContext : ICsvReaderContext {
     override var escapeChar: Char = '"'
     override var skipEmptyLine: Boolean = false
     override var skipMissMatchedRow: Boolean = false
+    override var autoRenameDuplicateHeaders: Boolean = false
 }
