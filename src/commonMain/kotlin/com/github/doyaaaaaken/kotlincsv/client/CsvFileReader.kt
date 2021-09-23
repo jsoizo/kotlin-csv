@@ -12,11 +12,11 @@ import mu.KotlinLogging
  * @author doyaaaaaken
  */
 class CsvFileReader internal constructor(
-        private val ctx: CsvReaderContext,
-        reader: Reader
+    private val ctx: CsvReaderContext,
+    reader: Reader
 ) {
 
-    private val logger = KotlinLogging.logger {  }
+    private val logger = KotlinLogging.logger { }
     private val reader = BufferedLineReader(reader)
     private var rowNum = 0L
 
@@ -44,7 +44,7 @@ class CsvFileReader internal constructor(
             if (fieldsNumInRow == null) fieldsNumInRow = row.size
             if (fieldsNumInRow != row.size) {
                 if (ctx.skipMissMatchedRow) {
-                    logger.info{"skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNumInRow]"}
+                    logger.info { "skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNumInRow]" }
                     null
                 } else {
                     throw CSVFieldNumDifferentException(requireNotNull(fieldsNumInRow), row.size, idx + 1)
@@ -120,16 +120,15 @@ class CsvFileReader internal constructor(
      *
      */
     private fun deduplicateHeaders(headers: List<String>): List<String> {
-        val occurrences = headers.toSet().associateWith { 1 }.toMutableMap()
+        val occurrences = headers.associateWith { 1 }.toMutableMap()
         return headers.map { header ->
-            occurrences[header]?.let { occurred ->
-                when {
-                    occurred > 1 -> "${header}_$occurred"
-                    else -> header
-                }.also {
-                    occurrences[header] = occurred + 1
-                }
-            } ?: throw RuntimeException("a")
+            val occurred = occurrences.getValue(header)
+            when {
+                occurred > 1 -> "${header}_$occurred"
+                else -> header
+            }.also {
+                occurrences[header] = occurred + 1
+            }
         }
     }
 }
