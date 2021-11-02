@@ -12,11 +12,11 @@ import mu.KotlinLogging
  * @author doyaaaaaken
  */
 class CsvFileReader internal constructor(
-        private val ctx: CsvReaderContext,
-        reader: Reader
+    private val ctx: CsvReaderContext,
+    reader: Reader
 ) {
 
-    private val logger = KotlinLogging.logger {  }
+    private val logger = KotlinLogging.logger { }
     private val reader = BufferedLineReader(reader)
     private var rowNum = 0L
 
@@ -44,7 +44,7 @@ class CsvFileReader internal constructor(
             if (fieldsNumInRow == null) fieldsNumInRow = row.size
             if (fieldsNumInRow != row.size) {
                 if (ctx.skipMissMatchedRow) {
-                    logger.info{"skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNumInRow]"}
+                    logger.info { "skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNumInRow]" }
                     null
                 } else {
                     throw CSVFieldNumDifferentException(requireNotNull(fieldsNumInRow), row.size, idx + 1)
@@ -59,9 +59,13 @@ class CsvFileReader internal constructor(
      * read all csv rows as Sequence with header information
      */
     fun readAllWithHeaderAsSequence(): Sequence<Map<String, String>> {
-        val headers = readNext() ?: return emptySequence()
-        val duplicated = findDuplicate(headers)
-        if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
+        var headers = readNext() ?: return emptySequence()
+        if (ctx.autoRenameDuplicateHeaders) {
+            headers = deduplicateHeaders(headers)
+        } else {
+            val duplicated = findDuplicate(headers)
+            if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
+        }
         return readAllAsSequence(headers.size).map { fields -> headers.zip(fields).toMap() }
     }
 
@@ -106,5 +110,25 @@ class CsvFileReader internal constructor(
             }
         }
         return null
+    }
+
+    /**
+     * deduplicate headers based on occurrence by appending "_<NUM>"
+     * Ex: [a,b,b,c,a] => [a,b,b_2,c,a_2]
+     *
+     * @return return headers as List<String>.
+     *
+     */
+    private fun deduplicateHeaders(headers: List<String>): List<String> {
+        val occurrences = headers.associateWith { 1 }.toMutableMap()
+        return headers.map { header ->
+            val occurred = occurrences.getValue(header)
+            when {
+                occurred > 1 -> "${header}_$occurred"
+                else -> header
+            }.also {
+                occurrences[header] = occurred + 1
+            }
+        }
     }
 }

@@ -163,6 +163,7 @@ val tsvReader = csvReader {
 | escapeChar | `"` | Character to escape quote inside field string.<br />Normally, you don't have to change this option.<br />See detail comment on [ICsvReaderContext](src/commonMain/kotlin/com/github/doyaaaaaken/kotlincsv/dsl/context/CsvReaderContext.kt). |
 | skipEmptyLine | `false` | Whether to skip or error out on empty lines. |
 | skipMissMatchedRow | `false` | Whether to skip an invalid row (different number of fields from other rows) or throw an exception. |
+| autoRenameDuplicateHeaders | `false` | Whether to auto rename duplicate headers or throw an exception. |
 
 ### CSV Write examples
 
