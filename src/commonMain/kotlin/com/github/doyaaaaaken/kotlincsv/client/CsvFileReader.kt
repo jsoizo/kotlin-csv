@@ -114,7 +114,7 @@ class CsvFileReader internal constructor(
 
     /**
      * deduplicate headers based on occurrence by appending "_<NUM>"
-     * Ex: [a,b,b,c,a] => [a,b,b_2,c,a_2]
+     * Ex: [a,b,b,b,c,a] => [a,b,b_2,b_3,c,a_2]
      *
      * @return return headers as List<String>.
      *
