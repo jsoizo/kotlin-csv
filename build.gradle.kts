@@ -1,6 +1,6 @@
 plugins {
     java
-    kotlin("multiplatform") version "1.5.30"
+    kotlin("multiplatform") version "1.5.31"
     id("org.jetbrains.dokka").version("0.9.18")
     `maven-publish`
     signing
@@ -47,7 +47,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("io.github.microutils:kotlin-logging:2.0.10")
+                implementation("io.github.microutils:kotlin-logging:2.0.11")
             }
         }
         val commonTest by getting {
@@ -59,13 +59,13 @@ kotlin {
 
         jvm().compilations["main"].defaultSourceSet {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
             }
         }
         jvm().compilations["test"].defaultSourceSet {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
-                implementation("io.kotest:kotest-runner-junit5-jvm:4.4.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+                implementation("io.kotest:kotest-runner-junit5-jvm:4.6.3")
             }
         }
         js().compilations["main"].defaultSourceSet {
@@ -142,18 +142,18 @@ jacoco {
 }
 tasks.jacocoTestReport {
     val coverageSourceDirs = arrayOf(
-            "commonMain/src",
-            "jvmMain/src"
+        "commonMain/src",
+        "jvmMain/src"
     )
     val classFiles = File("${buildDir}/classes/kotlin/jvm/")
-            .walkBottomUp()
-            .toSet()
+        .walkBottomUp()
+        .toSet()
     classDirectories.setFrom(classFiles)
     sourceDirectories.setFrom(files(coverageSourceDirs))
     additionalSourceDirs.setFrom(files(coverageSourceDirs))
 
     executionData
-            .setFrom(files("${buildDir}/jacoco/jvmTest.exec"))
+        .setFrom(files("${buildDir}/jacoco/jvmTest.exec"))
 
     reports {
         xml.isEnabled = true
