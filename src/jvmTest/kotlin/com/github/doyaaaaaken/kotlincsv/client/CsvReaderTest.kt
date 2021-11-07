@@ -226,6 +226,11 @@ class CsvReaderTest : WordSpec({
             result shouldBe deduplicateExpected
         }
 
+        "auto rename failed" {
+            val file = readTestDataFile("with-duplicate-header-auto-rename-failed.csv")
+            shouldThrow<MalformedCSVException> { csvReader().readAllWithHeader(file) }
+        }
+
         "read from String" {
             val data = """h1,h2,h3
                     |a,b,c

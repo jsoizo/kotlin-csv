@@ -2,6 +2,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
+import com.github.doyaaaaaken.kotlincsv.util.CSVAutoRenameFailedException
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import mu.KotlinLogging
@@ -127,6 +128,8 @@ class CsvFileReader internal constructor(
                 count > 1 -> "${header}_$count"
                 else -> header
             }
+        }.also { results ->
+            if (results.size != results.distinct().size) throw CSVAutoRenameFailedException()
         }
     }
 }
