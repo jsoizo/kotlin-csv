@@ -1,7 +1,7 @@
 <h1 align="center">kotlin-csv</h1>
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.1.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-1.2.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
@@ -19,49 +19,57 @@ Pure Kotlin CSV Reader/Writer.
 # Design goals
 
 ### 1. Simple interface
-  * easy to setup
-  * use DSL so easy to read
+
+* easy to setup
+* use DSL so easy to read
 
 ### 2. Automatic handling of I/O
-  * in Java, we always need to close file. but it's boilerplate code and not friendly for non-JVM user.
-  * provide interfaces which automatically close file without being aware.
+
+* in Java, we always need to close file. but it's boilerplate code and not friendly for non-JVM user.
+* provide interfaces which automatically close file without being aware.
 
 ### 3. Multiplatform
-  * kotlin multiplatform project
+
+* kotlin multiplatform project
 
 # Usage
 
 ## Download
 
 ### Gradle
+
 ```gradle
 //gradle kotlin DSL
-implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.1.0") //for JVM platform
-implementation("com.github.doyaaaaaken:kotlin-csv-js:1.1.0") //for Kotlin JS platform
+implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.2.0") //for JVM platform
+implementation("com.github.doyaaaaaken:kotlin-csv-js:1.2.0") //for Kotlin JS platform
 
 //gradle groovy DSL
-implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.1.0' //for JVM platform
-implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.1.0' //for Kotlin JS platform
+implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.2.0' //for JVM platform
+implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.2.0' //for Kotlin JS platform
 ```
 
 ### Maven
+
 ```maven
 <dependency>
   <groupId>com.github.doyaaaaaken</groupId>
   <artifactId>kotlin-csv-jvm</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 </dependency>
 <dependency>
   <groupId>com.github.doyaaaaaken</groupId>
   <artifactId>kotlin-csv-js</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
 [kscript](https://github.com/holgerbrandl/kscript)
+
 ```kotlin
-@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-jvm:1.1.0") //for JVM platform
-@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-js:1.1.0") //for Kotlin JS platform
+@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-jvm:1.2.0") //for JVM platform
+@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-js:1.2.0")
+
+//for Kotlin JS platform
 ```
 
 ## Examples
@@ -97,7 +105,7 @@ println(rows) //[{a=d, b=e, c=f}]
 It starts to process each rows before reading all row data.
 
 See detail about `Sequence` type on [Kotlin official document](https://kotlinlang.org/docs/reference/sequences.html).
- 
+
 ```kotlin
 csvReader().open("test1.csv") {
     readAllAsSequence().forEach { row: List<String> ->
@@ -114,14 +122,13 @@ csvReader().open("test2.csv") {
 }
 ```
 
-NOTE:`readAllAsSequence` and `readAllWithHeaderAsSequence` methods
-can only be called within the `open` lambda block.
+NOTE:`readAllAsSequence` and `readAllWithHeaderAsSequence` methods can only be called within the `open` lambda block.
 The input stream is closed after the `open` lambda block.
 
 #### Read line by line
 
-If you want to handle line-by-line, you can do it by using `open` method.
-Use `open` method and then use `readNext` method inside nested block to read row.
+If you want to handle line-by-line, you can do it by using `open` method. Use `open` method and then use `readNext`
+method inside nested block to read row.
 
 ```kotlin
 csvReader().open("test.csv") {
@@ -130,21 +137,24 @@ csvReader().open("test.csv") {
 ```
 
 #### Read in a `Suspending Function`
+
 ```kotlin
 csvReader().openAsync("test.csv") {
     val container = mutalbeListOf<List<String>>()
     delay(100) //other suspending task
     readAllAsSequence().asFlow().collect { row ->
-       delay(100) // other suspending task
-       container.add(row) 
+        delay(100) // other suspending task
+        container.add(row)
     }
 }
 ```
+
 Note: `openAsync` can be and only be accessed through a `coroutine` or another `suspending` function
 
 #### Customize
 
 When you create CsvReader, you can choose read options:
+
 ```kotlin
 // this is tsv reader's option
 val tsvReader = csvReader {
@@ -169,7 +179,9 @@ val tsvReader = csvReader {
 
 #### Simple case
 
-You can start writing csv in one line, no need to do any I/O handling (No need to call `use`, `close` and `flush` method.):
+You can start writing csv in one line, no need to do any I/O handling (No need to call `use`, `close` and `flush`
+method.):
+
 ```kotlin
 val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
 csvWriter().writeAll(rows, "test.csv")
@@ -182,11 +194,12 @@ csvWriter().writeAll(rows, File("test.csv").outputStream())
 ```
 
 You can also write a csv file line by line by `open` method:
+
 ```kotlin
 val row1 = listOf("a", "b", "c")
 val row2 = listOf("d", "e", "f")
 
-csvWriter().open("test.csv") { 
+csvWriter().open("test.csv") {
     writeRow(row1)
     writeRow(row2)
     writeRow("g", "h", "i")
@@ -195,12 +208,13 @@ csvWriter().open("test.csv") {
 ```
 
 #### Write in a `Suspending Function`
+
 ```kotlin
 val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f")).asSequence()
 csvWriter().openAsync(testFileName) {
     delay(100) //other suspending task
     rows.asFlow().collect {
-       delay(100) // other suspending task
+        delay(100) // other suspending task
         writeRow(it)
     }
 }
@@ -208,14 +222,15 @@ csvWriter().openAsync(testFileName) {
 
 #### long-running write (manual control for file close)
 
-If you want to close a file writer manually for performance reasons (e.g. streaming scenario),
-you can use `openAndGetRawWriter` and get a raw `CsvFileWriter`.  
+If you want to close a file writer manually for performance reasons (e.g. streaming scenario), you can
+use `openAndGetRawWriter` and get a raw `CsvFileWriter`.  
 **DO NOT forget to `close` the writer!**
 
 ```kotlin
 val row1 = listOf("a", "b", "c")
+
 @OptIn(KotlinCsvExperimental::class)
-val writer = csvWriter().openAndGetRawWriter("test.csv") 
+val writer = csvWriter().openAndGetRawWriter("test.csv")
 writer.writeRow(row1)
 writer.close()
 ```
@@ -223,6 +238,7 @@ writer.close()
 #### Customize
 
 When you create a CsvWriter, you can choose write options.
+
 ```kotlin
 val writer = csvWriter {
     charset = "ISO_8859_1"
@@ -250,9 +266,11 @@ val writer = csvWriter {
 # Links
 
 **Documents**
+
 * [Change Logs](https://github.com/doyaaaaaken/kotlin-csv/releases)
 
 **Libraries which use kotlin-csv**
+
 * [kotlin-grass](https://github.com/blackmo18/kotlin-grass): Csv File to Kotlin Data Class Parser.
 
 # Miscellaneous
