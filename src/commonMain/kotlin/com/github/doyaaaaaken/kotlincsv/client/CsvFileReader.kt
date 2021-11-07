@@ -2,6 +2,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
+import com.github.doyaaaaaken.kotlincsv.util.CSVAutoRenameFailedException
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import mu.KotlinLogging
@@ -64,7 +65,7 @@ class CsvFileReader internal constructor(
             headers = deduplicateHeaders(headers)
         } else {
             val duplicated = findDuplicate(headers)
-            if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
+            if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated. please consider to use 'autoRenameDuplicateHeaders' option.")
         }
         return readAllAsSequence(headers.size).map { fields -> headers.zip(fields).toMap() }
     }
@@ -114,21 +115,21 @@ class CsvFileReader internal constructor(
 
     /**
      * deduplicate headers based on occurrence by appending "_<NUM>"
-     * Ex: [a,b,b,c,a] => [a,b,b_2,c,a_2]
+     * Ex: [a,b,b,b,c,a] => [a,b,b_2,b_3,c,a_2]
      *
      * @return return headers as List<String>.
-     *
      */
     private fun deduplicateHeaders(headers: List<String>): List<String> {
-        val occurrences = headers.associateWith { 1 }.toMutableMap()
+        val occurrences = mutableMapOf<String, Int>()
         return headers.map { header ->
-            val occurred = occurrences.getValue(header)
+            val count = occurrences.getOrPut(header) { 0 } + 1
+            occurrences[header] = count
             when {
-                occurred > 1 -> "${header}_$occurred"
+                count > 1 -> "${header}_$count"
                 else -> header
-            }.also {
-                occurrences[header] = occurred + 1
             }
+        }.also { results ->
+            if (results.size != results.distinct().size) throw CSVAutoRenameFailedException()
         }
     }
 }

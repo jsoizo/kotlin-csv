@@ -1,7 +1,7 @@
 package com.github.doyaaaaaken.kotlincsv.util
 
 /**
- * @author doyaaaaaken
+ * General purpose Exception
  */
 open class MalformedCSVException(message: String) : RuntimeException(message)
 
@@ -9,10 +9,10 @@ open class MalformedCSVException(message: String) : RuntimeException(message)
  * Exception when parsing each csv row
  */
 class CSVParseFormatException(
-        val rowNum: Long,
-        val colIndex: Long,
-        val char: Char,
-        message: String = "Exception happened on parsing csv"
+    val rowNum: Long,
+    val colIndex: Long,
+    val char: Char,
+    message: String = "Exception happened on parsing csv"
 ) : MalformedCSVException("$message [rowNum = $rowNum, colIndex = $colIndex, char = $char]")
 
 /**
@@ -29,7 +29,10 @@ class CSVParseFormatException(
  * </pre>
  */
 class CSVFieldNumDifferentException(
-        val fieldNum: Int,
-        val fieldNumOnFailedRow: Int,
-        val csvRowNum: Int
+    val fieldNum: Int,
+    val fieldNumOnFailedRow: Int,
+    val csvRowNum: Int
 ) : MalformedCSVException("Fields num seems to be $fieldNum on each row, but on ${csvRowNum}th csv row, fields num is $fieldNumOnFailedRow.")
+
+class CSVAutoRenameFailedException :
+    MalformedCSVException("auto renaming by 'autoRenameDuplicateHeaders' option is failed.")
