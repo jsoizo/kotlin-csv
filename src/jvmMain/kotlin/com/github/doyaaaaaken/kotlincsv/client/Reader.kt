@@ -3,7 +3,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 import java.io.InputStream
 import java.nio.charset.Charset
 
-class ReaderJvmImpl(private val reader: java.io.BufferedReader): Reader {
+class ReaderJvmImpl(private val reader: java.io.BufferedReader) : Reader {
     override fun read(): Int {
         return reader.read()
     }
@@ -21,4 +21,5 @@ class ReaderJvmImpl(private val reader: java.io.BufferedReader): Reader {
     }
 }
 
-internal fun InputStream.bufferedReader(charset: Charset = Charsets.UTF_8): Reader = ReaderJvmImpl(reader(charset).buffered())
+internal fun InputStream.bufferedReader(charset: Charset = Charsets.UTF_8): Reader =
+    ReaderJvmImpl(reader(charset).buffered())

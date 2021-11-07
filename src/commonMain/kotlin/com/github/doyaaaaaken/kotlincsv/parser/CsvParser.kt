@@ -6,9 +6,9 @@ package com.github.doyaaaaaken.kotlincsv.parser
  * @author doyaaaaaken
  */
 internal class CsvParser(
-        private val quoteChar: Char,
-        private val delimiter: Char,
-        private val escapeChar: Char
+    private val quoteChar: Char,
+    private val delimiter: Char,
+    private val escapeChar: Char
 ) {
 
     /**

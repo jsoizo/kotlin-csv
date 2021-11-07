@@ -1,16 +1,12 @@
 package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
-import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
-import com.github.doyaaaaaken.kotlincsv.util.Const
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
 
 class StringReaderTest : WordSpec({
     "readAll method (with String argument)" should {
@@ -29,8 +25,12 @@ class StringReaderTest : WordSpec({
                         |d,e,f,g,h
                     """.trimMargin()
             )
-            result shouldBe listOf(listOf("a", "b", "c", "x", """y
-                    | hoge""".trimMargin()), listOf("d", "e", "f", "g", "h"))
+            result shouldBe listOf(
+                listOf(
+                    "a", "b", "c", "x", """y
+                    | hoge""".trimMargin()
+                ), listOf("d", "e", "f", "g", "h")
+            )
         }
         "get failed rowNum and colIndex when exception happened on parsing CSV" {
             val ex1 = shouldThrow<CSVParseFormatException> {

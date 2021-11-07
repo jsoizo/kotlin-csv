@@ -4,7 +4,7 @@ package com.github.doyaaaaaken.kotlincsv.client
  * buffered reader which can read line with line terminator
  */
 internal class BufferedLineReader(
-        private val br: Reader
+    private val br: Reader
 ) {
 
     fun readLineWithTerminator(): String? {

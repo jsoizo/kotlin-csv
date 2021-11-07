@@ -13,8 +13,8 @@ import java.io.PrintWriter
  * @author doyaaaaaken
  */
 class CsvFileWriter internal constructor(
-        private val ctx: CsvWriterContext,
-        private val writer: PrintWriter
+    private val ctx: CsvWriterContext,
+    private val writer: PrintWriter
 ) : ICsvFileWriter, Closeable, Flushable {
 
     /**
@@ -49,7 +49,7 @@ class CsvFileWriter internal constructor(
      */
     override fun writeRows(rows: List<List<Any?>>) {
         willWritePreTerminator()
-        rows.forEachIndexed{ index, list ->
+        rows.forEachIndexed { index, list ->
             writeNext(list)
             if (index < rows.size - 1) {
                 writeTerminator()
@@ -68,9 +68,9 @@ class CsvFileWriter internal constructor(
         willWritePreTerminator()
 
         val itr = rows.iterator()
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             writeNext(itr.next())
-            if(itr.hasNext()) writeTerminator()
+            if (itr.hasNext()) writeTerminator()
         }
 
         willWriteEndTerminator()

@@ -6,9 +6,9 @@ import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
  * @author doyaaaaaaken
  */
 internal class ParseStateMachine(
-        private val quoteChar: Char,
-        private val delimiter: Char,
-        private val escapeChar: Char
+    private val quoteChar: Char,
+    private val delimiter: Char,
+    private val escapeChar: Char
 ) {
 
     private val BOM = '\uFEFF'
@@ -56,7 +56,12 @@ internal class ParseStateMachine(
             ParseState.FIELD -> {
                 when (ch) {
                     escapeChar -> {
-                        if (nextCh != escapeChar) throw CSVParseFormatException(rowNum, pos, ch, "must appear escapeChar($escapeChar) after escapeChar($escapeChar)")
+                        if (nextCh != escapeChar) throw CSVParseFormatException(
+                            rowNum,
+                            pos,
+                            ch,
+                            "must appear escapeChar($escapeChar) after escapeChar($escapeChar)"
+                        )
                         field.append(nextCh)
                         state = ParseState.FIELD
                         pos += 1
@@ -107,7 +112,12 @@ internal class ParseStateMachine(
             ParseState.QUOTE_START, ParseState.QUOTED_FIELD -> {
                 if (ch == escapeChar && escapeChar != quoteChar) {
                     if (nextCh == null) throw CSVParseFormatException(rowNum, pos, ch, "end of quote doesn't exist")
-                    if (nextCh != escapeChar && nextCh != quoteChar) throw CSVParseFormatException(rowNum, pos, ch, "escape character must appear consecutively twice")
+                    if (nextCh != escapeChar && nextCh != quoteChar) throw CSVParseFormatException(
+                        rowNum,
+                        pos,
+                        ch,
+                        "escape character must appear consecutively twice"
+                    )
                     field.append(nextCh)
                     state = ParseState.QUOTED_FIELD
                     pos += 1
@@ -140,7 +150,12 @@ internal class ParseStateMachine(
                         flushField()
                         state = ParseState.END
                     }
-                    else -> throw CSVParseFormatException(rowNum, pos, ch, "must appear delimiter or line terminator after quote end")
+                    else -> throw CSVParseFormatException(
+                        rowNum,
+                        pos,
+                        ch,
+                        "must appear delimiter or line terminator after quote end"
+                    )
                 }
                 pos += 1
             }

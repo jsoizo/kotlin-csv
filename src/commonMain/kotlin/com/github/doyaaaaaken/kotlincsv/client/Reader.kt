@@ -42,9 +42,9 @@ internal class StringReaderImpl(private val data: String) : Reader {
     private var mark = -1
 
     override fun read(): Int {
-        return if(nextChar == data.length){
+        return if (nextChar == data.length) {
             -1
-        }else {
+        } else {
             data[nextChar++].code
         }
     }

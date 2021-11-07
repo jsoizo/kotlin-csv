@@ -116,7 +116,7 @@ class CsvWriterTest : WordSpec({
 
     "Customized CsvWriter" should {
         "write csv with SJIS charset" {
-            csvWriter{
+            csvWriter {
                 charset = "SJIS"
             }.open(File(testFileName)) {
                 writeRows(listOf(listOf("あ", "い")))
@@ -128,7 +128,7 @@ class CsvWriterTest : WordSpec({
             val row1 = listOf("a", "b")
             val row2 = listOf("c", "d")
             val expected = "a|b\r\nc|d\r\n"
-            csvWriter{
+            csvWriter {
                 delimiter = '|'
             }.open(File(testFileName)) {
                 writeRows(listOf(row1, row2))
@@ -150,7 +150,7 @@ class CsvWriterTest : WordSpec({
             val row1 = listOf("a", "b")
             val row2 = listOf("c", "d")
             val expected = "a,b\nc,d\n"
-            csvWriter{
+            csvWriter {
                 lineTerminator = "\n"
             }.open(File(testFileName)) {
                 writeRows(listOf(row1, row2))
@@ -162,7 +162,7 @@ class CsvWriterTest : WordSpec({
             val row1 = listOf("a", "b")
             val row2 = listOf("c", "d")
             val expected = "\"a\",\"b\"\r\n\"c\",\"d\"\r\n"
-            csvWriter{
+            csvWriter {
                 quote {
                     mode = WriteQuoteMode.ALL
                 }
@@ -176,7 +176,7 @@ class CsvWriterTest : WordSpec({
             val row1 = listOf("a", "b", 1)
             val row2 = listOf(2.0, "03.0", "4.0.0")
             val expected = "\"a\",\"b\",1\r\n2.0,03.0,\"4.0.0\"\r\n"
-            csvWriter{
+            csvWriter {
                 quote {
                     mode = WriteQuoteMode.NON_NUMERIC
                 }
@@ -190,7 +190,7 @@ class CsvWriterTest : WordSpec({
             val row1 = listOf("a'", "b")
             val row2 = listOf("'c", "d")
             val expected = "'a''',b\r\n'''c',d\r\n"
-            csvWriter{
+            csvWriter {
                 quote {
                     char = '\''
                 }
@@ -203,7 +203,7 @@ class CsvWriterTest : WordSpec({
         "write csv with custom quote character on WriteQuoteMode.ALL mode" {
             val rows = listOf(listOf("a1", "b1"), listOf("a2", "b2"))
             val expected = "_a1_,_b1_\r\n_a2_,_b2_\r\n"
-            csvWriter{
+            csvWriter {
                 quote {
                     mode = WriteQuoteMode.ALL
                     char = '_'
@@ -216,7 +216,7 @@ class CsvWriterTest : WordSpec({
             val row1 = listOf("a", "b")
             val row2 = listOf("c", "d")
             val expected = "a,b\nc,d"
-            csvWriter{
+            csvWriter {
                 lineTerminator = "\n"
                 outputLastLineTerminator = false
             }.open(File(testFileName)) {
@@ -229,7 +229,7 @@ class CsvWriterTest : WordSpec({
             val row1 = listOf("a", "b")
             val row2 = listOf("c", "d")
             val expected = "a,b\nc,d\n"
-            csvWriter{
+            csvWriter {
                 lineTerminator = "\n"
                 outputLastLineTerminator = true
             }.open(File(testFileName)) {
@@ -242,7 +242,7 @@ class CsvWriterTest : WordSpec({
             val row1 = listOf("a", "b")
             val row2 = listOf("c", "d")
             val expected = "a,b\r\nc,d"
-            csvWriter{
+            csvWriter {
                 outputLastLineTerminator = false
             }.open(File(testFileName)) {
                 writeRows(listOf(row1, row2))
@@ -258,7 +258,7 @@ class CsvWriterTest : WordSpec({
             val row5 = listOf("1", "2")
             val row6 = listOf("3", "4")
             val expected = "a,b\r\nc,d\r\ne,f\r\ng,h\r\n1,2\r\n3,4"
-            csvWriter{
+            csvWriter {
                 outputLastLineTerminator = false
             }.open(File(testFileName)) {
                 writeRow(row1)
@@ -300,6 +300,7 @@ class CsvWriterTest : WordSpec({
 
         "get raw writer from OutputStream and can use it" {
             val ops = File(testFileName).outputStream()
+
             @OptIn(KotlinCsvExperimental::class)
             val writer = csvWriter().openAndGetRawWriter(ops)
             writer.writeRow(row1)

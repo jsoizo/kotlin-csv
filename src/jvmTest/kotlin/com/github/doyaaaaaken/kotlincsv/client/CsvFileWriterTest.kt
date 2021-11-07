@@ -47,14 +47,14 @@ class CsvFileWriterTest : WordSpec({
             val date1 = LocalDate.of(2019, 8, 19)
             val date2 = LocalDateTime.of(2020, 9, 20, 14, 32, 21)
 
-            val expected = "a,b,c\r\n"+
-                "d,e,f\r\n"+
-                "1,2,3\r\n"+
-                "2019-08-19,2020-09-20T14:32:21\r\n"
+            val expected = "a,b,c\r\n" +
+                    "d,e,f\r\n" +
+                    "1,2,3\r\n" +
+                    "2019-08-19,2020-09-20T14:32:21\r\n"
             csvWriter().open(testFileName) {
                 writeRow("a", "b", "c")
                 writeRow("d", "e", "f")
-                writeRow(1,2,3)
+                writeRow(1, 2, 3)
                 writeRow(date1, date2)
             }
             val actual = readTestFile()
@@ -136,14 +136,14 @@ class CsvFileWriterTest : WordSpec({
             val date1 = LocalDate.of(2019, 8, 19)
             val date2 = LocalDateTime.of(2020, 9, 20, 14, 32, 21)
 
-            val expected = "a,b,c\r\n"+
-                "d,e,f\r\n"+
-                "1,2,3\r\n"+
-                "2019-08-19,2020-09-20T14:32:21\r\n"
+            val expected = "a,b,c\r\n" +
+                    "d,e,f\r\n" +
+                    "1,2,3\r\n" +
+                    "2019-08-19,2020-09-20T14:32:21\r\n"
             csvWriter().openAsync(testFileName) {
                 writeRow("a", "b", "c")
                 writeRow("d", "e", "f")
-                writeRow(1,2,3)
+                writeRow(1, 2, 3)
                 writeRow(date1, date2)
             }
             val actual = readTestFile()

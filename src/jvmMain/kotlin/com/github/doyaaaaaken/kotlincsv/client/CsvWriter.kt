@@ -14,7 +14,7 @@ import java.io.*
  * @author doyaaaaaken
  */
 actual class CsvWriter actual constructor(
-        private val ctx: CsvWriterContext
+    private val ctx: CsvWriterContext
 ) : ICsvWriterContext by ctx {
 
     actual fun open(targetFileName: String, append: Boolean, write: ICsvFileWriter.() -> Unit) {
@@ -22,7 +22,7 @@ actual class CsvWriter actual constructor(
         open(targetFile, append, write)
     }
 
-    actual suspend  fun openAsync(targetFileName: String, append: Boolean, write: suspend ICsvFileWriter.() -> Unit) {
+    actual suspend fun openAsync(targetFileName: String, append: Boolean, write: suspend ICsvFileWriter.() -> Unit) {
         val targetFile = File(targetFileName)
         openAsync(targetFile, append, write)
     }
@@ -32,10 +32,11 @@ actual class CsvWriter actual constructor(
         open(fos, write)
     }
 
-    suspend fun openAsync(targetFile: File, append: Boolean = false, write: suspend ICsvFileWriter.() -> Unit) = withContext(Dispatchers.IO) {
-        val fos = FileOutputStream(targetFile, append)
-        openAsync(fos, write)
-    }
+    suspend fun openAsync(targetFile: File, append: Boolean = false, write: suspend ICsvFileWriter.() -> Unit) =
+        withContext(Dispatchers.IO) {
+            val fos = FileOutputStream(targetFile, append)
+            openAsync(fos, write)
+        }
 
     fun open(ops: OutputStream, write: ICsvFileWriter.() -> Unit) {
         val osw = OutputStreamWriter(ops, ctx.charset)
@@ -48,6 +49,7 @@ actual class CsvWriter actual constructor(
         val writer = CsvFileWriter(ctx, PrintWriter(osw))
         writer.use { it.write() }
     }
+
     /**
      * *** ONLY for long-running write case ***
      *

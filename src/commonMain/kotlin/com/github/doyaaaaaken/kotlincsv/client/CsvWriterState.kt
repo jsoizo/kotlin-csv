@@ -7,9 +7,9 @@ package com.github.doyaaaaaken.kotlincsv.client
 internal class CsvWriterStateHandler {
 
     private sealed class CsvWriterState(val wroteFirstLine: Boolean, val wroteLineEndTerminator: Boolean) {
-        object InitialState: CsvWriterState(wroteFirstLine = false, wroteLineEndTerminator =  false)
-        object HasNotWroteLineEndTerminator: CsvWriterState(wroteFirstLine = true, wroteLineEndTerminator = false)
-        object HasWroteLineEndTerminator: CsvWriterState(wroteFirstLine = true, wroteLineEndTerminator = true)
+        object InitialState : CsvWriterState(wroteFirstLine = false, wroteLineEndTerminator = false)
+        object HasNotWroteLineEndTerminator : CsvWriterState(wroteFirstLine = true, wroteLineEndTerminator = false)
+        object HasWroteLineEndTerminator : CsvWriterState(wroteFirstLine = true, wroteLineEndTerminator = true)
     }
 
     private var state: CsvWriterState = CsvWriterState.InitialState
