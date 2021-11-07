@@ -65,7 +65,7 @@ interface ICsvReaderContext {
      *
      * Renaming is done based on occurrence and only applied from the first detected duplicate onwards.
      * ex:
-     * [a,b,b,c,a] => [a,b,b_2,c,a_2]
+     * [a,b,b,b,c,a] => [a,b,b_2,b_3,c,a_2]
      */
     val autoRenameDuplicateHeaders: Boolean
 }
