@@ -64,7 +64,7 @@ class CsvFileReader internal constructor(
             headers = deduplicateHeaders(headers)
         } else {
             val duplicated = findDuplicate(headers)
-            if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated")
+            if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated. please consider to use 'autoRenameDuplicateHeaders' option.")
         }
         return readAllAsSequence(headers.size).map { fields -> headers.zip(fields).toMap() }
     }
