@@ -52,8 +52,12 @@ class CsvReaderTest : WordSpec({
                         |d,e,f,g,h
                     """.trimMargin()
             )
-            result shouldBe listOf(listOf("a", "b", "c", "x", """y
-                    | hoge""".trimMargin()), listOf("d", "e", "f", "g", "h"))
+            val firstRow = listOf(
+                "a", "b", "c", "x", """y
+                    | hoge""".trimMargin()
+            )
+            val secondRow = listOf("d", "e", "f", "g", "h")
+            result shouldBe listOf(firstRow, secondRow)
         }
         "get failed rowNum and colIndex when exception happened on parsing CSV" {
             val reader = csvReader()
@@ -213,8 +217,7 @@ class CsvReaderTest : WordSpec({
 
         "auto rename duplicated headers" {
             val deduplicateExpected = listOf(
-                mapOf("some" to "a", "example" to "b", "example_2" to "b", "headers" to "c"),
-                mapOf("some" to "d", "example" to "e", "example_2" to "e", "headers" to "f")
+                mapOf("a" to "1", "b" to "2", "b_2" to "3", "b_3" to "4", "c" to "5", "c_2" to "6"),
             )
             val file = readTestDataFile("with-duplicate-header.csv")
             val result = csvReader {
@@ -305,7 +308,7 @@ class CsvReaderTest : WordSpec({
         }
         "validate test as flow" {
             val fileStream = readTestDataFile("simple.csv").inputStream()
-            val rows =  mutableListOf<List<String>>()
+            val rows = mutableListOf<List<String>>()
             csvReader().openAsync(fileStream) {
                 readAllAsSequence().asFlow().collect {
                     rows.add(it)
