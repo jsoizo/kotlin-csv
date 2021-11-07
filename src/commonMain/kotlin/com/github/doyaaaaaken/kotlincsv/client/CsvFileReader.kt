@@ -117,17 +117,15 @@ class CsvFileReader internal constructor(
      * Ex: [a,b,b,b,c,a] => [a,b,b_2,b_3,c,a_2]
      *
      * @return return headers as List<String>.
-     *
      */
     private fun deduplicateHeaders(headers: List<String>): List<String> {
-        val occurrences = headers.associateWith { 1 }.toMutableMap()
+        val occurrences = mutableMapOf<String, Int>()
         return headers.map { header ->
-            val occurred = occurrences.getValue(header)
+            val count = occurrences.getOrPut(header) { 0 } + 1
+            occurrences[header] = count
             when {
-                occurred > 1 -> "${header}_$occurred"
+                count > 1 -> "${header}_$count"
                 else -> header
-            }.also {
-                occurrences[header] = occurred + 1
             }
         }
     }
