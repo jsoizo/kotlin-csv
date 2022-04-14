@@ -38,23 +38,23 @@ class CsvFileReader internal constructor(
      * read all csv rows as Sequence
      */
     fun readAllAsSequence(fieldsNum: Int? = null): Sequence<List<String>> {
-        var expectedFieldsNumInRow: Int? = fieldsNum
+        var expectedNumFieldsInRow: Int? = fieldsNum
         return generateSequence {
             readNext()
         }.mapIndexedNotNull { idx, row ->
             // If no expected number of fields was passed in, then set it based on the first row.
-            if (expectedFieldsNumInRow == null) expectedFieldsNumInRow = row.size
-
-            var fieldsNumInRow: Int = expectedFieldsNumInRow ?: row.size
-            if (ctx.ignoreExcessCols && row.size > fieldsNumInRow) {
-                logger.info { "ignoring excess rows. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNumInRow]" }
-                row.subList(0, fieldsNumInRow)
-            } else if (fieldsNumInRow != row.size) {
+            if (expectedNumFieldsInRow == null) expectedNumFieldsInRow = row.size
+            // Assign this number to a non-nullable type to avoid need for thread-safety null checks.
+            val numFieldsInRow: Int = expectedNumFieldsInRow ?: row.size
+            if (ctx.ignoreExcessCols && row.size > numFieldsInRow) {
+                logger.info { "ignoring excess rows. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $numFieldsInRow]" }
+                row.subList(0, numFieldsInRow)
+            } else if (numFieldsInRow != row.size) {
                 if (ctx.skipMissMatchedRow) {
-                    logger.info { "skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNumInRow]" }
+                    logger.info { "skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $numFieldsInRow]" }
                     null
                 } else {
-                    throw CSVFieldNumDifferentException(requireNotNull(fieldsNumInRow), row.size, idx + 1)
+                    throw CSVFieldNumDifferentException(requireNotNull(numFieldsInRow), row.size, idx + 1)
                 }
             } else {
                 row
