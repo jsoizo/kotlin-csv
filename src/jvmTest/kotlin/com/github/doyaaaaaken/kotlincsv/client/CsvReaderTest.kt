@@ -166,6 +166,16 @@ class CsvReaderTest : WordSpec({
             ex.fieldNumOnFailedRow shouldBe 2
             ex.csvRowNum shouldBe 2
         }
+        "Trim row when reading csv with greater num of fields on a subsequent row" {
+            val expected = listOf(listOf("a", "b"), listOf("c", "d"))
+            val actual =
+                csvReader{
+                    ignoreExcessCols = true
+                }.readAll(readTestDataFile("different-fields-num2.csv"))
+
+            actual shouldBe expected
+            actual.size shouldBe 2
+        }
         "should not throw exception when reading csv with different fields num on each row with expected number of columns" {
             val expected = listOf(listOf("a", "b", "c"))
             val actual = csvReader {

@@ -21,11 +21,13 @@ class CsvReaderDslTest : StringSpec({
             escapeChar = '"'
             skipEmptyLine = true
             skipMissMatchedRow = true
+            ignoreExcessCols = true
         }
         reader.charset shouldBe Charsets.ISO_8859_1.name()
         reader.quoteChar shouldBe '\''
         reader.delimiter shouldBe '\t'
         reader.skipEmptyLine shouldBe true
         reader.skipMissMatchedRow shouldBe true
+        reader.ignoreExcessCols shouldBe true
     }
 })

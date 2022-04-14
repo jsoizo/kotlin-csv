@@ -38,12 +38,18 @@ class CsvFileReader internal constructor(
      * read all csv rows as Sequence
      */
     fun readAllAsSequence(fieldsNum: Int? = null): Sequence<List<String>> {
-        var fieldsNumInRow: Int? = fieldsNum
+        var expectedFieldsNumInRow: Int? = fieldsNum
         return generateSequence {
             readNext()
         }.mapIndexedNotNull { idx, row ->
-            if (fieldsNumInRow == null) fieldsNumInRow = row.size
-            if (fieldsNumInRow != row.size) {
+            // If no expected number of fields was passed in, then set it based on the first row.
+            if (expectedFieldsNumInRow == null) expectedFieldsNumInRow = row.size
+
+            var fieldsNumInRow: Int = expectedFieldsNumInRow ?: row.size
+            if (ctx.ignoreExcessCols && row.size > fieldsNumInRow) {
+                logger.info { "ignoring excess rows. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNumInRow]" }
+                row.subList(0, fieldsNumInRow)
+            } else if (fieldsNumInRow != row.size) {
                 if (ctx.skipMissMatchedRow) {
                     logger.info { "skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNumInRow]" }
                     null
