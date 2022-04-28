@@ -165,14 +165,15 @@ val tsvReader = csvReader {
 }
 ```
 
-| Opton | default value | description                         |
+| Option | default value | description                         |
 |------------|---------------|-------------------------------------|
 | charset |`UTF-8`| Charset encoding. The value must be supported by [java.nio.charset.Charset](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html). |
 | quoteChar | `"` | Character used to quote fields. |
 | delimiter | `,` | Character used as delimiter between each field.<br />Use `"\t"` if reading TSV file. |
 | escapeChar | `"` | Character to escape quote inside field string.<br />Normally, you don't have to change this option.<br />See detail comment on [ICsvReaderContext](src/commonMain/kotlin/com/github/doyaaaaaken/kotlincsv/dsl/context/CsvReaderContext.kt). |
 | skipEmptyLine | `false` | Whether to skip or error out on empty lines. |
-| skipMissMatchedRow | `false` | Whether to skip an invalid row (different number of fields from other rows) or throw an exception. |
+| ignoreExcessCols | `false` | Whether to remove excess columns when the row has more columns than expected.|
+| skipMissMatchedRow | `false` | Whether to skip an invalid row. If `ignoreExcessCols` is true, only rows with less than the expected number of columns will be skipped. |
 | autoRenameDuplicateHeaders | `false` | Whether to auto rename duplicate headers or throw an exception. |
 
 ### CSV Write examples

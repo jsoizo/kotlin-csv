@@ -176,6 +176,17 @@ class CsvReaderTest : WordSpec({
             actual shouldBe expected
             actual.size shouldBe 2
         }
+        "it should be be possible to both ignore excess columns and skip columns" {
+            val expected = listOf(listOf("a", "b"), listOf("d","e"))
+            val actual =
+                csvReader{
+                    ignoreExcessCols = true
+                    skipMissMatchedRow = true
+                }.readAll(readTestDataFile("varying-column-lengths.csv"))
+
+            actual shouldBe expected
+            actual.size shouldBe 2
+        }
         "should not throw exception when reading csv with different fields num on each row with expected number of columns" {
             val expected = listOf(listOf("a", "b", "c"))
             val actual = csvReader {
