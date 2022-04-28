@@ -1,7 +1,6 @@
 package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
-import com.github.doyaaaaaken.kotlincsv.dsl.context.DifferentNumberOfColumnsBehaviour
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
@@ -171,33 +170,16 @@ class CsvReaderTest : WordSpec({
             val expected = listOf(listOf("a", "b"), listOf("c", "d"))
             val actual =
                 csvReader{
-                    differentNumberOfColumnsBehaviour = DifferentNumberOfColumnsBehaviour.TRIM_EXCESS
+                    ignoreExcessCols = true
                 }.readAll(readTestDataFile("different-fields-num2.csv"))
 
             actual shouldBe expected
             actual.size shouldBe 2
         }
-        "(deprecated behaviour) should not throw exception when reading csv with different fields num on each row with expected number of columns" {
-            val expected = listOf(listOf("a", "b", "c"))
-            val actual = csvReader {
-                skipMissMatchedRow = true
-            }.readAll(readTestDataFile("different-fields-num.csv"))
-
-            actual shouldBe expected
-            actual.size shouldBe 1
-
-            val expected2 = listOf(listOf("a", "b"))
-            val actual2 = csvReader {
-                skipMissMatchedRow = true
-            }.readAll(readTestDataFile("different-fields-num2.csv"))
-
-            actual2 shouldBe expected2
-            actual2.size shouldBe 1
-        }
         "should not throw exception when reading csv with different fields num on each row with expected number of columns" {
             val expected = listOf(listOf("a", "b", "c"))
             val actual = csvReader {
-                differentNumberOfColumnsBehaviour = DifferentNumberOfColumnsBehaviour.IGNORE
+                skipMissMatchedRow = true
             }.readAll(readTestDataFile("different-fields-num.csv"))
 
             actual shouldBe expected
@@ -205,23 +187,12 @@ class CsvReaderTest : WordSpec({
 
             val expected2 = listOf(listOf("a", "b"))
             val actual2 = csvReader {
-                differentNumberOfColumnsBehaviour = DifferentNumberOfColumnsBehaviour.IGNORE
+                skipMissMatchedRow = true
             }.readAll(readTestDataFile("different-fields-num2.csv"))
 
             actual2 shouldBe expected2
             actual2.size shouldBe 1
-        }
-        "(Deprecated behaviour) should not throw exception when reading csv with header and different fields num on each row" {
-            val expected = listOf(
-                mapOf("h1" to "a", "h2" to "b", "h3" to "c"),
-                mapOf("h1" to "g", "h2" to "h", "h3" to "i")
-            )
-            val actual = csvReader {
-                skipMissMatchedRow = true
-            }.readAllWithHeader(readTestDataFile("with-header-different-size-row.csv"))
 
-            actual.size shouldBe 2
-            expected shouldBe actual
         }
         "should not throw exception when reading csv with header and different fields num on each row" {
             val expected = listOf(
@@ -229,7 +200,7 @@ class CsvReaderTest : WordSpec({
                 mapOf("h1" to "g", "h2" to "h", "h3" to "i")
             )
             val actual = csvReader {
-                differentNumberOfColumnsBehaviour = DifferentNumberOfColumnsBehaviour.IGNORE
+                skipMissMatchedRow = true
             }.readAllWithHeader(readTestDataFile("with-header-different-size-row.csv"))
 
             actual.size shouldBe 2
