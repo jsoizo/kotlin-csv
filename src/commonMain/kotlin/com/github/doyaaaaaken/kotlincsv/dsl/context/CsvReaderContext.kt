@@ -58,13 +58,14 @@ interface ICsvReaderContext {
     /**
      * If a invalid row which has different number of fields from other rows is found, skip it or not (=throw an exception).
      */
+    @Deprecated("Use [differentLengthFieldRow] specifier with behaviour set to IGNORE")
     val skipMissMatchedRow: Boolean
 
     /**
-     * If an invalid row which has a higher number of fields than other rows is found, optionally remove the excess rows
-     * and continue processing.
+     * Sets the behaviour for dealing with rows with lengths that differ to the column count established by the first row.
+     * See [DifferentNumberOfColumnsBehaviour]
      */
-    val ignoreExcessCols: Boolean
+    val differentNumberOfColumnsBehaviour: DifferentNumberOfColumnsBehaviour
 
     /**
      * If a header occurs multiple times whether auto renaming should be applied when `readAllWithHeaderAsSequence()` (=throw an exception).
@@ -74,6 +75,20 @@ interface ICsvReaderContext {
      * [a,b,b,b,c,a] => [a,b,b_2,b_3,c,a_2]
      */
     val autoRenameDuplicateHeaders: Boolean
+}
+
+/**
+ * Behaviour to use when subsequent rows have different numbers of columns from the original.
+ *
+ * [ERROR] - Throw an exception and stop processing (default).
+ * [IGNORE] - Skip the row and continue processing.
+ * [TRIM_EXCESS] - Trim the excess columns from the end of the row and use the data in the first n columns, where n is the
+ * expected number of columns.
+ */
+enum class DifferentNumberOfColumnsBehaviour {
+    ERROR,
+    IGNORE,
+    TRIM_EXCESS
 }
 
 /**
@@ -90,5 +105,5 @@ class CsvReaderContext : ICsvReaderContext {
     override var skipEmptyLine: Boolean = false
     override var skipMissMatchedRow: Boolean = false
     override var autoRenameDuplicateHeaders: Boolean = false
-    override var ignoreExcessCols: Boolean = false
+    override var differentNumberOfColumnsBehaviour: DifferentNumberOfColumnsBehaviour = DifferentNumberOfColumnsBehaviour.ERROR
 }
