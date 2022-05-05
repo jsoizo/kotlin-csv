@@ -24,7 +24,7 @@ class CsvReaderDslTest : StringSpec({
             skipEmptyLine = true
             skipMissMatchedRow = true
             insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
-            excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.IGNORE
+            excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
         }
         reader.charset shouldBe Charsets.ISO_8859_1.name()
         reader.quoteChar shouldBe '\''
