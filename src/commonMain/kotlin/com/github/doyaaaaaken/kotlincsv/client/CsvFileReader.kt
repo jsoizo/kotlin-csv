@@ -32,6 +32,7 @@ class CsvFileReader internal constructor(
      * @return return fields in row as List<String>.
      *         or return null, if all line are already read.
      */
+    @Deprecated("We are considering making it a private method. If you have feedback, please comment on Issue #100.")
     fun readNext(): List<String>? {
         return readUntilNextCsvRow("")
     }
@@ -42,12 +43,13 @@ class CsvFileReader internal constructor(
     fun readAllAsSequence(fieldsNum: Int? = null): Sequence<List<String>> {
         var expectedNumFieldsInRow: Int? = fieldsNum
         return generateSequence {
-            readNext()
+            @Suppress("DEPRECATION") readNext()
         }.mapIndexedNotNull { idx, row ->
             // If no expected number of fields was passed in, then set it based on the first row.
             if (expectedNumFieldsInRow == null) expectedNumFieldsInRow = row.size
             // Assign this number to a non-nullable type to avoid need for thread-safety null checks.
             val numFieldsInRow: Int = expectedNumFieldsInRow ?: row.size
+            @Suppress("DEPRECATION")
             if (row.size > numFieldsInRow) {
                 if (ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.TRIM) {
                     logger.info { "trimming excess rows. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of row = $numFieldsInRow]" }
@@ -82,6 +84,7 @@ class CsvFileReader internal constructor(
      * read all csv rows as Sequence with header information
      */
     fun readAllWithHeaderAsSequence(): Sequence<Map<String, String>> {
+        @Suppress("DEPRECATION")
         var headers = readNext() ?: return emptySequence()
         if (ctx.autoRenameDuplicateHeaders) {
             headers = deduplicateHeaders(headers)
