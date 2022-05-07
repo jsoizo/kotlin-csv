@@ -1,6 +1,8 @@
 package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
+import com.github.doyaaaaaken.kotlincsv.dsl.context.ExcessFieldsRowBehaviour
+import com.github.doyaaaaaken.kotlincsv.dsl.context.InsufficientFieldsRowBehaviour
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import com.github.doyaaaaaken.kotlincsv.util.CSVAutoRenameFailedException
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
@@ -38,22 +40,42 @@ class CsvFileReader internal constructor(
      * read all csv rows as Sequence
      */
     fun readAllAsSequence(fieldsNum: Int? = null): Sequence<List<String>> {
-        var fieldsNumInRow: Int? = fieldsNum
+        var expectedNumFieldsInRow: Int? = fieldsNum
         return generateSequence {
             readNext()
         }.mapIndexedNotNull { idx, row ->
-            if (fieldsNumInRow == null) fieldsNumInRow = row.size
-            if (fieldsNumInRow != row.size) {
-                if (ctx.skipMissMatchedRow) {
-                    logger.info { "skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $fieldsNumInRow]" }
-                    null
+            // If no expected number of fields was passed in, then set it based on the first row.
+            if (expectedNumFieldsInRow == null) expectedNumFieldsInRow = row.size
+            // Assign this number to a non-nullable type to avoid need for thread-safety null checks.
+            val numFieldsInRow: Int = expectedNumFieldsInRow ?: row.size
+            if (row.size > numFieldsInRow) {
+                if (ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.TRIM) {
+                    logger.info { "ignoring excess rows. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $numFieldsInRow]" }
+                    row.subList(0, numFieldsInRow)
+                } else if (ctx.skipMissMatchedRow || ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.IGNORE) {
+                    skipMismatchedRow(idx, row, numFieldsInRow)
                 } else {
-                    throw CSVFieldNumDifferentException(requireNotNull(fieldsNumInRow), row.size, idx + 1)
+                    throw CSVFieldNumDifferentException(requireNotNull(numFieldsInRow), row.size, idx + 1)
+                }
+            } else if (numFieldsInRow != row.size) {
+                if (ctx.skipMissMatchedRow || ctx.insufficientFieldsRowBehaviour == InsufficientFieldsRowBehaviour.IGNORE) {
+                    skipMismatchedRow(idx, row, numFieldsInRow)
+                } else {
+                    throw CSVFieldNumDifferentException(requireNotNull(numFieldsInRow), row.size, idx + 1)
                 }
             } else {
                 row
             }
         }
+    }
+
+    private fun skipMismatchedRow(
+        idx: Int,
+        row: List<String>,
+        numFieldsInRow: Int
+    ): Nothing? {
+        logger.info { "skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $numFieldsInRow]" }
+        return null
     }
 
     /**

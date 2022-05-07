@@ -1,6 +1,8 @@
 package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
+import com.github.doyaaaaaken.kotlincsv.dsl.context.ExcessFieldsRowBehaviour
+import com.github.doyaaaaaken.kotlincsv.dsl.context.InsufficientFieldsRowBehaviour
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
@@ -165,6 +167,67 @@ class CsvReaderTest : WordSpec({
             ex.fieldNum shouldBe 3
             ex.fieldNumOnFailedRow shouldBe 2
             ex.csvRowNum shouldBe 2
+        }
+        "Trim row when reading csv with greater num of fields on a subsequent row" {
+            val expected = listOf(listOf("a", "b"), listOf("c", "d"))
+            val actual =
+                csvReader{
+                    excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM
+                }.readAll(readTestDataFile("different-fields-num2.csv"))
+
+            actual shouldBe expected
+            actual.size shouldBe 2
+        }
+        "it should be be possible to skip rows with both excess and insufficient fields" {
+            val expected = listOf(listOf("a", "b"))
+            val actual =
+                csvReader{
+                    excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
+                    insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
+                }.readAll(readTestDataFile("varying-column-lengths.csv"))
+
+            actual shouldBe expected
+            actual.size shouldBe 1
+        }
+        "it should be be possible to trim excess columns and skip insufficient row columns" {
+            val expected = listOf(listOf("a", "b"), listOf("d","e"))
+            val actual =
+                csvReader{
+                    excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM
+                    insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
+                }.readAll(readTestDataFile("varying-column-lengths.csv"))
+
+            actual shouldBe expected
+            actual.size shouldBe 2
+        }
+        "If the excess fields behaviour is ERROR and the insufficient behaviour is IGNORE then an error should be thrown if there are excess columns" {
+            val ex = shouldThrow<CSVFieldNumDifferentException> {
+                csvReader {
+                    insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
+                }.readAll(readTestDataFile("varying-column-lengths.csv"))
+            }
+            ex.fieldNum shouldBe 2
+            ex.fieldNumOnFailedRow shouldBe 3
+            ex.csvRowNum shouldBe 3
+        }
+        "If the excess fields behaviour is IGNORE or TRIM and the insufficient behaviour is ERROR then an error should be thrown if there are columns with insufficient rows" {
+            val ex1 = shouldThrow<CSVFieldNumDifferentException> {
+                csvReader {
+                    excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
+                }.readAll(readTestDataFile("varying-column-lengths.csv"))
+            }
+            ex1.fieldNum shouldBe 2
+            ex1.fieldNumOnFailedRow shouldBe 1
+            ex1.csvRowNum shouldBe 2
+
+            val ex2 = shouldThrow<CSVFieldNumDifferentException> {
+                csvReader {
+                    excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM
+                }.readAll(readTestDataFile("varying-column-lengths.csv"))
+            }
+            ex2.fieldNum shouldBe 2
+            ex2.fieldNumOnFailedRow shouldBe 1
+            ex2.csvRowNum shouldBe 2
         }
         "should not throw exception when reading csv with different fields num on each row with expected number of columns" {
             val expected = listOf(listOf("a", "b", "c"))

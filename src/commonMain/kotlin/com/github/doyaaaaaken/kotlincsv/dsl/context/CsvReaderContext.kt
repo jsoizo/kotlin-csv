@@ -58,6 +58,7 @@ interface ICsvReaderContext {
     /**
      * If a invalid row which has different number of fields from other rows is found, skip it or not (=throw an exception).
      */
+    @Deprecated("Use insufficientFieldsRowBehaviour and excessRowsBehaviour to specify 'ignore'")
     val skipMissMatchedRow: Boolean
 
     /**
@@ -68,6 +69,47 @@ interface ICsvReaderContext {
      * [a,b,b,b,c,a] => [a,b,b_2,b_3,c,a_2]
      */
     val autoRenameDuplicateHeaders: Boolean
+
+    /**
+     * If a row does not have the expected number of fields (columns), how, and if, the reader should proceed
+     */
+    val insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour
+
+    /**
+     * If a row exceeds have the expected number of fields (columns), how, and if, the reader should proceed
+     */
+    val excessFieldsRowBehaviour: ExcessFieldsRowBehaviour
+}
+
+enum class InsufficientFieldsRowBehaviour {
+
+    /**
+     * Throw an exception (default)
+     */
+    ERROR,
+
+    /**
+     * Ignore the row and skip to the next row
+     */
+    IGNORE
+}
+
+enum class ExcessFieldsRowBehaviour {
+
+    /**
+     * Throw an exception (default)
+     */
+    ERROR,
+
+    /**
+     * Ignore the row and skip to the next row
+     */
+    IGNORE,
+
+    /**
+     * Trim the excess fields from the row (e.g. if 8 fields are present and 7 are expected, return the first 7 fields)
+     */
+    TRIM
 }
 
 /**
@@ -84,4 +126,6 @@ class CsvReaderContext : ICsvReaderContext {
     override var skipEmptyLine: Boolean = false
     override var skipMissMatchedRow: Boolean = false
     override var autoRenameDuplicateHeaders: Boolean = false
+    override var insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.ERROR
+    override var excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = ExcessFieldsRowBehaviour.ERROR
 }
