@@ -55,13 +55,13 @@ class CsvFileReader internal constructor(
                 } else if (ctx.skipMissMatchedRow || ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.IGNORE) {
                     skipMismatchedRow(idx, row, numFieldsInRow)
                 } else {
-                    throw CSVFieldNumDifferentException(requireNotNull(numFieldsInRow), row.size, idx + 1)
+                    throw CSVFieldNumDifferentException(numFieldsInRow, row.size, idx + 1)
                 }
             } else if (numFieldsInRow != row.size) {
                 if (ctx.skipMissMatchedRow || ctx.insufficientFieldsRowBehaviour == InsufficientFieldsRowBehaviour.IGNORE) {
                     skipMismatchedRow(idx, row, numFieldsInRow)
                 } else {
-                    throw CSVFieldNumDifferentException(requireNotNull(numFieldsInRow), row.size, idx + 1)
+                    throw CSVFieldNumDifferentException(numFieldsInRow, row.size, idx + 1)
                 }
             } else {
                 row
