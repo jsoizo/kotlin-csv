@@ -172,8 +172,8 @@ val tsvReader = csvReader {
 | delimiter | `,` | Character used as delimiter between each field.<br />Use `"\t"` if reading TSV file. |
 | escapeChar | `"` | Character to escape quote inside field string.<br />Normally, you don't have to change this option.<br />See detail comment on [ICsvReaderContext](src/commonMain/kotlin/com/github/doyaaaaaken/kotlincsv/dsl/context/CsvReaderContext.kt). |
 | skipEmptyLine | `false` | Whether to skip or error out on empty lines. |
-| ~~skipMissMatchedRow~~ | `false` | Deprecated. Replace with appropriate values in `excessFieldsRowBehaviour` and `insufficientFieldsRowBehaviour`, e.g. both set to `IGNORE`. ~~Whether to skip an invalid row. If `ignoreExcessCols` is true, only rows with less than the expected number of columns will be skipped.~~ |
 | autoRenameDuplicateHeaders | `false` | Whether to auto rename duplicate headers or throw an exception. |
+| ~~skipMissMatchedRow~~ | `false` | Deprecated. Replace with appropriate values in `excessFieldsRowBehaviour` and `insufficientFieldsRowBehaviour`, e.g. both set to `IGNORE`. ~~Whether to skip an invalid row. If `ignoreExcessCols` is true, only rows with less than the expected number of columns will be skipped.~~ |
 | excessFieldsRowBehaviour | `ERROR` | Behaviour to use when a row has more fields (columns) than expected. `ERROR` (default), `IGNORE` (skip the row) or `TRIM` (remove the excess fields at the end of the row to match the expected number of fields). |
 | insufficientFieldsRowBehaviour | `ERROR` | Behaviour to use when a row has fewer fields (columns) than expected. `ERROR` (default), `IGNORE` (skip the row). |
 
