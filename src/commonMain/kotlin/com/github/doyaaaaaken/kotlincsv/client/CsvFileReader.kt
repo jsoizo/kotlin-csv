@@ -7,7 +7,6 @@ import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import com.github.doyaaaaaken.kotlincsv.util.CSVAutoRenameFailedException
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.logger.Logger
-import com.github.doyaaaaaken.kotlincsv.util.logger.LoggerNop
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 
 /**
