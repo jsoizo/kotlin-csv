@@ -2,6 +2,8 @@ package com.github.doyaaaaaken.kotlincsv.dsl.context
 
 import com.github.doyaaaaaken.kotlincsv.util.Const
 import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
+import com.github.doyaaaaaken.kotlincsv.util.logger.Logger
+import com.github.doyaaaaaken.kotlincsv.util.logger.LoggerNop
 
 /**
  * Interface for CSV Reader settings
@@ -10,6 +12,9 @@ import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
  */
 @CsvDslMarker
 interface ICsvReaderContext {
+
+    val logger: Logger
+
     /**
      * Charset encoding
      *
@@ -119,6 +124,7 @@ enum class ExcessFieldsRowBehaviour {
  */
 @CsvDslMarker
 class CsvReaderContext : ICsvReaderContext {
+    override var logger: Logger = LoggerNop
     override var charset = Const.defaultCharset
     override var quoteChar: Char = '"'
     override var delimiter: Char = ','

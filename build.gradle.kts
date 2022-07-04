@@ -45,11 +45,7 @@ kotlin {
         }
     }
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation("io.github.microutils:kotlin-logging:2.0.11")
-            }
-        }
+        val commonMain by getting
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
