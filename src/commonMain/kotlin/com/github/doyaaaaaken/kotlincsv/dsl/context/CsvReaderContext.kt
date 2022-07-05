@@ -13,6 +13,10 @@ import com.github.doyaaaaaken.kotlincsv.util.logger.LoggerNop
 @CsvDslMarker
 interface ICsvReaderContext {
 
+    /**
+     * Logger instance for logging debug statements.
+     * Default instance does not log anything.
+     */
     val logger: Logger
 
     /**
