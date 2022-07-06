@@ -4,6 +4,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
+import com.github.doyaaaaaken.kotlincsv.util.logger.LoggerNop
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
@@ -145,12 +146,12 @@ private fun readTestDataFile(fileName: String): String {
  * read csv data as String, and convert into List<List<String>>
  */
 private fun readAll(data: String): List<List<String>> {
-    return CsvFileReader(CsvReaderContext(), StringReaderImpl(data)).readAllAsSequence().toList()
+    return CsvFileReader(CsvReaderContext(), StringReaderImpl(data), LoggerNop).readAllAsSequence().toList()
 }
 
 /**
  * read csv data with header, and convert into List<Map<String, String>>
  */
 private fun readAllWithHeader(data: String): List<Map<String, String>> {
-    return CsvFileReader(CsvReaderContext(), StringReaderImpl(data)).readAllWithHeaderAsSequence().toList()
+    return CsvFileReader(CsvReaderContext(), StringReaderImpl(data), LoggerNop).readAllWithHeaderAsSequence().toList()
 }

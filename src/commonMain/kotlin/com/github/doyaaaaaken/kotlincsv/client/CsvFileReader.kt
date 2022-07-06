@@ -6,8 +6,8 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.InsufficientFieldsRowBehavio
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import com.github.doyaaaaaken.kotlincsv.util.CSVAutoRenameFailedException
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
+import com.github.doyaaaaaken.kotlincsv.util.logger.Logger
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
-import mu.KotlinLogging
 
 /**
  * CSV Reader class, which controls file I/O flow.
@@ -16,10 +16,10 @@ import mu.KotlinLogging
  */
 class CsvFileReader internal constructor(
     private val ctx: CsvReaderContext,
-    reader: Reader
+    reader: Reader,
+    private val logger: Logger,
 ) {
 
-    private val logger = KotlinLogging.logger { }
     private val reader = BufferedLineReader(reader)
     private var rowNum = 0L
 

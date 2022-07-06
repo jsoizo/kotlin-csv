@@ -172,14 +172,14 @@ actual class CsvReader actual constructor(
     }
 
     private fun <T> open(br: Reader, doRead: CsvFileReader.() -> T): T {
-        val reader = CsvFileReader(ctx, br)
+        val reader = CsvFileReader(ctx, br, logger)
         return reader.use {
             reader.doRead()
         }
     }
 
     private suspend fun <T> openAsync(br: Reader, doRead: suspend CsvFileReader.() -> T): T {
-        val reader = CsvFileReader(ctx, br)
+        val reader = CsvFileReader(ctx, br, logger)
         return reader.use {
             reader.doRead()
         }
