@@ -1,7 +1,7 @@
 plugins {
     java
-    kotlin("multiplatform") version "1.5.31"
-    id("org.jetbrains.dokka").version("1.5.30")
+    kotlin("multiplatform") version "1.6.21"
+    id("org.jetbrains.dokka").version("1.6.21")
     `maven-publish`
     signing
     jacoco
@@ -15,7 +15,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.5.30")
+        classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.6.21")
     }
 }
 

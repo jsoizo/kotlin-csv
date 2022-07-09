@@ -12,3 +12,6 @@ test.csv
 # Project definition file
 *.iml
 .idea/*
+
+# Ignore yarn.lcok
+kotlin-js-store/yarn.lock
