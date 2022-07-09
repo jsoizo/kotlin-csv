@@ -135,7 +135,7 @@ signing {
 //         Jacoco setting              //
 /////////////////////////////////////////
 jacoco {
-    toolVersion = "0.8.5"
+    toolVersion = "0.8.8"
 }
 tasks.jacocoTestReport {
     val coverageSourceDirs = arrayOf(
