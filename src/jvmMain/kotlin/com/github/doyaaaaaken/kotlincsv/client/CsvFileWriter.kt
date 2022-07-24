@@ -88,13 +88,13 @@ class CsvFileWriter internal constructor(
     }
 
     private fun writeNext(row: List<Any?>) {
-        val rowStr = row.map { field ->
+        val rowStr = row.joinToString(ctx.delimiter.toString()) { field ->
             if (field == null) {
                 ctx.nullCode
             } else {
                 attachQuote(field.toString())
             }
-        }.joinToString(ctx.delimiter.toString())
+        }
         writer.print(rowStr)
     }
 
