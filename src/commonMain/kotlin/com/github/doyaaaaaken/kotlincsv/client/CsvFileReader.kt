@@ -52,7 +52,7 @@ class CsvFileReader internal constructor(
             @Suppress("DEPRECATION")
             if (row.size > numFieldsInRow) {
                 if (ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.TRIM) {
-                    logger.info { "trimming excess rows. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of row = $numFieldsInRow]" }
+                    logger.info("trimming excess rows. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of row = $numFieldsInRow]")
                     row.subList(0, numFieldsInRow)
                 } else if (ctx.skipMissMatchedRow || ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.IGNORE) {
                     skipMismatchedRow(idx, row, numFieldsInRow)
@@ -76,7 +76,7 @@ class CsvFileReader internal constructor(
         row: List<String>,
         numFieldsInRow: Int
     ): Nothing? {
-        logger.info { "skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $numFieldsInRow]" }
+        logger.info("skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $numFieldsInRow]")
         return null
     }
 

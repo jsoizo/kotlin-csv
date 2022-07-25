@@ -6,5 +6,5 @@ package com.github.doyaaaaaken.kotlincsv.util.logger
  * @see [com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext.logger]
  */
 interface Logger {
-    fun info(message: () -> Any?)
+    fun info(message: String)
 }
