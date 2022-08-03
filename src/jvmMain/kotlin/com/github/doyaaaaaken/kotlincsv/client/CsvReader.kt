@@ -78,6 +78,66 @@ actual class CsvReader actual constructor(
     }
 
     /**
+     * read the specified number of rows, and convert into List<List<String>>
+     *
+     * No need to close InputStream when calling this method.
+     */
+    actual fun read(data: String, numberOfRows: Int): List<List<String>> {
+        val br = data.byteInputStream(charsetCode).bufferedReader(charsetCode)
+        return open(br) { readAsSequence(numberOfRows).toList() }
+    }
+
+    /**
+     * read the specified number of rows from File, and convert into List<List<String>>
+     *
+     * No need to close InputStream when calling this method.
+     */
+    fun read(file: File, numberOfRows: Int = -1): List<List<String>> {
+        val br = file.inputStream().bufferedReader(charsetCode)
+        return open(br) { readAsSequence(numberOfRows).toList() }
+    }
+
+    /**
+     * read the specified number of rows from InputStream, and convert into List<List<String>>
+     *
+     * No need to close InputStream when calling this method.
+     */
+    fun read(ips: InputStream, numberOfRows: Int = -1): List<List<String>> {
+        val br = ips.bufferedReader(charsetCode)
+        return open(br) { readAsSequence(numberOfRows).toList() }
+    }
+
+    /**
+     * read the specified number of rows with header, and convert into List<Map<String, String>>
+     *
+     * No need to close InputStream when calling this method.
+     */
+    actual fun readWithHeader(data: String, numberOfRows: Int): List<Map<String, String>> {
+        val br = data.byteInputStream(charsetCode).bufferedReader(charsetCode)
+        return open(br) { readWithHeaderAsSequence(numberOfRows).toList() }
+    }
+
+    /**
+     * read the specified number of rows with header, and convert into List<Map<String, String>>
+     *
+     * No need to close InputStream when calling this method.
+     */
+    fun readWithHeader(file: File, numberOfRows: Int = -1): List<Map<String, String>> {
+        val br = file.inputStream().bufferedReader(charsetCode)
+        return open(br) { readWithHeaderAsSequence(numberOfRows).toList() }
+    }
+
+    /**
+     * read the specified number of rows with header, and convert into List<Map<String, String>>
+     *
+     * No need to close InputStream when calling this method.
+     */
+    fun readWithHeader(ips: InputStream, numberOfRows: Int = -1): List<Map<String, String>> {
+        val br = ips.bufferedReader(charsetCode)
+        return open(br) { readWithHeaderAsSequence(numberOfRows).toList() }
+    }
+
+    /**
      * open inputStreamReader and execute reading process.
      *
      * If you want to control read flow precisely, use this method.

@@ -19,4 +19,14 @@ expect class CsvReader(
      * read csv data with header, and convert into List<Map<String, String>>
      */
     fun readAllWithHeader(data: String): List<Map<String, String>>
+
+    /**
+     * read the specified number of rows, and convert into List<List<String>>
+     */
+    fun read(data: String, numberOfRows: Int = -1): List<List<String>>
+
+    /**
+     * read the specified number of rows with header, and convert into List<Map<String, String>>
+     */
+    fun readWithHeader(data: String, numberOfRows: Int = -1): List<Map<String, String>>
 }

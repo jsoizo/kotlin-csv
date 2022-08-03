@@ -329,6 +329,60 @@ class CsvReaderTest : WordSpec({
         }
     }
 
+    "read method (with String argument)" should {
+        "read simple csv" {
+            val result = csvReader().read(
+                """a,b,c
+                        |d,e,f
+                    """.trimMargin(),
+                1
+            )
+            result shouldBe listOf(listOf("a", "b", "c"))
+        }
+    }
+
+    "read method (with File argument)" should {
+        "read simple csv" {
+            val result = csvReader().read(readTestDataFile("simple.csv"), 1)
+            result shouldBe listOf(listOf("a", "b", "c"))
+        }
+    }
+
+    "read method (with InputStream argument)" should {
+        "read simple csv" {
+            val file = readTestDataFile("simple.csv")
+            val result = csvReader().read(file.inputStream(), 1)
+            result shouldBe listOf(listOf("a", "b", "c"))
+        }
+    }
+
+    "readWithHeader method" should {
+        val expected = listOf(
+            mapOf("h1" to "a", "h2" to "b", "h3" to "c")
+        )
+
+        "read from String" {
+            val data = """h1,h2,h3
+                    |a,b,c
+                    |d,e,f
+                """.trimMargin()
+            val result = csvReader().readWithHeader(data, 1)
+            result shouldBe expected
+        }
+
+        "read simple csv file" {
+            val file = readTestDataFile("with-header.csv")
+            val result = csvReader().readWithHeader(file, 1)
+            result shouldBe expected
+        }
+
+        "read from InputStream" {
+            val file = readTestDataFile("with-header.csv")
+            val result = csvReader().readWithHeader(file.inputStream(), 1)
+            result shouldBe expected
+        }
+    }
+
     "open method (with fileName argument)" should {
         val rows = csvReader().open("src/jvmTest/resources/testdata/csv/simple.csv") {
             val row1 = readNext()

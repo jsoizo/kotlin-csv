@@ -6,8 +6,8 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.InsufficientFieldsRowBehavio
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import com.github.doyaaaaaken.kotlincsv.util.CSVAutoRenameFailedException
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
-import com.github.doyaaaaaken.kotlincsv.util.logger.Logger
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
+import com.github.doyaaaaaken.kotlincsv.util.logger.Logger
 
 /**
  * CSV Reader class, which controls file I/O flow.
@@ -47,27 +47,46 @@ class CsvFileReader internal constructor(
         }.mapIndexedNotNull { idx, row ->
             // If no expected number of fields was passed in, then set it based on the first row.
             if (expectedNumFieldsInRow == null) expectedNumFieldsInRow = row.size
-            // Assign this number to a non-nullable type to avoid need for thread-safety null checks.
-            val numFieldsInRow: Int = expectedNumFieldsInRow ?: row.size
-            @Suppress("DEPRECATION")
-            if (row.size > numFieldsInRow) {
-                if (ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.TRIM) {
-                    logger.info("trimming excess rows. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of row = $numFieldsInRow]")
-                    row.subList(0, numFieldsInRow)
-                } else if (ctx.skipMissMatchedRow || ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.IGNORE) {
-                    skipMismatchedRow(idx, row, numFieldsInRow)
-                } else {
-                    throw CSVFieldNumDifferentException(numFieldsInRow, row.size, idx + 1)
-                }
-            } else if (numFieldsInRow != row.size) {
-                if (ctx.skipMissMatchedRow || ctx.insufficientFieldsRowBehaviour == InsufficientFieldsRowBehaviour.IGNORE) {
-                    skipMismatchedRow(idx, row, numFieldsInRow)
-                } else {
-                    throw CSVFieldNumDifferentException(numFieldsInRow, row.size, idx + 1)
-                }
+            readRow(idx, row, expectedNumFieldsInRow!!)
+        }
+    }
+
+    /**
+     * read the specified number of csv rows as Sequence
+     */
+    fun readAsSequence(numberOfRows: Int, fieldsNum: Int? = null): Sequence<List<String>> {
+        if (numberOfRows < 0) return readAllAsSequence(fieldsNum)
+        if (numberOfRows == 0) return emptySequence()
+
+        var expectedNumFieldsInRow: Int? = fieldsNum
+        return generateSequence {
+            @Suppress("DEPRECATION") readNext()
+        }.take(numberOfRows).mapIndexedNotNull { idx, row ->
+            // If no expected number of fields was passed in, then set it based on the first row.
+            if (expectedNumFieldsInRow == null) expectedNumFieldsInRow = row.size
+            readRow(idx, row, expectedNumFieldsInRow!!)
+        }
+    }
+
+    private fun readRow(idx: Int, row: List<String>, numFieldsInRow: Int): List<String>? {
+        @Suppress("DEPRECATION")
+        return if (row.size > numFieldsInRow) {
+            if (ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.TRIM) {
+                logger.info("trimming excess rows. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of row = $numFieldsInRow]")
+                row.subList(0, numFieldsInRow)
+            } else if (ctx.skipMissMatchedRow || ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.IGNORE) {
+                skipMismatchedRow(idx, row, numFieldsInRow)
             } else {
-                row
+                throw CSVFieldNumDifferentException(numFieldsInRow, row.size, idx + 1)
             }
+        } else if (numFieldsInRow != row.size) {
+            if (ctx.skipMissMatchedRow || ctx.insufficientFieldsRowBehaviour == InsufficientFieldsRowBehaviour.IGNORE) {
+                skipMismatchedRow(idx, row, numFieldsInRow)
+            } else {
+                throw CSVFieldNumDifferentException(numFieldsInRow, row.size, idx + 1)
+            }
+        } else {
+            row
         }
     }
 
@@ -84,15 +103,28 @@ class CsvFileReader internal constructor(
      * read all csv rows as Sequence with header information
      */
     fun readAllWithHeaderAsSequence(): Sequence<Map<String, String>> {
+        val headers = readHeader()
+        return readAllAsSequence(headers.size).map { fields -> headers.zip(fields).toMap() }
+    }
+
+    /**
+     * read the specified number of csv rows as Sequence with header information
+     */
+    fun readWithHeaderAsSequence(numberOfRows: Int): Sequence<Map<String, String>> {
+        val headers = readHeader()
+        return readAsSequence(numberOfRows, headers.size).map { fields -> headers.zip(fields).toMap() }
+    }
+
+    private fun readHeader(): List<String> {
         @Suppress("DEPRECATION")
-        var headers = readNext() ?: return emptySequence()
+        var headers = readNext() ?: return emptyList()
         if (ctx.autoRenameDuplicateHeaders) {
             headers = deduplicateHeaders(headers)
         } else {
             val duplicated = findDuplicate(headers)
             if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated. please consider to use 'autoRenameDuplicateHeaders' option.")
         }
-        return readAllAsSequence(headers.size).map { fields -> headers.zip(fields).toMap() }
+        return headers
     }
 
     fun close() {

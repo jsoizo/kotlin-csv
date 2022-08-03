@@ -25,4 +25,18 @@ actual class CsvReader actual constructor(
     actual fun readAllWithHeader(data: String): List<Map<String, String>> {
         return CsvFileReader(ctx, StringReaderImpl(data), logger).readAllWithHeaderAsSequence().toList()
     }
+
+    /**
+     * read the specified number of rows, and convert into List<List<String>>
+     */
+    actual fun read(data: String, numberOfRows: Int): List<List<String>> {
+        return CsvFileReader(ctx, StringReaderImpl(data), logger).readAsSequence(numberOfRows).toList()
+    }
+
+    /**
+     * read the specified number of rows with header, and convert into List<Map<String, String>>
+     */
+    actual fun readWithHeader(data: String, numberOfRows: Int): List<Map<String, String>> {
+        return CsvFileReader(ctx, StringReaderImpl(data), logger).readWithHeaderAsSequence(numberOfRows).toList()
+    }
 }
