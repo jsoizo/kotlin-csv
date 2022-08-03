@@ -91,6 +91,20 @@ class CsvWriterTest : WordSpec({
         }
     }
 
+    "writeString method" should {
+        val row1 = listOf("a", "b", null)
+        val row2 = listOf("d", "2", "1.0")
+        val expected = "a,b,\r\nd,2,1.0\r\n"
+
+        "write simple csv data to String" {
+            val actual = csvWriter().writeString {
+                writeRow(row1)
+                writeRow(row2)
+            }
+            actual shouldBe expected
+        }
+    }
+
     "writeAll method without calling `open` method" should {
         val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
         val expected = "a,b,c\r\nd,e,f\r\n"
@@ -110,6 +124,11 @@ class CsvWriterTest : WordSpec({
         "write data with target output stream (java.io.OutputStream)" {
             csvWriter().writeAll(rows, File(testFileName).outputStream())
             val actual = readTestFile()
+            actual shouldBe expected
+        }
+
+        "write data to String" {
+            val actual = csvWriter().writeAll(rows)
             actual shouldBe expected
         }
     }
