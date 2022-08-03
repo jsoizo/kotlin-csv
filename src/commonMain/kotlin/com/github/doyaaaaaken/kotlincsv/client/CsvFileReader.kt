@@ -45,14 +45,18 @@ class CsvFileReader internal constructor(
         return generateSequence {
             @Suppress("DEPRECATION") readNext()
         }.mapIndexedNotNull { idx, row ->
+            val numberOfFields = expectedNumFieldsInRow ?: row.size
             // If no expected number of fields was passed in, then set it based on the first row.
-            if (expectedNumFieldsInRow == null) expectedNumFieldsInRow = row.size
-            readRow(idx, row, expectedNumFieldsInRow!!)
+            if (expectedNumFieldsInRow == null) expectedNumFieldsInRow = numberOfFields
+            readRow(idx, row, numberOfFields)
         }
     }
 
     /**
      * read the specified number of csv rows as Sequence
+     *
+     * if the requested number of rows is negative, read all rows
+     * if the requested number of rows is zero, return an empty sequence
      */
     fun readAsSequence(numberOfRows: Int, fieldsNum: Int? = null): Sequence<List<String>> {
         if (numberOfRows < 0) return readAllAsSequence(fieldsNum)
@@ -62,9 +66,10 @@ class CsvFileReader internal constructor(
         return generateSequence {
             @Suppress("DEPRECATION") readNext()
         }.take(numberOfRows).mapIndexedNotNull { idx, row ->
+            val numberOfFields = expectedNumFieldsInRow ?: row.size
             // If no expected number of fields was passed in, then set it based on the first row.
-            if (expectedNumFieldsInRow == null) expectedNumFieldsInRow = row.size
-            readRow(idx, row, expectedNumFieldsInRow!!)
+            if (expectedNumFieldsInRow == null) expectedNumFieldsInRow = numberOfFields
+            readRow(idx, row, numberOfFields)
         }
     }
 
