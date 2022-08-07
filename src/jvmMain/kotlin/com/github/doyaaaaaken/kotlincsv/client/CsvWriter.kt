@@ -51,7 +51,7 @@ actual class CsvWriter actual constructor(
         writer.use { it.write() }
     }
 
-    fun writeString(write: ICsvFileWriter.() -> Unit): String {
+    internal fun writeAsString(write: ICsvFileWriter.() -> Unit): String {
         val baos = ByteArrayOutputStream()
         open(baos, write)
         return String(baos.toByteArray(), Charset.forName(ctx.charset))
@@ -144,7 +144,7 @@ actual class CsvWriter actual constructor(
     /**
      * write all rows to string
      */
-    fun writeAll(rows: List<List<Any?>>): String {
-        return writeString { writeRows(rows) }
+    fun writeAllAsString(rows: List<List<Any?>>): String {
+        return writeAsString { writeRows(rows) }
     }
 }
