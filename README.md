@@ -223,6 +223,13 @@ csvWriter().openAsync(testFileName) {
 }
 ```
 
+#### Write as String
+
+```kotlin
+val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+val csvString: String = csvWriter().writeAllAsString(rows) //a,b,c\r\nd,e,f\r\n
+```
+
 #### long-running write (manual control for file close)
 
 If you want to close a file writer manually for performance reasons (e.g. streaming scenario), you can

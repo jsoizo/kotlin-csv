@@ -91,13 +91,13 @@ class CsvWriterTest : WordSpec({
         }
     }
 
-    "writeString method" should {
+    "writeAsString method" should {
         val row1 = listOf("a", "b", null)
         val row2 = listOf("d", "2", "1.0")
         val expected = "a,b,\r\nd,2,1.0\r\n"
 
         "write simple csv data to String" {
-            val actual = csvWriter().writeString {
+            val actual = csvWriter().writeAsString {
                 writeRow(row1)
                 writeRow(row2)
             }
@@ -128,7 +128,7 @@ class CsvWriterTest : WordSpec({
         }
 
         "write data to String" {
-            val actual = csvWriter().writeAll(rows)
+            val actual = csvWriter().writeAllAsString(rows)
             actual shouldBe expected
         }
     }
