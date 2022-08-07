@@ -5,6 +5,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvWriterContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.*
+import java.nio.charset.Charset
 
 /**
  * CSV Writer class, which decides where to write and returns CsvFileWriter class (class for controlling File I/O).
@@ -48,6 +49,12 @@ actual class CsvWriter actual constructor(
         val osw = OutputStreamWriter(ops, ctx.charset)
         val writer = CsvFileWriter(ctx, PrintWriter(osw))
         writer.use { it.write() }
+    }
+
+    fun writeString(write: ICsvFileWriter.() -> Unit): String {
+        val baos = ByteArrayOutputStream()
+        open(baos, write)
+        return String(baos.toByteArray(), Charset.forName(ctx.charset))
     }
 
     /**
@@ -132,5 +139,12 @@ actual class CsvWriter actual constructor(
      */
     suspend fun writeAllAsync(rows: List<List<Any?>>, ops: OutputStream) {
         open(ops) { writeRows(rows) }
+    }
+
+    /**
+     * write all rows to string
+     */
+    fun writeAll(rows: List<List<Any?>>): String {
+        return writeString { writeRows(rows) }
     }
 }
