@@ -11,7 +11,7 @@ internal class BufferedLineReader(
     }
 
     private fun StringBuilder.isEmptyLine(): Boolean =
-        this.isEmpty() || (this.length == 1 && this[0] == BOM)
+        this.isEmpty() || this.length == 1 && this[0] == BOM
 
     fun readLineWithTerminator(): String? {
         val sb = StringBuilder()
