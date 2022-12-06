@@ -6,6 +6,9 @@ package com.github.doyaaaaaken.kotlincsv.client
 internal class BufferedLineReader(
     private val br: Reader
 ) {
+    companion object {
+        private val BOM = '\uFEFF'
+    }
 
     fun readLineWithTerminator(): String? {
         val sb = StringBuilder()
@@ -13,7 +16,7 @@ internal class BufferedLineReader(
             val c = br.read()
 
             if (c == -1) {
-                if (sb.isEmpty()) {
+                if (sb.isEmpty() || (sb.length == 1 && sb[0] == BOM)) {
                     return null
                 } else {
                     break
