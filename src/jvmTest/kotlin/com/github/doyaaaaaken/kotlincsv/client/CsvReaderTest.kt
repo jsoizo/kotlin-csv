@@ -138,6 +138,12 @@ class CsvReaderTest : WordSpec({
             }.readAll(readTestDataFile("bom.csv"))
             result shouldBe listOf(listOf("a", "b", "c"))
         }
+        "read empty csv with BOM" {
+            val result = csvReader {
+                escapeChar = '\\'
+            }.readAll(readTestDataFile("empty-bom.csv"))
+            result shouldBe listOf()
+        }
         //refs https://github.com/tototoshi/scala-csv/issues/22
         "read csv with \u2028 field" {
             val result = csvReader().readAll(readTestDataFile("unicode2028.csv"))
