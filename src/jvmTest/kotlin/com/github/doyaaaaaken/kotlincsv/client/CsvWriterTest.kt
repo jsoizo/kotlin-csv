@@ -143,7 +143,7 @@ class CsvWriterTest : WordSpec({
             val actual = readTestFile(Charset.forName("SJIS"))
             actual shouldBe "あ,い\r\n"
         }
-        "write csv with '|' demimiter" {
+        "write csv with '|' delimiter" {
             val row1 = listOf("a", "b")
             val row2 = listOf("c", "d")
             val expected = "a|b\r\nc|d\r\n"
