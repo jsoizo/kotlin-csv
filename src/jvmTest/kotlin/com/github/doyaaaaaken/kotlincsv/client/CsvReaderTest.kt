@@ -243,7 +243,6 @@ class CsvReaderTest : WordSpec({
                     excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM
                 }.readAll(readTestDataFile("varying-column-lengths.csv"))
             }
-            
             assertSoftly {
                 ex1.fieldNum shouldBe 2
                 ex1.fieldNumOnFailedRow shouldBe 1
