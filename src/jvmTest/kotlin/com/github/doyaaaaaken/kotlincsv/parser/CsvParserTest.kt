@@ -1,6 +1,7 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
+import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
@@ -59,17 +60,19 @@ class CsvParserTest : WordSpec({
             val ex1 = shouldThrow<CSVParseFormatException> {
                 parser.parseRow("a,\"\"failed")
             }
-            ex1.rowNum shouldBe 1
-            ex1.colIndex shouldBe 4
-            ex1.char shouldBe 'f'
-
             val ex2 = shouldThrow<CSVParseFormatException> {
                 parser.parseRow("a,\"\"failed", 2)
             }
 
-            ex2.rowNum shouldBe 2
-            ex2.colIndex shouldBe 4
-            ex2.char shouldBe 'f'
+            assertSoftly {
+                ex1.rowNum shouldBe 1
+                ex1.colIndex shouldBe 4
+                ex1.char shouldBe 'f'
+
+                ex2.rowNum shouldBe 2
+                ex2.colIndex shouldBe 4
+                ex2.char shouldBe 'f'
+            }
         }
     }
 })
