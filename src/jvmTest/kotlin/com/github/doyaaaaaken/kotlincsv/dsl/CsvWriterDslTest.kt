@@ -2,6 +2,7 @@ package com.github.doyaaaaaken.kotlincsv.dsl
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.github.doyaaaaaken.kotlincsv.dsl.context.WriteQuoteMode
+import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeTypeOf
@@ -26,12 +27,14 @@ class CsvWriterDslTest : StringSpec({
                 mode = WriteQuoteMode.ALL
             }
         }
-        writer.charset shouldBe Charsets.ISO_8859_1.name()
-        writer.delimiter shouldBe '\t'
-        writer.nullCode shouldBe "NULL"
-        writer.lineTerminator shouldBe "\n"
-        writer.outputLastLineTerminator shouldBe false
-        writer.quote.char shouldBe '\''
-        writer.quote.mode = WriteQuoteMode.ALL
+        assertSoftly {
+            writer.charset shouldBe Charsets.ISO_8859_1.name()
+            writer.delimiter shouldBe '\t'
+            writer.nullCode shouldBe "NULL"
+            writer.lineTerminator shouldBe "\n"
+            writer.outputLastLineTerminator shouldBe false
+            writer.quote.char shouldBe '\''
+            writer.quote.mode = WriteQuoteMode.ALL
+        }
     }
 })
