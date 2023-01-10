@@ -47,7 +47,7 @@ class CsvReaderTest : WordSpec({
             )
             result shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
         }
-        "read csv with line separater" {
+        "read csv with line separator" {
             val result = csvReader().readAll(
                 """a,b,c,"x","y
                             | hoge"
