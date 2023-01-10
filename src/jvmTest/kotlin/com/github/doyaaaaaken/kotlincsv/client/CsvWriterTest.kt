@@ -4,6 +4,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.WriteQuoteMode
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.github.doyaaaaaken.kotlincsv.util.Const
+import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
 import java.io.File
@@ -37,12 +38,14 @@ class CsvWriterTest : WordSpec({
                 }
             }
             val writer = CsvWriter(context)
-            writer.charset shouldBe Charsets.ISO_8859_1.name()
-            writer.delimiter shouldBe '\t'
-            writer.nullCode shouldBe "NULL"
-            writer.lineTerminator shouldBe "\n"
-            writer.quote.char = '\''
-            writer.quote.mode = WriteQuoteMode.ALL
+            assertSoftly {
+                writer.charset shouldBe Charsets.ISO_8859_1.name()
+                writer.delimiter shouldBe '\t'
+                writer.nullCode shouldBe "NULL"
+                writer.lineTerminator shouldBe "\n"
+                writer.quote.char = '\''
+                writer.quote.mode = WriteQuoteMode.ALL
+            }
         }
     }
 
