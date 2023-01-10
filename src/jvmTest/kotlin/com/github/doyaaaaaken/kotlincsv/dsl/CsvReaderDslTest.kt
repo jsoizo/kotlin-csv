@@ -3,6 +3,7 @@ package com.github.doyaaaaaken.kotlincsv.dsl
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ExcessFieldsRowBehaviour
 import com.github.doyaaaaaken.kotlincsv.dsl.context.InsufficientFieldsRowBehaviour
+import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeTypeOf
@@ -26,12 +27,14 @@ class CsvReaderDslTest : StringSpec({
             insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
             excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
         }
-        reader.charset shouldBe Charsets.ISO_8859_1.name()
-        reader.quoteChar shouldBe '\''
-        reader.delimiter shouldBe '\t'
-        reader.skipEmptyLine shouldBe true
-        reader.skipMissMatchedRow shouldBe true
-        reader.insufficientFieldsRowBehaviour shouldBe InsufficientFieldsRowBehaviour.IGNORE
-        reader.excessFieldsRowBehaviour shouldBe ExcessFieldsRowBehaviour.IGNORE
+        assertSoftly {
+            reader.charset shouldBe Charsets.ISO_8859_1.name()
+            reader.quoteChar shouldBe '\''
+            reader.delimiter shouldBe '\t'
+            reader.skipEmptyLine shouldBe true
+            reader.skipMissMatchedRow shouldBe true
+            reader.insufficientFieldsRowBehaviour shouldBe InsufficientFieldsRowBehaviour.IGNORE
+            reader.excessFieldsRowBehaviour shouldBe ExcessFieldsRowBehaviour.IGNORE
+        }
     }
 })
