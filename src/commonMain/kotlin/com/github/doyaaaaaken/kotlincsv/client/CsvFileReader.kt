@@ -64,9 +64,7 @@ class CsvFileReader internal constructor(
                     skipMismatchedRow(idx, row, numFieldsInRow)
                 } else if (ctx.insufficientFieldsRowBehaviour == InsufficientFieldsRowBehaviour.EMPTY_STRING) {
                     val numOfMissingRows = numFieldsInRow - row.size
-                    row.plus((1..numOfMissingRows).map {
-                        ""
-                    })
+                    row.plus(List(numOfMissingRows) { "" })
                 } else {
                     throw CSVFieldNumDifferentException(numFieldsInRow, row.size, idx + 1)
                 }
