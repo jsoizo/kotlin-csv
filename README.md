@@ -30,7 +30,7 @@ Pure Kotlin CSV Reader/Writer.
 
 ### 3. Multiplatform
 
-* kotlin multiplatform project
+* Kotlin Multiplatform projects support.
 
 # Usage
 
@@ -39,13 +39,13 @@ Pure Kotlin CSV Reader/Writer.
 ### Gradle
 
 ```gradle
-//gradle kotlin DSL
-implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.7.0") //for JVM platform
-implementation("com.github.doyaaaaaken:kotlin-csv-js:1.7.0") //for Kotlin JS platform
+// Gradle Kotlin DSL
+implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.7.0") // for JVM platform
+implementation("com.github.doyaaaaaken:kotlin-csv-js:1.7.0") // for Kotlin JS platform
 
-//gradle groovy DSL
-implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.7.0' //for JVM platform
-implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.7.0' //for Kotlin JS platform
+// Gradle Groovy DSL
+implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.7.0' // for JVM platform
+implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.7.0' // for Kotlin JS platform
 ```
 
 ### Maven
@@ -63,13 +63,11 @@ implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.7.0' //for Kotlin JS plat
 </dependency>
 ```
 
-[kscript](https://github.com/holgerbrandl/kscript)
+### [kscript](https://github.com/holgerbrandl/kscript)
 
 ```kotlin
-@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-jvm:1.7.0") //for JVM platform
-@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-js:1.7.0")
-
-//for Kotlin JS platform
+@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-jvm:1.7.0") // for JVM platform
+@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-js:1.7.0") // for Kotlin JS platform
 ```
 
 ## Examples
@@ -104,7 +102,7 @@ println(rows) //[{a=d, b=e, c=f}]
 `Sequence` type allows to execute lazily.<br />
 It starts to process each rows before reading all row data.
 
-See detail about `Sequence` type on [Kotlin official document](https://kotlinlang.org/docs/reference/sequences.html).
+Learn more about the `Sequence` type on [Kotlin's official documentation](https://kotlinlang.org/docs/reference/sequences.html).
 
 ```kotlin
 csvReader().open("test1.csv") {
@@ -122,7 +120,7 @@ csvReader().open("test2.csv") {
 }
 ```
 
-NOTE:`readAllAsSequence` and `readAllWithHeaderAsSequence` methods can only be called within the `open` lambda block.
+NOTE: `readAllAsSequence` and `readAllWithHeaderAsSequence` methods can only be called within the `open` lambda block.
 The input stream is closed after the `open` lambda block.
 
 #### Read line by line
