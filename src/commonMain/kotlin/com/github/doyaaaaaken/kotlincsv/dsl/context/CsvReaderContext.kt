@@ -102,7 +102,7 @@ enum class InsufficientFieldsRowBehaviour {
      */
     IGNORE,
     /**
-     * Treat empty row as an empty string
+     * Treat missing fields as an empty string
      */
     EMPTY_STRING
 }
