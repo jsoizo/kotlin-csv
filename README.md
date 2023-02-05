@@ -176,7 +176,7 @@ val tsvReader = csvReader {
 | autoRenameDuplicateHeaders     | `false`       | Whether to auto rename duplicate headers or throw an exception.                                                                                                                                                                                                                        |
 | ~~skipMissMatchedRow~~         | `false`       | Deprecated. Replace with appropriate values in `excessFieldsRowBehaviour` and `insufficientFieldsRowBehaviour`, e.g. both set to `IGNORE`. ~~Whether to skip an invalid row. If `ignoreExcessCols` is true, only rows with less than the expected number of columns will be skipped.~~ |
 | excessFieldsRowBehaviour       | `ERROR`       | Behaviour to use when a row has more fields (columns) than expected. `ERROR` (default), `IGNORE` (skip the row) or `TRIM` (remove the excess fields at the end of the row to match the expected number of fields).                                                                     |
-| insufficientFieldsRowBehaviour | `ERROR`       | Behaviour to use when a row has fewer fields (columns) than expected. `ERROR` (default), `IGNORE` (skip the row).                                                                                                                                                                      |
+| insufficientFieldsRowBehaviour | `ERROR`       | Behaviour to use when a row has fewer fields (columns) than expected. `ERROR` (default), `IGNORE` (skip the row) or `EMPTY_STRING` (replace missing fields with an empty string).                                                                                                      |
 
 ### CSV Write examples
 
