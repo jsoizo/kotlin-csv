@@ -184,7 +184,7 @@ class CsvReaderTest : WordSpec({
         "Trim row when reading csv with greater num of fields on a subsequent row" {
             val expected = listOf(listOf("a", "b"), listOf("c", "d"))
             val actual =
-                csvReader{
+                csvReader {
                     excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM
                 }.readAll(readTestDataFile("different-fields-num2.csv"))
 
@@ -196,7 +196,7 @@ class CsvReaderTest : WordSpec({
         "it should be be possible to skip rows with both excess and insufficient fields" {
             val expected = listOf(listOf("a", "b"))
             val actual =
-                csvReader{
+                csvReader {
                     excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
                     insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
                 }.readAll(readTestDataFile("varying-column-lengths.csv"))
@@ -206,10 +206,36 @@ class CsvReaderTest : WordSpec({
                 actual.size shouldBe 1
             }
         }
-        "it should be be possible to trim excess columns and skip insufficient row columns" {
-            val expected = listOf(listOf("a", "b"), listOf("d","e"))
+        "it should be be possible to replace insufficient fields with strings and skip rows with excess fields" {
+            val expected = listOf(listOf("a", "b"), listOf("c", ""))
             val actual =
-                csvReader{
+                csvReader {
+                    excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
+                    insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.EMPTY_STRING
+                }.readAll(readTestDataFile("varying-column-lengths.csv"))
+
+            assertSoftly {
+                actual shouldBe expected
+                actual.size shouldBe 2
+            }
+        }
+        "it should be be possible to replace insufficient fields with strings and trim rows with excess fields" {
+            val expected = listOf(listOf("a", "b"), listOf("c", ""), listOf("d", "e"))
+            val actual =
+                csvReader {
+                    excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM
+                    insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.EMPTY_STRING
+                }.readAll(readTestDataFile("varying-column-lengths.csv"))
+
+            assertSoftly {
+                actual shouldBe expected
+                actual.size shouldBe 3
+            }
+        }
+        "it should be be possible to trim excess columns and skip insufficient row columns" {
+            val expected = listOf(listOf("a", "b"), listOf("d", "e"))
+            val actual =
+                csvReader {
                     excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM
                     insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
                 }.readAll(readTestDataFile("varying-column-lengths.csv"))
