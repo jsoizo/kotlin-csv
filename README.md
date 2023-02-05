@@ -1,7 +1,7 @@
 <h1 align="center">kotlin-csv</h1>
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.7.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-1.8.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
@@ -40,12 +40,12 @@ Pure Kotlin CSV Reader/Writer.
 
 ```gradle
 // Gradle Kotlin DSL
-implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.7.0") // for JVM platform
-implementation("com.github.doyaaaaaken:kotlin-csv-js:1.7.0") // for Kotlin JS platform
+implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.8.0") // for JVM platform
+implementation("com.github.doyaaaaaken:kotlin-csv-js:1.8.0") // for Kotlin JS platform
 
 // Gradle Groovy DSL
-implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.7.0' // for JVM platform
-implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.7.0' // for Kotlin JS platform
+implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.8.0' // for JVM platform
+implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.8.0' // for Kotlin JS platform
 ```
 
 ### Maven
@@ -54,20 +54,20 @@ implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.7.0' // for Kotlin JS pla
 <dependency>
   <groupId>com.github.doyaaaaaken</groupId>
   <artifactId>kotlin-csv-jvm</artifactId>
-  <version>1.7.0</version>
+  <version>1.8.0</version>
 </dependency>
 <dependency>
   <groupId>com.github.doyaaaaaken</groupId>
   <artifactId>kotlin-csv-js</artifactId>
-  <version>1.7.0</version>
+  <version>1.8.0</version>
 </dependency>
 ```
 
 ### [kscript](https://github.com/holgerbrandl/kscript)
 
 ```kotlin
-@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-jvm:1.7.0") // for JVM platform
-@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-js:1.7.0") // for Kotlin JS platform
+@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-jvm:1.8.0") // for JVM platform
+@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-js:1.8.0") // for Kotlin JS platform
 ```
 
 ## Examples
