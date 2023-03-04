@@ -13,5 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Logging
-        run: echo "Version ${{ github.event.inputs.version }} was input."
+      - name: Assign input version
+        run: |
+          echo "Version ${{ github.event.inputs.version }} was input."
+          echo "RELEASE_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+
+      - name: Release ${{ env.RELEASE_VERSION }}
+        run: |
+          echo "Release version is ${{ env.RELEASE_VERSION }}"
