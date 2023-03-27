@@ -1,6 +1,7 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
+import com.github.doyaaaaaken.kotlincsv.util.Const
 
 /**
  * @author doyaaaaaaken
@@ -11,7 +12,7 @@ internal class ParseStateMachine(
     private val escapeChar: Char
 ) {
 
-    private val BOM = '\uFEFF'
+    private val BOM = Const.BOM
 
     private var state = ParseState.START
 

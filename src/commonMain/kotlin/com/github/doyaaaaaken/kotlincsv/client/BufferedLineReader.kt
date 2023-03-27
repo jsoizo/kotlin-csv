@@ -1,5 +1,7 @@
 package com.github.doyaaaaaken.kotlincsv.client
 
+import com.github.doyaaaaaken.kotlincsv.util.Const
+
 /**
  * buffered reader which can read line with line terminator
  */
@@ -7,7 +9,7 @@ internal class BufferedLineReader(
     private val br: Reader
 ) {
     companion object {
-        private const val BOM = '\uFEFF'
+        private const val BOM = Const.BOM
     }
 
     private fun StringBuilder.isEmptyLine(): Boolean =
