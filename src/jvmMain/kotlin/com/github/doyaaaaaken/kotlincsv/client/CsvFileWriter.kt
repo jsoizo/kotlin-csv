@@ -98,15 +98,6 @@ class CsvFileWriter internal constructor(
         writer.print(rowStr)
     }
 
-    private fun willWriteEndTerminator() {
-        if (ctx.outputLastLineTerminator) {
-            writeTerminator()
-            stateHandler.setStateOfWroteLineEndTerminator()
-        } else {
-            stateHandler.setStateOfNotWroteLineEndTerminator()
-        }
-    }
-
     /**
      * Will write terminator if and only if
      *  1. has wrote first line
@@ -124,6 +115,15 @@ class CsvFileWriter internal constructor(
     private fun writeTerminator() {
         writer.print(ctx.lineTerminator)
         stateHandler.setStateOfWroteLineEndTerminator()
+    }
+
+    private fun willWriteEndTerminator() {
+        if (ctx.outputLastLineTerminator) {
+            writeTerminator()
+            stateHandler.setStateOfWroteLineEndTerminator()
+        } else {
+            stateHandler.setStateOfNotWroteLineEndTerminator()
+        }
     }
 
     private fun attachQuote(field: String): String {
