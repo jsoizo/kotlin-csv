@@ -102,8 +102,9 @@ class CsvFileWriter internal constructor(
      * Will write terminator if writer has not wrote last line terminator on previous line.
      */
     private fun willWritePreTerminator() {
-        if (stateHandler.hasNotWroteLineEndTerminator()) {
+        if (stateHandler.mustWriteTerminatorOnLineHead()) {
             writeTerminator()
+            stateHandler.setMustWriteTerminatorOnNextLineHead(false)
         }
     }
 
@@ -112,14 +113,13 @@ class CsvFileWriter internal constructor(
      */
     private fun writeTerminator() {
         writer.print(ctx.lineTerminator)
-        stateHandler.setStateOfHasWroteTerminator()
     }
 
     private fun willWriteEndTerminator() {
         if (ctx.outputLastLineTerminator) {
             writeTerminator()
         } else {
-            stateHandler.setStateOfMustWriteTerminatorOnNextLineHead()
+            stateHandler.setMustWriteTerminatorOnNextLineHead(true)
         }
     }
 
