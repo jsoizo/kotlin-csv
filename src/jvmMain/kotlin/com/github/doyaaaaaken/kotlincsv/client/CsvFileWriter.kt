@@ -99,12 +99,10 @@ class CsvFileWriter internal constructor(
     }
 
     /**
-     * Will write terminator if and only if
-     *  1. has wrote first line
-     *  2. state is set to has not wrote last line terminator
+     * Will write terminator if writer has not wrote last line terminator on previous line.
      */
     private fun willWritePreTerminator() {
-        if (stateHandler.hasWroteFirstLine() && !stateHandler.hasWroteLineEndTerminator()) {
+        if (stateHandler.hasNotWroteLineEndTerminator()) {
             writeTerminator()
         }
     }
