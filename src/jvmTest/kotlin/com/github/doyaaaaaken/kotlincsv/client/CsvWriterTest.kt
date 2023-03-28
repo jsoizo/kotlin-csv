@@ -32,6 +32,8 @@ class CsvWriterTest : WordSpec({
                 delimiter = '\t'
                 nullCode = "NULL"
                 lineTerminator = "\n"
+                outputLastLineTerminator = false
+                prependBOM = true
                 quote {
                     char = '\''
                     mode = WriteQuoteMode.ALL
@@ -43,6 +45,8 @@ class CsvWriterTest : WordSpec({
                 writer.delimiter shouldBe '\t'
                 writer.nullCode shouldBe "NULL"
                 writer.lineTerminator shouldBe "\n"
+                writer.outputLastLineTerminator shouldBe false
+                writer.prependBOM shouldBe true
                 writer.quote.char = '\''
                 writer.quote.mode = WriteQuoteMode.ALL
             }
@@ -266,6 +270,18 @@ class CsvWriterTest : WordSpec({
             val expected = "a,b\r\nc,d"
             csvWriter {
                 outputLastLineTerminator = false
+            }.open(File(testFileName)) {
+                writeRows(listOf(row1, row2))
+            }
+            val actual = readTestFile()
+            actual shouldBe expected
+        }
+        "write simple csv with prepending BOM" {
+            val row1 = listOf("a", "b")
+            val row2 = listOf("c", "d")
+            val expected = "\uFEFFa,b\r\nc,d\r\n"
+            csvWriter {
+                prependBOM = true
             }.open(File(testFileName)) {
                 writeRows(listOf(row1, row2))
             }

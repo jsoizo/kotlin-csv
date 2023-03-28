@@ -22,6 +22,7 @@ class CsvWriterDslTest : StringSpec({
             nullCode = "NULL"
             lineTerminator = "\n"
             outputLastLineTerminator = false
+            prependBOM = true
             quote {
                 char = '\''
                 mode = WriteQuoteMode.ALL
@@ -33,6 +34,7 @@ class CsvWriterDslTest : StringSpec({
             writer.nullCode shouldBe "NULL"
             writer.lineTerminator shouldBe "\n"
             writer.outputLastLineTerminator shouldBe false
+            writer.prependBOM shouldBe true
             writer.quote.char shouldBe '\''
             writer.quote.mode = WriteQuoteMode.ALL
         }

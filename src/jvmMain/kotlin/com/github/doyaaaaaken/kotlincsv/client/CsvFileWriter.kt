@@ -2,6 +2,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.WriteQuoteMode
+import com.github.doyaaaaaken.kotlincsv.util.Const
 import java.io.Closeable
 import java.io.Flushable
 import java.io.IOException
@@ -85,6 +86,10 @@ class CsvFileWriter internal constructor(
     }
 
     private fun writeNext(row: List<Any?>) {
+        if (!hasWroteInitialChar && ctx.prependBOM) {
+            writer.print(Const.BOM)
+        }
+
         val rowStr = row.joinToString(ctx.delimiter.toString()) { field ->
             if (field == null) {
                 ctx.nullCode

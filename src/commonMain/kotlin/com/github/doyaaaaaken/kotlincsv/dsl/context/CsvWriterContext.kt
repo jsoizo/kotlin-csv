@@ -58,6 +58,12 @@ interface ICsvWriterContext {
     val outputLastLineTerminator: Boolean
 
     /**
+     * Output BOM (Byte Order Mark) at the beginning of file or not.
+     * See https://github.com/doyaaaaaken/kotlin-csv/issues/84
+     */
+    val prependBOM: Boolean
+
+    /**
      * Options about quotes of each fields
      */
     val quote: CsvWriteQuoteContext
@@ -75,6 +81,7 @@ class CsvWriterContext : ICsvWriterContext {
     override var nullCode: String = ""
     override var lineTerminator: String = "\r\n"
     override var outputLastLineTerminator = true
+    override var prependBOM = false
     override val quote: CsvWriteQuoteContext = CsvWriteQuoteContext()
 
     fun quote(init: CsvWriteQuoteContext.() -> Unit) {
