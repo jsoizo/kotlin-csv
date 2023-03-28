@@ -112,14 +112,14 @@ class CsvFileWriter internal constructor(
      */
     private fun writeTerminator() {
         writer.print(ctx.lineTerminator)
-        stateHandler.setStateOfWroteLineEndTerminator()
+        stateHandler.setStateOfHasWroteTerminator()
     }
 
     private fun willWriteEndTerminator() {
         if (ctx.outputLastLineTerminator) {
             writeTerminator()
         } else {
-            stateHandler.setStateOfNotWroteLineEndTerminator()
+            stateHandler.setStateOfMustWriteTerminatorOnNextLineHead()
         }
     }
 

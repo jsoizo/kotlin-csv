@@ -8,21 +8,21 @@ internal class CsvWriterStateHandler {
 
     private sealed class CsvWriterState {
         object InitialState : CsvWriterState()
-        object HasNotWroteLineEndTerminator : CsvWriterState()
-        object HasWroteLineEndTerminator : CsvWriterState()
+        object HasWroteTerminator : CsvWriterState()
+        object MustWriteTerminatorOnNextLineHead : CsvWriterState()
     }
 
     private var state: CsvWriterState = CsvWriterState.InitialState
 
     fun hasNotWroteLineEndTerminator(): Boolean {
-        return state is CsvWriterState.HasNotWroteLineEndTerminator
+        return state is CsvWriterState.MustWriteTerminatorOnNextLineHead
     }
 
-    fun setStateOfWroteLineEndTerminator() {
-        state = CsvWriterState.HasWroteLineEndTerminator
+    fun setStateOfHasWroteTerminator() {
+        state = CsvWriterState.HasWroteTerminator
     }
 
-    fun setStateOfNotWroteLineEndTerminator() {
-        state = CsvWriterState.HasNotWroteLineEndTerminator
+    fun setStateOfMustWriteTerminatorOnNextLineHead() {
+        state = CsvWriterState.MustWriteTerminatorOnNextLineHead
     }
 }
