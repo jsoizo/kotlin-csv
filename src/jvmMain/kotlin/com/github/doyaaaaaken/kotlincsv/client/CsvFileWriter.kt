@@ -118,7 +118,6 @@ class CsvFileWriter internal constructor(
     private fun willWriteEndTerminator() {
         if (ctx.outputLastLineTerminator) {
             writeTerminator()
-            stateHandler.setStateOfWroteLineEndTerminator()
         } else {
             stateHandler.setStateOfNotWroteLineEndTerminator()
         }
