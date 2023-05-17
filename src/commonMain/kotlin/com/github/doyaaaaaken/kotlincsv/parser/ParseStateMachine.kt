@@ -12,8 +12,6 @@ internal class ParseStateMachine(
     private val escapeChar: Char
 ) {
 
-    private val BOM = Const.BOM
-
     private var state = ParseState.START
 
     private val fields = ArrayList<String>()
@@ -32,7 +30,7 @@ internal class ParseStateMachine(
         when (state) {
             ParseState.START -> {
                 when (ch) {
-                    BOM -> Unit
+                    Const.BOM -> Unit
                     quoteChar -> state = ParseState.QUOTE_START
                     delimiter -> {
                         flushField()
