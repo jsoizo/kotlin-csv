@@ -49,7 +49,7 @@ class CsvFileWriter internal constructor(
         willWritePreTerminator()
         rows.forEachIndexed { index, list ->
             writeNext(list)
-            if (index < rows.size - 1) {
+            if (index < rows.size - 1 && list.isNotEmpty()) {
                 writeTerminator()
             }
         }
