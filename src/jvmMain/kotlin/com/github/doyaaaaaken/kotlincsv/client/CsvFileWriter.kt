@@ -49,7 +49,7 @@ class CsvFileWriter internal constructor(
         willWritePreTerminator()
         rows.forEachIndexed { index, list ->
             writeNext(list)
-            if (index < rows.size - 1) {
+            if (index < rows.size - 1 && list.isNotEmpty()) {
                 writeTerminator()
             }
         }
@@ -67,8 +67,9 @@ class CsvFileWriter internal constructor(
 
         val itr = rows.iterator()
         while (itr.hasNext()) {
-            writeNext(itr.next())
-            if (itr.hasNext()) writeTerminator()
+            val row = itr.next()
+            writeNext(row)
+            if (itr.hasNext() && row.isNotEmpty()) writeTerminator()
         }
 
         willWriteEndTerminator()

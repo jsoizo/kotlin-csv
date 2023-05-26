@@ -98,6 +98,24 @@ class CsvFileWriterTest : WordSpec({
             val actual = readTestFile()
             actual shouldBe expected
         }
+        "write no line terminator when row is empty for rows from list" {
+            val rows = listOf(listOf("a", "b", "c"), listOf(), listOf("d", "e", "f"))
+            val expected = "a,b,c\r\nd,e,f\r\n"
+            csvWriter().open(testFileName) {
+                writeRows(rows)
+            }
+            val actual = readTestFile()
+            actual shouldBe expected
+        }
+        "write no line terminator when row is empty for rows from sequence" {
+            val rows = listOf(listOf("a", "b", "c"), listOf(), listOf("d", "e", "f")).asSequence()
+            val expected = "a,b,c\r\nd,e,f\r\n"
+            csvWriter().open(testFileName) {
+                writeRows(rows)
+            }
+            val actual = readTestFile()
+            actual shouldBe expected
+        }
     }
     "close method" should {
         "throw Exception when stream is already closed" {
