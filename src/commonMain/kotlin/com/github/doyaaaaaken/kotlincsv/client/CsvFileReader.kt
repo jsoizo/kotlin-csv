@@ -23,7 +23,7 @@ class CsvFileReader internal constructor(
     private val reader = BufferedLineReader(reader)
     private var rowNum = 0L
 
-    private val parser = CsvParser(ctx.quoteChar, ctx.delimiter, ctx.escapeChar)
+    private val parser = CsvParser(ctx.quoteChar, ctx.delimiter, ctx.escapeChar, ctx.withFieldAsNull)
 
     /**
      * read next csv row
@@ -33,14 +33,14 @@ class CsvFileReader internal constructor(
      *         or return null, if all line are already read.
      */
     @Deprecated("We are considering making it a private method. If you have feedback, please comment on Issue #100.")
-    fun readNext(): List<String>? {
+    fun readNext(): List<String?>? {
         return readUntilNextCsvRow("")
     }
 
     /**
      * read all csv rows as Sequence
      */
-    fun readAllAsSequence(fieldsNum: Int? = null): Sequence<List<String>> {
+    fun readAllAsSequence(fieldsNum: Int? = null): Sequence<List<String?>> {
         var expectedNumFieldsInRow: Int? = fieldsNum
         return generateSequence {
             @Suppress("DEPRECATION") readNext()
@@ -76,7 +76,7 @@ class CsvFileReader internal constructor(
 
     private fun skipMismatchedRow(
         idx: Int,
-        row: List<String>,
+        row: List<String?>,
         numFieldsInRow: Int
     ): Nothing? {
         logger.info("skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $numFieldsInRow]")
@@ -86,9 +86,9 @@ class CsvFileReader internal constructor(
     /**
      * read all csv rows as Sequence with header information
      */
-    fun readAllWithHeaderAsSequence(): Sequence<Map<String, String>> {
+    fun readAllWithHeaderAsSequence(): Sequence<Map<String, String?>> {
         @Suppress("DEPRECATION")
-        var headers = readNext() ?: return emptySequence()
+        var headers = readNext()?.map { it ?: "" } ?: return emptySequence()
         if (ctx.autoRenameDuplicateHeaders) {
             headers = deduplicateHeaders(headers)
         } else {
@@ -108,7 +108,7 @@ class CsvFileReader internal constructor(
      * @return return fields in row as List<String>.
      *         or return null, if all line are already read.
      */
-    private tailrec fun readUntilNextCsvRow(leftOver: String = ""): List<String>? {
+    private tailrec fun readUntilNextCsvRow(leftOver: String = ""): List<String?>? {
         val nextLine = reader.readLineWithTerminator()
         rowNum++
         return if (nextLine == null) {

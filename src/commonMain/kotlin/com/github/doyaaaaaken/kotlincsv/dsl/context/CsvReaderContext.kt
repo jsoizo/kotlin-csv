@@ -170,5 +170,5 @@ class CsvReaderContext : ICsvReaderContext {
     override var autoRenameDuplicateHeaders: Boolean = false
     override var insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.ERROR
     override var excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = ExcessFieldsRowBehaviour.ERROR
-    override val withFieldAsNull: CSVReaderNullFieldIndicator = CSVReaderNullFieldIndicator.NEITHER
+    override var withFieldAsNull: CSVReaderNullFieldIndicator = CSVReaderNullFieldIndicator.NEITHER
 }

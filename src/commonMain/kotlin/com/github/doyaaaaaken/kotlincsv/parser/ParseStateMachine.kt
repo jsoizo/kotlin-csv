@@ -1,5 +1,6 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
+import com.github.doyaaaaaken.kotlincsv.dsl.context.CSVReaderNullFieldIndicator
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
 import com.github.doyaaaaaken.kotlincsv.util.Const
 
@@ -9,14 +10,17 @@ import com.github.doyaaaaaken.kotlincsv.util.Const
 internal class ParseStateMachine(
     private val quoteChar: Char,
     private val delimiter: Char,
-    private val escapeChar: Char
+    private val escapeChar: Char,
+    private val withFieldAsNull: CSVReaderNullFieldIndicator
 ) {
 
     private var state = ParseState.START
 
-    private val fields = ArrayList<String>()
+    private val fields = ArrayList<String?>()
 
     private var field = StringBuilder()
+
+    private var handleFieldAsNull = false
 
     private var pos = 0L
 
@@ -33,6 +37,7 @@ internal class ParseStateMachine(
                     Const.BOM -> Unit
                     quoteChar -> state = ParseState.QUOTE_START
                     delimiter -> {
+                        handleEmptySeparators()
                         flushField()
                         state = ParseState.DELIMITER
                     }
@@ -89,6 +94,7 @@ internal class ParseStateMachine(
                 when (ch) {
                     quoteChar -> state = ParseState.QUOTE_START
                     delimiter -> {
+                        handleEmptySeparators()
                         flushField()
                         state = ParseState.DELIMITER
                     }
@@ -126,6 +132,7 @@ internal class ParseStateMachine(
                         state = ParseState.QUOTED_FIELD
                         pos += 1
                     } else {
+                        handleEmptyQuotes()
                         state = ParseState.QUOTE_END
                     }
                 } else {
@@ -167,10 +174,15 @@ internal class ParseStateMachine(
      * @return return parsed CSV Fields.
      *         return null, if current position is on the way of csv row.
      */
-    fun getResult(): List<String>? {
+    fun getResult(): List<String?>? {
         return when (state) {
             ParseState.DELIMITER -> {
-                fields.add("")
+                val value = when(withFieldAsNull) {
+                    CSVReaderNullFieldIndicator.EMPTY_SEPARATORS    -> null
+                    CSVReaderNullFieldIndicator.BOTH                -> null
+                    else                                            -> ""
+                }
+                fields.add(value)
                 fields.toList()
             }
             ParseState.QUOTED_FIELD -> null
@@ -183,8 +195,27 @@ internal class ParseStateMachine(
     }
 
     private fun flushField() {
-        fields.add(field.toString())
+        val value = if (handleFieldAsNull) null else field.toString()
+
+        fields.add(value)
         field.clear()
+        handleFieldAsNull = false
+    }
+
+    private fun handleEmptySeparators() {
+        handleFieldAsNull = when(withFieldAsNull) {
+            CSVReaderNullFieldIndicator.EMPTY_SEPARATORS    -> true
+            CSVReaderNullFieldIndicator.BOTH                -> true
+            else                                            -> false
+        }
+    }
+
+    private fun handleEmptyQuotes() {
+        handleFieldAsNull = when(withFieldAsNull) {
+            CSVReaderNullFieldIndicator.EMPTY_QUOTES        -> field.isEmpty()
+            CSVReaderNullFieldIndicator.BOTH                -> field.isEmpty()
+            else                                            -> false
+        }
     }
 }
 
