@@ -1,13 +1,15 @@
 package com.github.doyaaaaaken.kotlincsv.client
 
+import com.github.doyaaaaaken.kotlincsv.dsl.context.CSVReaderNullFieldIndicator
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ExcessFieldsRowBehaviour
 import com.github.doyaaaaaken.kotlincsv.dsl.context.InsufficientFieldsRowBehaviour
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
+import com.github.doyaaaaaken.kotlincsv.parser.ParserNullFieldIndicator
 import com.github.doyaaaaaken.kotlincsv.util.CSVAutoRenameFailedException
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
-import com.github.doyaaaaaken.kotlincsv.util.logger.Logger
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
+import com.github.doyaaaaaken.kotlincsv.util.logger.Logger
 
 /**
  * CSV Reader class, which controls file I/O flow.
@@ -23,7 +25,7 @@ class CsvFileReader internal constructor(
     private val reader = BufferedLineReader(reader)
     private var rowNum = 0L
 
-    private val parser = CsvParser(ctx.quoteChar, ctx.delimiter, ctx.escapeChar, ctx.withFieldAsNull)
+    private val parser = CsvParser(ctx.quoteChar, ctx.delimiter, ctx.escapeChar, ctx.withFieldAsNull.toParserNullFieldIndicator())
 
     /**
      * read next csv row
@@ -159,5 +161,12 @@ class CsvFileReader internal constructor(
         }.also { results ->
             if (results.size != results.distinct().size) throw CSVAutoRenameFailedException()
         }
+    }
+
+    private fun CSVReaderNullFieldIndicator.toParserNullFieldIndicator() = when(this) {
+        CSVReaderNullFieldIndicator.EMPTY_SEPARATORS    -> ParserNullFieldIndicator.EMPTY_SEPARATORS
+        CSVReaderNullFieldIndicator.EMPTY_QUOTES        -> ParserNullFieldIndicator.EMPTY_QUOTES
+        CSVReaderNullFieldIndicator.BOTH                -> ParserNullFieldIndicator.BOTH
+        CSVReaderNullFieldIndicator.NEITHER             -> ParserNullFieldIndicator.NEITHER
     }
 }

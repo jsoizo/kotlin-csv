@@ -1,6 +1,5 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
-import com.github.doyaaaaaken.kotlincsv.dsl.context.CSVReaderNullFieldIndicator
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
 import com.github.doyaaaaaken.kotlincsv.util.Const
 
@@ -11,7 +10,7 @@ internal class ParseStateMachine(
     private val quoteChar: Char,
     private val delimiter: Char,
     private val escapeChar: Char,
-    private val withFieldAsNull: CSVReaderNullFieldIndicator
+    private val withFieldAsNull: ParserNullFieldIndicator
 ) {
 
     private var state = ParseState.START
@@ -178,9 +177,9 @@ internal class ParseStateMachine(
         return when (state) {
             ParseState.DELIMITER -> {
                 val value = when(withFieldAsNull) {
-                    CSVReaderNullFieldIndicator.EMPTY_SEPARATORS    -> null
-                    CSVReaderNullFieldIndicator.BOTH                -> null
-                    else                                            -> ""
+                    ParserNullFieldIndicator.EMPTY_SEPARATORS    -> null
+                    ParserNullFieldIndicator.BOTH                -> null
+                    else                                   -> ""
                 }
                 fields.add(value)
                 fields.toList()
@@ -204,17 +203,17 @@ internal class ParseStateMachine(
 
     private fun handleEmptySeparators() {
         handleFieldAsNull = when(withFieldAsNull) {
-            CSVReaderNullFieldIndicator.EMPTY_SEPARATORS    -> true
-            CSVReaderNullFieldIndicator.BOTH                -> true
-            else                                            -> false
+            ParserNullFieldIndicator.EMPTY_SEPARATORS    -> true
+            ParserNullFieldIndicator.BOTH                -> true
+            else                                   -> false
         }
     }
 
     private fun handleEmptyQuotes() {
         handleFieldAsNull = when(withFieldAsNull) {
-            CSVReaderNullFieldIndicator.EMPTY_QUOTES        -> field.isEmpty()
-            CSVReaderNullFieldIndicator.BOTH                -> field.isEmpty()
-            else                                            -> false
+            ParserNullFieldIndicator.EMPTY_QUOTES         -> field.isEmpty()
+            ParserNullFieldIndicator.BOTH                 -> field.isEmpty()
+            else                                    -> false
         }
     }
 }
@@ -227,4 +226,11 @@ private enum class ParseState {
     QUOTE_START,
     QUOTE_END,
     QUOTED_FIELD
+}
+
+internal enum class ParserNullFieldIndicator {
+    EMPTY_SEPARATORS,
+    EMPTY_QUOTES,
+    BOTH,
+    NEITHER
 }

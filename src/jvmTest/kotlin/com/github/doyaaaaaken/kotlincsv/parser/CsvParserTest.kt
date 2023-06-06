@@ -1,6 +1,5 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
-import com.github.doyaaaaaken.kotlincsv.dsl.context.CSVReaderNullFieldIndicator
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
@@ -8,7 +7,7 @@ import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
 
 class CsvParserTest : WordSpec({
-    val parser = CsvParser('"', ',', '"', CSVReaderNullFieldIndicator.NEITHER)
+    val parser = CsvParser('"', ',', '"', ParserNullFieldIndicator.NEITHER)
     val lineTerminators = listOf("\n", "\u2028", "\u2029", "\u0085", "\r", "\r\n")
 
     "CsvParser.parseRow" should {

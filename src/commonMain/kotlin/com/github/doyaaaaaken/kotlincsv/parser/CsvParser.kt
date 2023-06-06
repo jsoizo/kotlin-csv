@@ -1,7 +1,5 @@
 package com.github.doyaaaaaken.kotlincsv.parser
 
-import com.github.doyaaaaaken.kotlincsv.dsl.context.CSVReaderNullFieldIndicator
-
 /**
  * Csv Parse logic while reading csv
  *
@@ -11,7 +9,7 @@ internal class CsvParser(
     private val quoteChar: Char,
     private val delimiter: Char,
     private val escapeChar: Char,
-    private val withFieldAsNull: CSVReaderNullFieldIndicator
+    private val withFieldAsNull: ParserNullFieldIndicator
 ) {
 
     /**
