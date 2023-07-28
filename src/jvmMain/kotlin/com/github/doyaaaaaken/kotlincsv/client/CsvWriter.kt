@@ -29,13 +29,13 @@ actual class CsvWriter actual constructor(
     }
 
     fun open(targetFile: File, append: Boolean = false, write: ICsvFileWriter.() -> Unit) {
-        val fos = FileOutputStream(targetFile, append)
+        val fos = FileOutputStream(targetFile, append).buffered()
         open(fos, write)
     }
 
     suspend fun openAsync(targetFile: File, append: Boolean = false, write: suspend ICsvFileWriter.() -> Unit) =
         withContext(Dispatchers.IO) {
-            val fos = FileOutputStream(targetFile, append)
+            val fos = FileOutputStream(targetFile, append).buffered()
             openAsync(fos, write)
         }
 
