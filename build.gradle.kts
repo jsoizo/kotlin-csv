@@ -1,6 +1,6 @@
 plugins {
     java
-    kotlin("multiplatform") version "1.6.21"
+    kotlin("multiplatform") version "1.9.0"
     id("org.jetbrains.dokka").version("1.6.21")
     `maven-publish`
     signing
