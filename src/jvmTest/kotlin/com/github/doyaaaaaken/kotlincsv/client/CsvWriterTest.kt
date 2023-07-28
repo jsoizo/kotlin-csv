@@ -4,6 +4,7 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.WriteQuoteMode
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.github.doyaaaaaken.kotlincsv.util.Const
+import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
 import java.io.File
@@ -31,18 +32,24 @@ class CsvWriterTest : WordSpec({
                 delimiter = '\t'
                 nullCode = "NULL"
                 lineTerminator = "\n"
+                outputLastLineTerminator = false
+                prependBOM = true
                 quote {
                     char = '\''
                     mode = WriteQuoteMode.ALL
                 }
             }
             val writer = CsvWriter(context)
-            writer.charset shouldBe Charsets.ISO_8859_1.name()
-            writer.delimiter shouldBe '\t'
-            writer.nullCode shouldBe "NULL"
-            writer.lineTerminator shouldBe "\n"
-            writer.quote.char = '\''
-            writer.quote.mode = WriteQuoteMode.ALL
+            assertSoftly {
+                writer.charset shouldBe Charsets.ISO_8859_1.name()
+                writer.delimiter shouldBe '\t'
+                writer.nullCode shouldBe "NULL"
+                writer.lineTerminator shouldBe "\n"
+                writer.outputLastLineTerminator shouldBe false
+                writer.prependBOM shouldBe true
+                writer.quote.char = '\''
+                writer.quote.mode = WriteQuoteMode.ALL
+            }
         }
     }
 
@@ -143,7 +150,7 @@ class CsvWriterTest : WordSpec({
             val actual = readTestFile(Charset.forName("SJIS"))
             actual shouldBe "あ,い\r\n"
         }
-        "write csv with '|' demimiter" {
+        "write csv with '|' delimiter" {
             val row1 = listOf("a", "b")
             val row2 = listOf("c", "d")
             val expected = "a|b\r\nc|d\r\n"
@@ -263,6 +270,18 @@ class CsvWriterTest : WordSpec({
             val expected = "a,b\r\nc,d"
             csvWriter {
                 outputLastLineTerminator = false
+            }.open(File(testFileName)) {
+                writeRows(listOf(row1, row2))
+            }
+            val actual = readTestFile()
+            actual shouldBe expected
+        }
+        "write simple csv with prepending BOM" {
+            val row1 = listOf("a", "b")
+            val row2 = listOf("c", "d")
+            val expected = "\uFEFFa,b\r\nc,d\r\n"
+            csvWriter {
+                prependBOM = true
             }.open(File(testFileName)) {
                 writeRows(listOf(row1, row2))
             }

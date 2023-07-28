@@ -8,6 +8,7 @@ import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
 import com.github.doyaaaaaken.kotlincsv.util.Const
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
+import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
@@ -30,11 +31,13 @@ class CsvReaderTest : WordSpec({
                 skipEmptyLine = true
             }
             val reader = CsvReader(context)
-            reader.charset shouldBe Charsets.ISO_8859_1.name()
-            reader.quoteChar shouldBe '\''
-            reader.delimiter shouldBe '\t'
-            reader.escapeChar shouldBe '"'
-            reader.skipEmptyLine shouldBe true
+            assertSoftly {
+                reader.charset shouldBe Charsets.ISO_8859_1.name()
+                reader.quoteChar shouldBe '\''
+                reader.delimiter shouldBe '\t'
+                reader.escapeChar shouldBe '"'
+                reader.skipEmptyLine shouldBe true
+            }
         }
     }
 
@@ -47,7 +50,7 @@ class CsvReaderTest : WordSpec({
             )
             result shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
         }
-        "read csv with line separater" {
+        "read csv with line separator" {
             val result = csvReader().readAll(
                 """a,b,c,"x","y
                             | hoge"
@@ -66,25 +69,26 @@ class CsvReaderTest : WordSpec({
             val ex1 = shouldThrow<CSVParseFormatException> {
                 reader.readAll("a,\"\"failed")
             }
-            ex1.rowNum shouldBe 1
-            ex1.colIndex shouldBe 4
-            ex1.char shouldBe 'f'
-
             val ex2 = shouldThrow<CSVParseFormatException> {
                 reader.readAll("a,b\nc,\"\"failed")
             }
-
-            ex2.rowNum shouldBe 2
-            ex2.colIndex shouldBe 4
-            ex2.char shouldBe 'f'
-
             val ex3 = shouldThrow<CSVParseFormatException> {
                 reader.readAll("a,\"b\nb\"\nc,\"\"failed")
             }
 
-            ex3.rowNum shouldBe 3
-            ex3.colIndex shouldBe 4
-            ex3.char shouldBe 'f'
+            assertSoftly {
+                ex1.rowNum shouldBe 1
+                ex1.colIndex shouldBe 4
+                ex1.char shouldBe 'f'
+
+                ex2.rowNum shouldBe 2
+                ex2.colIndex shouldBe 4
+                ex2.char shouldBe 'f'
+
+                ex3.rowNum shouldBe 3
+                ex3.colIndex shouldBe 4
+                ex3.char shouldBe 'f'
+            }
         }
     }
 
@@ -170,41 +174,76 @@ class CsvReaderTest : WordSpec({
             val ex = shouldThrow<CSVFieldNumDifferentException> {
                 csvReader().readAll(readTestDataFile("different-fields-num.csv"))
             }
-            ex.fieldNum shouldBe 3
-            ex.fieldNumOnFailedRow shouldBe 2
-            ex.csvRowNum shouldBe 2
+
+            assertSoftly {
+                ex.fieldNum shouldBe 3
+                ex.fieldNumOnFailedRow shouldBe 2
+                ex.csvRowNum shouldBe 2
+            }
         }
         "Trim row when reading csv with greater num of fields on a subsequent row" {
             val expected = listOf(listOf("a", "b"), listOf("c", "d"))
             val actual =
-                csvReader{
+                csvReader {
                     excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM
                 }.readAll(readTestDataFile("different-fields-num2.csv"))
 
-            actual shouldBe expected
-            actual.size shouldBe 2
+            assertSoftly {
+                actual shouldBe expected
+                actual.size shouldBe 2
+            }
         }
         "it should be be possible to skip rows with both excess and insufficient fields" {
             val expected = listOf(listOf("a", "b"))
             val actual =
-                csvReader{
+                csvReader {
                     excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
                     insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
                 }.readAll(readTestDataFile("varying-column-lengths.csv"))
 
-            actual shouldBe expected
-            actual.size shouldBe 1
+            assertSoftly {
+                actual shouldBe expected
+                actual.size shouldBe 1
+            }
+        }
+        "it should be be possible to replace insufficient fields with strings and skip rows with excess fields" {
+            val expected = listOf(listOf("a", "b"), listOf("c", ""))
+            val actual =
+                csvReader {
+                    excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
+                    insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.EMPTY_STRING
+                }.readAll(readTestDataFile("varying-column-lengths.csv"))
+
+            assertSoftly {
+                actual shouldBe expected
+                actual.size shouldBe 2
+            }
+        }
+        "it should be be possible to replace insufficient fields with strings and trim rows with excess fields" {
+            val expected = listOf(listOf("a", "b"), listOf("c", ""), listOf("d", "e"))
+            val actual =
+                csvReader {
+                    excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM
+                    insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.EMPTY_STRING
+                }.readAll(readTestDataFile("varying-column-lengths.csv"))
+
+            assertSoftly {
+                actual shouldBe expected
+                actual.size shouldBe 3
+            }
         }
         "it should be be possible to trim excess columns and skip insufficient row columns" {
-            val expected = listOf(listOf("a", "b"), listOf("d","e"))
+            val expected = listOf(listOf("a", "b"), listOf("d", "e"))
             val actual =
-                csvReader{
+                csvReader {
                     excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM
                     insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
                 }.readAll(readTestDataFile("varying-column-lengths.csv"))
 
-            actual shouldBe expected
-            actual.size shouldBe 2
+            assertSoftly {
+                actual shouldBe expected
+                actual.size shouldBe 2
+            }
         }
         "If the excess fields behaviour is ERROR and the insufficient behaviour is IGNORE then an error should be thrown if there are excess columns" {
             val ex = shouldThrow<CSVFieldNumDifferentException> {
@@ -212,9 +251,12 @@ class CsvReaderTest : WordSpec({
                     insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
                 }.readAll(readTestDataFile("varying-column-lengths.csv"))
             }
-            ex.fieldNum shouldBe 2
-            ex.fieldNumOnFailedRow shouldBe 3
-            ex.csvRowNum shouldBe 3
+
+            assertSoftly {
+                ex.fieldNum shouldBe 2
+                ex.fieldNumOnFailedRow shouldBe 3
+                ex.csvRowNum shouldBe 3
+            }
         }
         "If the excess fields behaviour is IGNORE or TRIM and the insufficient behaviour is ERROR then an error should be thrown if there are columns with insufficient rows" {
             val ex1 = shouldThrow<CSVFieldNumDifferentException> {
@@ -222,18 +264,20 @@ class CsvReaderTest : WordSpec({
                     excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
                 }.readAll(readTestDataFile("varying-column-lengths.csv"))
             }
-            ex1.fieldNum shouldBe 2
-            ex1.fieldNumOnFailedRow shouldBe 1
-            ex1.csvRowNum shouldBe 2
-
             val ex2 = shouldThrow<CSVFieldNumDifferentException> {
                 csvReader {
                     excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM
                 }.readAll(readTestDataFile("varying-column-lengths.csv"))
             }
-            ex2.fieldNum shouldBe 2
-            ex2.fieldNumOnFailedRow shouldBe 1
-            ex2.csvRowNum shouldBe 2
+            assertSoftly {
+                ex1.fieldNum shouldBe 2
+                ex1.fieldNumOnFailedRow shouldBe 1
+                ex1.csvRowNum shouldBe 2
+
+                ex2.fieldNum shouldBe 2
+                ex2.fieldNumOnFailedRow shouldBe 1
+                ex2.csvRowNum shouldBe 2
+            }
         }
         "should not throw exception when reading csv with different fields num on each row with expected number of columns" {
             val expected = listOf(listOf("a", "b", "c"))
@@ -241,17 +285,18 @@ class CsvReaderTest : WordSpec({
                 skipMissMatchedRow = true
             }.readAll(readTestDataFile("different-fields-num.csv"))
 
-            actual shouldBe expected
-            actual.size shouldBe 1
-
             val expected2 = listOf(listOf("a", "b"))
             val actual2 = csvReader {
                 skipMissMatchedRow = true
             }.readAll(readTestDataFile("different-fields-num2.csv"))
 
-            actual2 shouldBe expected2
-            actual2.size shouldBe 1
+            assertSoftly {
+                actual shouldBe expected
+                actual.size shouldBe 1
 
+                actual2 shouldBe expected2
+                actual2.size shouldBe 1
+            }
         }
         "should not throw exception when reading csv with header and different fields num on each row" {
             val expected = listOf(
@@ -262,8 +307,10 @@ class CsvReaderTest : WordSpec({
                 skipMissMatchedRow = true
             }.readAllWithHeader(readTestDataFile("with-header-different-size-row.csv"))
 
-            actual.size shouldBe 2
-            expected shouldBe actual
+            assertSoftly {
+                actual.size shouldBe 2
+                expected shouldBe actual
+            }
         }
     }
 

@@ -2,6 +2,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.WriteQuoteMode
+import com.github.doyaaaaaken.kotlincsv.util.Const
 import java.io.Closeable
 import java.io.Flushable
 import java.io.IOException
@@ -17,12 +18,9 @@ class CsvFileWriter internal constructor(
     private val writer: PrintWriter
 ) : ICsvFileWriter, Closeable, Flushable {
 
-    /**
-     * state handling to write terminator for next line
-     */
-    private val stateHandler = CsvWriterStateHandler()
-
     private val quoteNeededChars = setOf('\r', '\n', ctx.quote.char, ctx.delimiter)
+
+    private var hasWroteInitialChar: Boolean = false
 
     /**
      * write one row
@@ -51,7 +49,7 @@ class CsvFileWriter internal constructor(
         willWritePreTerminator()
         rows.forEachIndexed { index, list ->
             writeNext(list)
-            if (index < rows.size - 1) {
+            if (index < rows.size - 1 && list.isNotEmpty()) {
                 writeTerminator()
             }
         }
@@ -69,8 +67,9 @@ class CsvFileWriter internal constructor(
 
         val itr = rows.iterator()
         while (itr.hasNext()) {
-            writeNext(itr.next())
-            if (itr.hasNext()) writeTerminator()
+            val row = itr.next()
+            writeNext(row)
+            if (itr.hasNext() && row.isNotEmpty()) writeTerminator()
         }
 
         willWriteEndTerminator()
@@ -88,6 +87,10 @@ class CsvFileWriter internal constructor(
     }
 
     private fun writeNext(row: List<Any?>) {
+        if (!hasWroteInitialChar && ctx.prependBOM) {
+            writer.print(Const.BOM)
+        }
+
         val rowStr = row.joinToString(ctx.delimiter.toString()) { field ->
             if (field == null) {
                 ctx.nullCode
@@ -96,24 +99,14 @@ class CsvFileWriter internal constructor(
             }
         }
         writer.print(rowStr)
-    }
-
-    private fun willWriteEndTerminator() {
-        if (ctx.outputLastLineTerminator) {
-            writeTerminator()
-            stateHandler.setStateOfWroteLineEndTerminator()
-        } else {
-            stateHandler.setStateOfNotWroteLineEndTerminator()
-        }
+        hasWroteInitialChar = true
     }
 
     /**
-     * Will write terminator if and only if
-     *  1. has wrote first line
-     *  2. state is set to has not wrote last line terminator
+     * Will write terminator if writer has not wrote last line terminator on previous line.
      */
     private fun willWritePreTerminator() {
-        if (stateHandler.hasWroteFirstLine() && !stateHandler.hasWroteLineEndTerminator()) {
+        if (!ctx.outputLastLineTerminator && hasWroteInitialChar) {
             writeTerminator()
         }
     }
@@ -123,7 +116,12 @@ class CsvFileWriter internal constructor(
      */
     private fun writeTerminator() {
         writer.print(ctx.lineTerminator)
-        stateHandler.setStateOfWroteLineEndTerminator()
+    }
+
+    private fun willWriteEndTerminator() {
+        if (ctx.outputLastLineTerminator) {
+            writeTerminator()
+        }
     }
 
     private fun attachQuote(field: String): String {

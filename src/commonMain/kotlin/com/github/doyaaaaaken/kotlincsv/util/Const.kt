@@ -6,5 +6,7 @@ package com.github.doyaaaaaken.kotlincsv.util
  * @author doyaaaaaken
  */
 internal object Const {
-    val defaultCharset = "UTF-8"
+    const val defaultCharset = "UTF-8"
+
+    const val BOM = '\uFEFF'
 }

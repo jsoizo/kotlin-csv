@@ -1,7 +1,7 @@
 <h1 align="center">kotlin-csv</h1>
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.6.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-1.9.1-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
@@ -30,7 +30,7 @@ Pure Kotlin CSV Reader/Writer.
 
 ### 3. Multiplatform
 
-* kotlin multiplatform project
+* Kotlin Multiplatform projects support.
 
 # Usage
 
@@ -39,13 +39,13 @@ Pure Kotlin CSV Reader/Writer.
 ### Gradle
 
 ```gradle
-//gradle kotlin DSL
-implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.6.0") //for JVM platform
-implementation("com.github.doyaaaaaken:kotlin-csv-js:1.6.0") //for Kotlin JS platform
+// Gradle Kotlin DSL
+implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.1") // for JVM platform
+implementation("com.github.doyaaaaaken:kotlin-csv-js:1.9.1") // for Kotlin JS platform
 
-//gradle groovy DSL
-implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.6.0' //for JVM platform
-implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.6.0' //for Kotlin JS platform
+// Gradle Groovy DSL
+implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.9.1' // for JVM platform
+implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.9.1' // for Kotlin JS platform
 ```
 
 ### Maven
@@ -54,22 +54,20 @@ implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.6.0' //for Kotlin JS plat
 <dependency>
   <groupId>com.github.doyaaaaaken</groupId>
   <artifactId>kotlin-csv-jvm</artifactId>
-  <version>1.6.0</version>
+  <version>1.9.1</version>
 </dependency>
 <dependency>
   <groupId>com.github.doyaaaaaken</groupId>
   <artifactId>kotlin-csv-js</artifactId>
-  <version>1.6.0</version>
+  <version>1.9.1</version>
 </dependency>
 ```
 
-[kscript](https://github.com/holgerbrandl/kscript)
+### [kscript](https://github.com/holgerbrandl/kscript)
 
 ```kotlin
-@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-jvm:1.6.0") //for JVM platform
-@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-js:1.6.0")
-
-//for Kotlin JS platform
+@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.1") // for JVM platform
+@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-js:1.9.1") // for Kotlin JS platform
 ```
 
 ## Examples
@@ -104,7 +102,7 @@ println(rows) //[{a=d, b=e, c=f}]
 `Sequence` type allows to execute lazily.<br />
 It starts to process each rows before reading all row data.
 
-See detail about `Sequence` type on [Kotlin official document](https://kotlinlang.org/docs/reference/sequences.html).
+Learn more about the `Sequence` type on [Kotlin's official documentation](https://kotlinlang.org/docs/reference/sequences.html).
 
 ```kotlin
 csvReader().open("test1.csv") {
@@ -122,7 +120,7 @@ csvReader().open("test2.csv") {
 }
 ```
 
-NOTE:`readAllAsSequence` and `readAllWithHeaderAsSequence` methods can only be called within the `open` lambda block.
+NOTE: `readAllAsSequence` and `readAllWithHeaderAsSequence` methods can only be called within the `open` lambda block.
 The input stream is closed after the `open` lambda block.
 
 #### Read line by line
@@ -176,7 +174,7 @@ val tsvReader = csvReader {
 | autoRenameDuplicateHeaders     | `false`       | Whether to auto rename duplicate headers or throw an exception.                                                                                                                                                                                                                        |
 | ~~skipMissMatchedRow~~         | `false`       | Deprecated. Replace with appropriate values in `excessFieldsRowBehaviour` and `insufficientFieldsRowBehaviour`, e.g. both set to `IGNORE`. ~~Whether to skip an invalid row. If `ignoreExcessCols` is true, only rows with less than the expected number of columns will be skipped.~~ |
 | excessFieldsRowBehaviour       | `ERROR`       | Behaviour to use when a row has more fields (columns) than expected. `ERROR` (default), `IGNORE` (skip the row) or `TRIM` (remove the excess fields at the end of the row to match the expected number of fields).                                                                     |
-| insufficientFieldsRowBehaviour | `ERROR`       | Behaviour to use when a row has fewer fields (columns) than expected. `ERROR` (default), `IGNORE` (skip the row).                                                                                                                                                                      |
+| insufficientFieldsRowBehaviour | `ERROR`       | Behaviour to use when a row has fewer fields (columns) than expected. `ERROR` (default), `IGNORE` (skip the row) or `EMPTY_STRING` (replace missing fields with an empty string).                                                                                                      |
 
 ### CSV Write examples
 
@@ -270,6 +268,7 @@ val writer = csvWriter {
 | nullCode | `(empty string)` | Character used when a written field is null value. |
 | lineTerminator | `\r\n` | Character used as line terminator. |
 | outputLastLineTerminator | `true` | Output line break at the end of file or not. |
+| prependBOM | `false` | Output BOM (Byte Order Mark) at the beginning of file or not. |
 | quote.char  | `"` | Character to quote each fields. |
 | quote.mode  | `CANONICAL` | Quote mode. <br />- `CANONICAL`: Not quote normally, but quote special characters (quoteChar, delimiter, line feed). This is [the specification of CSV](https://tools.ietf.org/html/rfc4180#section-2).<br />- `ALL`: Quote all fields.<br />- `NON_NUMERIC`: Quote non-numeric fields. (ex. 1,"a",2.3) |
 

@@ -5,6 +5,7 @@ import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
 import com.github.doyaaaaaken.kotlincsv.util.logger.LoggerNop
+import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
@@ -19,7 +20,7 @@ class StringReaderTest : WordSpec({
             )
             result shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
         }
-        "read csv with line separater" {
+        "read csv with line separator" {
             val result = readAll(
                 """a,b,c,"x","y
                             | hoge"
@@ -37,25 +38,26 @@ class StringReaderTest : WordSpec({
             val ex1 = shouldThrow<CSVParseFormatException> {
                 readAll("a,\"\"failed")
             }
-            ex1.rowNum shouldBe 1
-            ex1.colIndex shouldBe 4
-            ex1.char shouldBe 'f'
-
             val ex2 = shouldThrow<CSVParseFormatException> {
                 readAll("a,b\nc,\"\"failed")
             }
-
-            ex2.rowNum shouldBe 2
-            ex2.colIndex shouldBe 4
-            ex2.char shouldBe 'f'
-
             val ex3 = shouldThrow<CSVParseFormatException> {
                 readAll("a,\"b\nb\"\nc,\"\"failed")
             }
 
-            ex3.rowNum shouldBe 3
-            ex3.colIndex shouldBe 4
-            ex3.char shouldBe 'f'
+            assertSoftly {
+                ex1.rowNum shouldBe 1
+                ex1.colIndex shouldBe 4
+                ex1.char shouldBe 'f'
+
+                ex2.rowNum shouldBe 2
+                ex2.colIndex shouldBe 4
+                ex2.char shouldBe 'f'
+
+                ex3.rowNum shouldBe 3
+                ex3.colIndex shouldBe 4
+                ex3.char shouldBe 'f'
+            }
         }
     }
 
@@ -90,9 +92,11 @@ class StringReaderTest : WordSpec({
             val ex = shouldThrow<CSVFieldNumDifferentException> {
                 readAll(readTestDataFile("different-fields-num.csv"))
             }
-            ex.fieldNum shouldBe 3
-            ex.fieldNumOnFailedRow shouldBe 2
-            ex.csvRowNum shouldBe 2
+            assertSoftly {
+                ex.fieldNum shouldBe 3
+                ex.fieldNumOnFailedRow shouldBe 2
+                ex.csvRowNum shouldBe 2
+            }
         }
     }
 

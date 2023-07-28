@@ -100,7 +100,11 @@ enum class InsufficientFieldsRowBehaviour {
     /**
      * Ignore the row and skip to the next row
      */
-    IGNORE
+    IGNORE,
+    /**
+     * Treat missing fields as an empty string
+     */
+    EMPTY_STRING
 }
 
 enum class ExcessFieldsRowBehaviour {
