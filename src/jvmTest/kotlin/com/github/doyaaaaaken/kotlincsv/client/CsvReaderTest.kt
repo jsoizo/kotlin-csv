@@ -208,7 +208,7 @@ class CsvReaderTest : WordSpec({
                 actual.size shouldBe 1
             }
         }
-        "it should be be possible to listen to to skip events for insufficient or excess fields " {
+        "it should be be possible to listen to skip events for insufficient or excess fields " {
             val expected = listOf(listOf("a", "b"))
             val actual =
                 csvReader {
