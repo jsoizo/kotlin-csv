@@ -1,5 +1,6 @@
 package com.github.doyaaaaaken.kotlincsv.dsl.context
 
+import com.github.doyaaaaaken.kotlincsv.event.skip.INotifySkippedEvent
 import com.github.doyaaaaaken.kotlincsv.util.Const
 import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
 import com.github.doyaaaaaken.kotlincsv.util.logger.Logger
@@ -88,6 +89,11 @@ interface ICsvReaderContext {
      * If a row exceeds have the expected number of fields (columns), how, and if, the reader should proceed
      */
     val excessFieldsRowBehaviour: ExcessFieldsRowBehaviour
+
+    /**
+     * A pluggable Interface on listening when skipping either an insufficient or an excess number of fields
+     */
+    val onSkippedEvent: INotifySkippedEvent?
 }
 
 enum class InsufficientFieldsRowBehaviour {
@@ -142,4 +148,5 @@ class CsvReaderContext : ICsvReaderContext {
     override var autoRenameDuplicateHeaders: Boolean = false
     override var insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.ERROR
     override var excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = ExcessFieldsRowBehaviour.ERROR
+    override var onSkippedEvent: INotifySkippedEvent? = null
 }

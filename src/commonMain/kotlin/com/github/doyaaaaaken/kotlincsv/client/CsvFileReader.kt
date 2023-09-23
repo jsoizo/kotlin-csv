@@ -3,6 +3,8 @@ package com.github.doyaaaaaken.kotlincsv.client
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ExcessFieldsRowBehaviour
 import com.github.doyaaaaaken.kotlincsv.dsl.context.InsufficientFieldsRowBehaviour
+import com.github.doyaaaaaken.kotlincsv.event.skip.SkipType
+import com.github.doyaaaaaken.kotlincsv.event.skip.SkippedRow
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import com.github.doyaaaaaken.kotlincsv.util.CSVAutoRenameFailedException
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
@@ -55,13 +57,13 @@ class CsvFileReader internal constructor(
                     logger.info("trimming excess rows. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of row = $numFieldsInRow]")
                     row.subList(0, numFieldsInRow)
                 } else if (ctx.skipMissMatchedRow || ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.IGNORE) {
-                    skipMismatchedRow(idx, row, numFieldsInRow)
+                    skipMismatchedRow(idx, row, numFieldsInRow, SkipType.ExcessFieldsRowBehaviour)
                 } else {
                     throw CSVFieldNumDifferentException(numFieldsInRow, row.size, idx + 1)
                 }
             } else if (numFieldsInRow != row.size) {
                 if (ctx.skipMissMatchedRow || ctx.insufficientFieldsRowBehaviour == InsufficientFieldsRowBehaviour.IGNORE) {
-                    skipMismatchedRow(idx, row, numFieldsInRow)
+                    skipMismatchedRow(idx, row, numFieldsInRow, SkipType.InsufficientFieldsRowBehaviour)
                 } else if (ctx.insufficientFieldsRowBehaviour == InsufficientFieldsRowBehaviour.EMPTY_STRING) {
                     val numOfMissingFields = numFieldsInRow - row.size
                     row.plus(List(numOfMissingFields) { "" })
@@ -77,9 +79,13 @@ class CsvFileReader internal constructor(
     private fun skipMismatchedRow(
         idx: Int,
         row: List<String>,
-        numFieldsInRow: Int
+        numFieldsInRow: Int,
+        skipType: SkipType
     ): Nothing? {
-        logger.info("skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $numFieldsInRow]")
+        val message = "skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $numFieldsInRow]"
+        val skippedRow = SkippedRow(idx, row, message, skipType)
+        ctx.onSkippedEvent?.notify(skippedRow)
+        logger.info(message)
         return null
     }
 
