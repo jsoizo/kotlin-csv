@@ -162,7 +162,25 @@ val tsvReader = csvReader {
     escapeChar = '\\'
 }
 ```
+#### Listening Interface for Skipped Row Events
+```kotlin
+csvReader {
+    excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
+    insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
+    onSkippedEvent = skipNotification {
+        listeners["id"] = SkipNotify { println(it) }
+    }
+}
+```
 
+* skipNotification - builder function for creating notification listener
+* listeners `Mutable<String, ISkippedRow>` - map of listener function to be notified 
+* `SkipNotify` - functional interface template
+```kotlin
+fun interface SkipNotify {
+    fun onSkipped(row: SkippedRow)
+}
+```
 | Option                         | default value | description                                                                                                                                                                                                                                                                            |
 |--------------------------------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | logger                         | _no-op_       | Logger instance for logging debug information at runtime.                                                                                                                                                                                                                              |
@@ -176,26 +194,6 @@ val tsvReader = csvReader {
 | excessFieldsRowBehaviour       | `ERROR`       | Behaviour to use when a row has more fields (columns) than expected. `ERROR` (default), `IGNORE` (skip the row) or `TRIM` (remove the excess fields at the end of the row to match the expected number of fields).                                                                     |
 | insufficientFieldsRowBehaviour | `ERROR`       | Behaviour to use when a row has fewer fields (columns) than expected. `ERROR` (default), `IGNORE` (skip the row) or `EMPTY_STRING` (replace missing fields with an empty string).                                                                                                      |
 | onSkippedEvent                 | `null`        | A pluggable Interface on listening when skipping either an insufficient or an excess number of fields.                                                                                                                                                                                 |
-
-#### Interface Listing to Skipped Row Events`
-```kotlin
-csvReader {
-    excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
-    insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
-    onSkippedEvent = skipNotification {
-        listeners["id"] = SkipNotify { println(it) }
-    }
-}
-```
-
-* skipNotification - builder function for creating notification listener
-* listeners `Mutable<String, ISkippedRow>` - map of listener function that will be triggered
-* `SkipNotify` - functional interface template
-```kotlin
-fun interface SkipNotify {
-    fun onSkipped(row: SkippedRow)
-}
-```
 
 ### CSV Write examples
 
