@@ -110,7 +110,7 @@ actual class CsvWriter actual constructor(
      * write all rows on assigned target file
      */
     actual suspend fun writeAllAsync(rows: List<List<Any?>>, targetFileName: String, append: Boolean) {
-        open(targetFileName, append) { writeRows(rows) }
+        openAsync(targetFileName, append) { writeRows(rows) }
     }
 
     /**
@@ -124,7 +124,7 @@ actual class CsvWriter actual constructor(
      * write all rows on assigned target file
      */
     suspend fun writeAllAsync(rows: List<List<Any?>>, targetFile: File, append: Boolean = false) {
-        open(targetFile, append) { writeRows(rows) }
+        openAsync(targetFile, append) { writeRows(rows) }
     }
 
     /**
@@ -138,7 +138,7 @@ actual class CsvWriter actual constructor(
      * write all rows on assigned output stream
      */
     suspend fun writeAllAsync(rows: List<List<Any?>>, ops: OutputStream) {
-        open(ops) { writeRows(rows) }
+        openAsync(ops) { writeRows(rows) }
     }
 
     /**
