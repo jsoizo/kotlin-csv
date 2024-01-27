@@ -1,6 +1,8 @@
+import org.jetbrains.kotlin.gradle.targets.js.dsl.ExperimentalWasmDsl
+
 plugins {
     java
-    kotlin("multiplatform") version "1.6.21"
+    kotlin("multiplatform") version "1.9.22"
     id("org.jetbrains.dokka").version("1.6.21")
     `maven-publish`
     signing
@@ -8,7 +10,7 @@ plugins {
 }
 
 group = "com.github.doyaaaaaken"
-version = "1.9.3"
+version = "1.10.0"
 
 buildscript {
     repositories {
@@ -38,11 +40,15 @@ kotlin {
             artifact(dokkaJar)
         }
     }
-    js(BOTH) {
+    js(IR) {
         browser {
         }
         nodejs {
         }
+    }
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser()
     }
     sourceSets {
         val commonMain by getting
