@@ -303,10 +303,14 @@ Give a ⭐️ if this project helped you!
 
 ## 📝 License
 
-Copyright © 2019 [doyaaaaaken](https://github.com/doyaaaaaken).  
+Copyright © 2024 [jsoizo](https://github.com/jsoizo).
 This project is licensed under [Apache 2.0](LICENSE).
 
 ***
 _This project is inspired ❤️ by [scala-csv](https://github.com/tototoshi/scala-csv)_
 
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+
+## Acknowledgments
+
+This project was originally created by [@doyaaaaaken](https://github.com/doyaaaaaken). The initial work and contributions are greatly appreciated.
