@@ -7,7 +7,7 @@ plugins {
     jacoco
 }
 
-group = "com.github.doyaaaaaken"
+group = "com.jsoizo"
 version = "1.9.3"
 
 buildscript {
@@ -90,7 +90,7 @@ publishing {
             url.set("https://github.com/jsoizo/kotlin-csv")
 
             organization {
-                name.set("com.github.doyaaaaaken")
+                name.set("com.jzoizo")
                 url.set("https://github.com/jsoizo")
             }
             licenses {
