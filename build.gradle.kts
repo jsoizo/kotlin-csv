@@ -87,26 +87,26 @@ publishing {
         (this as MavenPublication).pom {
             name.set("kotlin-csv")
             description.set("Kotlin CSV Reader/Writer")
-            url.set("https://github.com/doyaaaaaken/kotlin-csv")
+            url.set("https://github.com/jsoizo/kotlin-csv")
 
             organization {
                 name.set("com.github.doyaaaaaken")
-                url.set("https://github.com/doyaaaaaken")
+                url.set("https://github.com/jsoizo")
             }
             licenses {
                 license {
                     name.set("Apache License 2.0")
-                    url.set("https://github.com/doyaaaaaken/kotlin-csv/blob/master/LICENSE")
+                    url.set("https://github.com/jsoizo/kotlin-csv/blob/master/LICENSE")
                 }
             }
             scm {
-                url.set("https://github.com/doyaaaaaken/kotlin-csv")
-                connection.set("scm:git:git://github.com/doyaaaaaken/kotlin-csv.git")
-                developerConnection.set("https://github.com/doyaaaaaken/kotlin-csv")
+                url.set("https://github.com/jsoizo/kotlin-csv")
+                connection.set("scm:git:git://github.com/jsoizo/kotlin-csv.git")
+                developerConnection.set("https://github.com/jsoizo/kotlin-csv")
             }
             developers {
                 developer {
-                    name.set("doyaaaaaken")
+                    name.set("jsoizo")
                 }
             }
         }
