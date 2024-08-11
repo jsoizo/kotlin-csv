@@ -1,7 +1,7 @@
 <h1 align="center">kotlin-csv</h1>
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.9.3-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-1.10.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/jsoizo/kotlin-csv/blob/master/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
@@ -40,37 +40,37 @@ Pure Kotlin CSV Reader/Writer.
 for Kotlin DSL
 
 ```kotlin
-implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.3") // for JVM platform
-implementation("com.github.doyaaaaaken:kotlin-csv-js:1.9.3") // for Kotlin JS platform
+implementation("com.jsoizo:kotlin-csv-jvm:1.10.0") // for JVM platform
+implementation("com.jsoizo:kotlin-csv-js:1.10.0") // for Kotlin JS platform
 ```
 
 for Gradle DSL
 
 ```groovy
-implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.9.3' // for JVM platform
-implementation 'com.github.doyaaaaaken:kotlin-csv-js:1.9.3' // for Kotlin JS platform
+implementation 'com.jsoizo:kotlin-csv-jvm:1.10.0' // for JVM platform
+implementation 'com.jsoizo:kotlin-csv-js:1.10.0' // for Kotlin JS platform
 ```
 
 ### Maven
 
 ```maven
 <dependency>
-  <groupId>com.github.doyaaaaaken</groupId>
+  <groupId>com.jsoizo</groupId>
   <artifactId>kotlin-csv-jvm</artifactId>
-  <version>1.9.3</version>
+  <version>1.10.0</version>
 </dependency>
 <dependency>
-  <groupId>com.github.doyaaaaaken</groupId>
+  <groupId>com.jsoizo</groupId>
   <artifactId>kotlin-csv-js</artifactId>
-  <version>1.9.3</version>
+  <version>1.10.0</version>
 </dependency>
 ```
 
 ### [kscript](https://github.com/holgerbrandl/kscript)
 
 ```kotlin
-@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.3") // for JVM platform
-@file:DependsOn("com.github.doyaaaaaken:kotlin-csv-js:1.9.3") // for Kotlin JS platform
+@file:DependsOn("com.jsoizo:kotlin-csv-jvm:1.10.0") // for JVM platform
+@file:DependsOn("com.jsoizo:kotlin-csv-js:1.10.0") // for Kotlin JS platform
 ```
 
 ## Examples
