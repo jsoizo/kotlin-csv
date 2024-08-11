@@ -1,7 +1,7 @@
 plugins {
     java
-    kotlin("multiplatform") version "1.6.21"
-    id("org.jetbrains.dokka").version("1.6.21")
+    kotlin("multiplatform") version "1.7.21"
+    id("org.jetbrains.dokka").version("1.7.20")
     `maven-publish`
     signing
     jacoco
@@ -15,7 +15,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.6.21")
+        classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.7.20")
     }
 }
 
@@ -45,8 +45,8 @@ kotlin {
         }
     }
     sourceSets {
-        val commonMain by getting
-        val commonTest by getting {
+        commonMain {}
+        commonTest {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
