@@ -4,6 +4,8 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ExcessFieldsRowBehaviour
 import com.github.doyaaaaaken.kotlincsv.dsl.context.InsufficientFieldsRowBehaviour
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
+import com.github.doyaaaaaken.kotlincsv.event.skip.SkipNotify
+import com.github.doyaaaaaken.kotlincsv.event.skip.skipNotification
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
 import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
 import com.github.doyaaaaaken.kotlincsv.util.Const
@@ -199,6 +201,22 @@ class CsvReaderTest : WordSpec({
                 csvReader {
                     excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
                     insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
+                }.readAll(readTestDataFile("varying-column-lengths.csv"))
+
+            assertSoftly {
+                actual shouldBe expected
+                actual.size shouldBe 1
+            }
+        }
+        "it should be be possible to listen to skip events for insufficient or excess fields " {
+            val expected = listOf(listOf("a", "b"))
+            val actual =
+                csvReader {
+                    excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
+                    insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
+                    onSkippedEvent = skipNotification {
+                        listeners["id"] = SkipNotify { println(it) }
+                    }
                 }.readAll(readTestDataFile("varying-column-lengths.csv"))
 
             assertSoftly {
