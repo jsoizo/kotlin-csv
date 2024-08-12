@@ -7,7 +7,7 @@ import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
 
 class CsvParserTest : WordSpec({
-    val parser = CsvParser('"', ',', '"')
+    val parser = CsvParser('"', ',', '"', ParserNullFieldIndicator.NEITHER)
     val lineTerminators = listOf("\n", "\u2028", "\u2029", "\u0085", "\r", "\r\n")
 
     "CsvParser.parseRow" should {

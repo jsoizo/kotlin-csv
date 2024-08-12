@@ -8,7 +8,8 @@ package com.github.doyaaaaaken.kotlincsv.parser
 internal class CsvParser(
     private val quoteChar: Char,
     private val delimiter: Char,
-    private val escapeChar: Char
+    private val escapeChar: Char,
+    private val withFieldAsNull: ParserNullFieldIndicator
 ) {
 
     /**
@@ -18,8 +19,8 @@ internal class CsvParser(
      * @return return parsed row fields
      *         return null, if passed line string is on the way of csv row.
      */
-    fun parseRow(line: String, rowNum: Long = 1): List<String>? {
-        val stateMachine = ParseStateMachine(quoteChar, delimiter, escapeChar)
+    fun parseRow(line: String, rowNum: Long = 1): List<String?>? {
+        val stateMachine = ParseStateMachine(quoteChar, delimiter, escapeChar, withFieldAsNull)
         var lastCh: Char? = line.firstOrNull()
         var skipCount = 0L
         line.zipWithNext { ch, nextCh ->

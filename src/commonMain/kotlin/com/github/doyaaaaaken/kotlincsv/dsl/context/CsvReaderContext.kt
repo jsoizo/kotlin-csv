@@ -88,6 +88,11 @@ interface ICsvReaderContext {
      * If a row exceeds have the expected number of fields (columns), how, and if, the reader should proceed
      */
     val excessFieldsRowBehaviour: ExcessFieldsRowBehaviour
+
+    /**
+     * Configures which field values should be handled as null value by the reader.
+     */
+    val withFieldAsNull: CSVReaderNullFieldIndicator
 }
 
 enum class InsufficientFieldsRowBehaviour {
@@ -125,6 +130,29 @@ enum class ExcessFieldsRowBehaviour {
     TRIM
 }
 
+enum class CSVReaderNullFieldIndicator {
+
+    /**
+     * Two sequential separators are null.
+     */
+    EMPTY_SEPARATORS,
+
+    /**
+     * Two sequential quotes are null.
+     */
+    EMPTY_QUOTES,
+
+    /**
+     * Two sequential separators and two sequential quotes are null.
+     */
+    BOTH,
+
+    /**
+     * Default. Both are considered empty string.
+     */
+    NEITHER
+}
+
 /**
  * CSV Reader settings used in `csvReader` DSL method.
  *
@@ -142,4 +170,5 @@ class CsvReaderContext : ICsvReaderContext {
     override var autoRenameDuplicateHeaders: Boolean = false
     override var insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.ERROR
     override var excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = ExcessFieldsRowBehaviour.ERROR
+    override var withFieldAsNull: CSVReaderNullFieldIndicator = CSVReaderNullFieldIndicator.NEITHER
 }

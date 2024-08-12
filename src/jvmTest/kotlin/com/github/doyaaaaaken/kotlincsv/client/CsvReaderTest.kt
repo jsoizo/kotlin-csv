@@ -1,5 +1,6 @@
 package com.github.doyaaaaaken.kotlincsv.client
 
+import com.github.doyaaaaaken.kotlincsv.dsl.context.CSVReaderNullFieldIndicator
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.ExcessFieldsRowBehaviour
 import com.github.doyaaaaaken.kotlincsv.dsl.context.InsufficientFieldsRowBehaviour
@@ -21,6 +22,7 @@ class CsvReaderTest : WordSpec({
         "be created with no argument" {
             val reader = CsvReader()
             reader.charset shouldBe Const.defaultCharset
+            reader.withFieldAsNull shouldBe CSVReaderNullFieldIndicator.NEITHER
         }
         "be created with CsvReaderContext argument" {
             val context = CsvReaderContext().apply {
@@ -29,6 +31,7 @@ class CsvReaderTest : WordSpec({
                 delimiter = '\t'
                 escapeChar = '"'
                 skipEmptyLine = true
+                withFieldAsNull = CSVReaderNullFieldIndicator.EMPTY_SEPARATORS
             }
             val reader = CsvReader(context)
             assertSoftly {
@@ -37,6 +40,7 @@ class CsvReaderTest : WordSpec({
                 reader.delimiter shouldBe '\t'
                 reader.escapeChar shouldBe '"'
                 reader.skipEmptyLine shouldBe true
+                reader.withFieldAsNull shouldBe CSVReaderNullFieldIndicator.EMPTY_SEPARATORS
             }
         }
     }
@@ -312,6 +316,39 @@ class CsvReaderTest : WordSpec({
                 expected shouldBe actual
             }
         }
+        "should handle two sequential separators as null with EMPTY_SEPARATORS null field indicator" {
+            val result = csvReader{
+                withFieldAsNull = CSVReaderNullFieldIndicator.EMPTY_SEPARATORS
+            }.readAll(
+                """,,"a","","""
+            )
+            result shouldBe listOf(listOf(null, null, "a", "", null))
+        }
+        "should handle two sequential quotes as null with EMPTY_QUOTES null field indicator" {
+            val result = csvReader{
+                withFieldAsNull = CSVReaderNullFieldIndicator.EMPTY_QUOTES
+            }.readAll(
+                """,,"a","","""
+            )
+            result shouldBe listOf(listOf("", "", "a", null, ""))
+        }
+        "should handle two sequential separators and  quotes as null with BOTH null field indicator" {
+            val result = csvReader{
+                withFieldAsNull = CSVReaderNullFieldIndicator.BOTH
+            }.readAll(
+                """,,"a","","""
+            )
+            result shouldBe listOf(listOf(null, null, "a", null, null))
+        }
+        "should handle two sequential separators and  quotes not as null with NEITHER null field indicator" {
+            val result = csvReader{
+                withFieldAsNull = CSVReaderNullFieldIndicator.NEITHER
+            }.readAll(
+                """,,"a","","""
+            )
+            result shouldBe listOf(listOf("", "", "a", "", ""))
+        }
+
     }
 
     "readAllWithHeader method" should {
@@ -380,6 +417,42 @@ class CsvReaderTest : WordSpec({
             }
             exception.fieldNum shouldBe 3
         }
+        "should handle two sequential separators in header as empty string" {
+
+            val indicators = listOf(
+                CSVReaderNullFieldIndicator.EMPTY_SEPARATORS,
+                CSVReaderNullFieldIndicator.BOTH
+            )
+
+            indicators.forEach { indicator ->
+                val result = csvReader{
+                    withFieldAsNull = indicator
+                }.readAllWithHeader(
+                    """a,,c
+                    |a,,c
+                """.trimMargin()
+                )
+                result shouldBe listOf(mapOf("a" to "a", "" to null, "c" to "c"))
+            }
+        }
+        "should handle two sequential quotes in header as empty string" {
+
+            val indicators = listOf(
+                CSVReaderNullFieldIndicator.EMPTY_QUOTES,
+                CSVReaderNullFieldIndicator.BOTH
+            )
+
+            indicators.forEach { indicator ->
+                val result = csvReader{
+                    withFieldAsNull = indicator
+                }.readAllWithHeader(
+                    """a,"",c
+                    |a,"",c
+                """.trimMargin()
+                )
+                result shouldBe listOf(mapOf("a" to "a", "" to null, "c" to "c"))
+            }
+        }
     }
 
     "open method (with fileName argument)" should {
@@ -429,7 +502,7 @@ class CsvReaderTest : WordSpec({
         }
         "validate test as flow" {
             val fileStream = readTestDataFile("simple.csv").inputStream()
-            val rows = mutableListOf<List<String>>()
+            val rows = mutableListOf<List<String?>>()
             csvReader().openAsync(fileStream) {
                 readAllAsSequence().asFlow().collect {
                     rows.add(it)

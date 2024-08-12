@@ -147,15 +147,15 @@ private fun readTestDataFile(fileName: String): String {
 }
 
 /**
- * read csv data as String, and convert into List<List<String>>
+ * read csv data as String, and convert into List<List<String?>>
  */
-private fun readAll(data: String): List<List<String>> {
+private fun readAll(data: String): List<List<String?>> {
     return CsvFileReader(CsvReaderContext(), StringReaderImpl(data), LoggerNop).readAllAsSequence().toList()
 }
 
 /**
- * read csv data with header, and convert into List<Map<String, String>>
+ * read csv data with header, and convert into List<Map<String, String?>>
  */
-private fun readAllWithHeader(data: String): List<Map<String, String>> {
+private fun readAllWithHeader(data: String): List<Map<String, String?>> {
     return CsvFileReader(CsvReaderContext(), StringReaderImpl(data), LoggerNop).readAllWithHeaderAsSequence().toList()
 }

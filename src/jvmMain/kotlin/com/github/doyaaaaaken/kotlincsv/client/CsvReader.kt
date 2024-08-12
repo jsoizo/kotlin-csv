@@ -18,61 +18,61 @@ actual class CsvReader actual constructor(
     private val charsetCode = Charset.forName(charset)
 
     /**
-     * read csv data as String, and convert into List<List<String>>
+     * read csv data as String, and convert into List<List<String?>>
      *
      * No need to close InputStream when calling this method.
      */
-    actual fun readAll(data: String): List<List<String>> {
+    actual fun readAll(data: String): List<List<String?>> {
         val br = data.byteInputStream(charsetCode).bufferedReader(charsetCode)
         return open(br) { readAllAsSequence().toList() }
     }
 
     /**
-     * read csv data as File, and convert into List<List<String>>
+     * read csv data as File, and convert into List<List<String?>>
      *
      * No need to close InputStream when calling this method.
      */
-    fun readAll(file: File): List<List<String>> {
+    fun readAll(file: File): List<List<String?>> {
         val br = file.inputStream().bufferedReader(charsetCode)
         return open(br) { readAllAsSequence().toList() }
     }
 
     /**
-     * read csv data as InputStream, and convert into List<List<String>>
+     * read csv data as InputStream, and convert into List<List<String?>>
      *
      * No need to close InputStream when calling this method.
      */
-    fun readAll(ips: InputStream): List<List<String>> {
+    fun readAll(ips: InputStream): List<List<String?>> {
         val br = ips.bufferedReader(charsetCode)
         return open(br) { readAllAsSequence().toList() }
     }
 
     /**
-     * read csv data with header, and convert into List<Map<String, String>>
+     * read csv data with header, and convert into List<Map<String, String?>>
      *
      * No need to close InputStream when calling this method.
      */
-    actual fun readAllWithHeader(data: String): List<Map<String, String>> {
+    actual fun readAllWithHeader(data: String): List<Map<String, String?>> {
         val br = data.byteInputStream(charsetCode).bufferedReader(charsetCode)
         return open(br) { readAllWithHeaderAsSequence().toList() }
     }
 
     /**
-     * read csv data with header, and convert into List<Map<String, String>>
+     * read csv data with header, and convert into List<Map<String, String?>>
      *
      * No need to close InputStream when calling this method.
      */
-    fun readAllWithHeader(file: File): List<Map<String, String>> {
+    fun readAllWithHeader(file: File): List<Map<String, String?>> {
         val br = file.inputStream().bufferedReader(charsetCode)
         return open(br) { readAllWithHeaderAsSequence().toList() }
     }
 
     /**
-     * read csv data with header, and convert into List<Map<String, String>>
+     * read csv data with header, and convert into List<Map<String, String?>>
      *
      * No need to close InputStream when calling this method.
      */
-    fun readAllWithHeader(ips: InputStream): List<Map<String, String>> {
+    fun readAllWithHeader(ips: InputStream): List<Map<String, String?>> {
         val br = ips.bufferedReader(charsetCode)
         return open(br) { readAllWithHeaderAsSequence().toList() }
     }
