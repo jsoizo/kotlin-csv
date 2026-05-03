@@ -46,17 +46,16 @@ class CsvFileReader internal constructor(
             if (expectedNumFieldsInRow == null) expectedNumFieldsInRow = row.size
             // Assign this number to a non-nullable type to avoid need for thread-safety null checks.
             val numFieldsInRow: Int = expectedNumFieldsInRow ?: row.size
-            @Suppress("DEPRECATION")
             if (row.size > numFieldsInRow) {
                 if (ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.TRIM) {
                     row.subList(0, numFieldsInRow)
-                } else if (ctx.skipMissMatchedRow || ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.IGNORE) {
+                } else if (ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.IGNORE) {
                     skipMismatchedRow()
                 } else {
                     throw CSVFieldNumDifferentException(numFieldsInRow, row.size, idx + 1)
                 }
             } else if (numFieldsInRow != row.size) {
-                if (ctx.skipMissMatchedRow || ctx.insufficientFieldsRowBehaviour == InsufficientFieldsRowBehaviour.IGNORE) {
+                if (ctx.insufficientFieldsRowBehaviour == InsufficientFieldsRowBehaviour.IGNORE) {
                     skipMismatchedRow()
                 } else if (ctx.insufficientFieldsRowBehaviour == InsufficientFieldsRowBehaviour.EMPTY_STRING) {
                     val numOfMissingFields = numFieldsInRow - row.size

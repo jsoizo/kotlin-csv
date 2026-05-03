@@ -23,7 +23,6 @@ class CsvReaderDslTest : StringSpec({
             delimiter = '\t'
             escapeChar = '"'
             skipEmptyLine = true
-            skipMissMatchedRow = true
             insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE
             excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE
         }
@@ -32,7 +31,6 @@ class CsvReaderDslTest : StringSpec({
             reader.quoteChar shouldBe '\''
             reader.delimiter shouldBe '\t'
             reader.skipEmptyLine shouldBe true
-            reader.skipMissMatchedRow shouldBe true
             reader.insufficientFieldsRowBehaviour shouldBe InsufficientFieldsRowBehaviour.IGNORE
             reader.excessFieldsRowBehaviour shouldBe ExcessFieldsRowBehaviour.IGNORE
         }

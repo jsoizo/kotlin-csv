@@ -56,12 +56,6 @@ interface ICsvReaderContext {
     val skipEmptyLine: Boolean
 
     /**
-     * If a invalid row which has different number of fields from other rows is found, skip it or not (=throw an exception).
-     */
-    @Deprecated("Use insufficientFieldsRowBehaviour and excessRowsBehaviour to specify 'ignore'")
-    val skipMissMatchedRow: Boolean
-
-    /**
      * If a row does not have the expected number of fields (columns), how, and if, the reader should proceed
      */
     val insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour
@@ -119,7 +113,6 @@ class CsvReaderContext : ICsvReaderContext {
     override var delimiter: Char = ','
     override var escapeChar: Char = '"'
     override var skipEmptyLine: Boolean = false
-    override var skipMissMatchedRow: Boolean = false
     override var insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.ERROR
     override var excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = ExcessFieldsRowBehaviour.ERROR
 }
