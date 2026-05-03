@@ -332,51 +332,7 @@ class CsvReaderTest : WordSpec({
         }
     }
 
-    "open method (with fileName argument)" should {
-        val rows = csvReader().open("src/jvmTest/resources/testdata/csv/simple.csv") {
-            val row1 = readNext()
-            val row2 = readNext()
-            listOf(row1, row2)
-        }
-        rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
-    }
-
-    "open method (with InputStream argument)" should {
-        val file = readTestDataFile("simple.csv")
-        val rows = csvReader().open(file.inputStream()) {
-            val row1 = readNext()
-            val row2 = readNext()
-            listOf(row1, row2)
-        }
-        rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
-    }
     "execute as suspending function" should {
-        "open suspending method (with fileName argument)" {
-            val rows = csvReader().openAsync("src/jvmTest/resources/testdata/csv/simple.csv") {
-                val row1 = readNext()
-                val row2 = readNext()
-                listOf(row1, row2)
-            }
-            rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
-        }
-        "open suspending method (with file argument)" {
-            val file = readTestDataFile("simple.csv")
-            val rows = csvReader().openAsync(file) {
-                val row1 = readNext()
-                val row2 = readNext()
-                listOf(row1, row2)
-            }
-            rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
-        }
-        "open suspending method (with InputStream argument)" {
-            val fileStream = readTestDataFile("simple.csv").inputStream()
-            val rows = csvReader().openAsync(fileStream) {
-                val row1 = readNext()
-                val row2 = readNext()
-                listOf(row1, row2)
-            }
-            rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
-        }
         "validate test as flow" {
             val fileStream = readTestDataFile("simple.csv").inputStream()
             val rows = mutableListOf<List<String>>()

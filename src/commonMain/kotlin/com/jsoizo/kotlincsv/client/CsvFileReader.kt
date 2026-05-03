@@ -23,24 +23,12 @@ class CsvFileReader internal constructor(
     private val parser = CsvParser(ctx.quoteChar, ctx.delimiter, ctx.escapeChar)
 
     /**
-     * read next csv row
-     * (which may contain multiple lines, because csv fields may contain line feed)
-     *
-     * @return return fields in row as List<String>.
-     *         or return null, if all line are already read.
-     */
-    @Deprecated("We are considering making it a private method. If you have feedback, please comment on Issue #100.")
-    fun readNext(): List<String>? {
-        return readUntilNextCsvRow("")
-    }
-
-    /**
      * read all csv rows as Sequence
      */
     fun readAllAsSequence(fieldsNum: Int? = null): Sequence<List<String>> {
         var expectedNumFieldsInRow: Int? = fieldsNum
         return generateSequence {
-            @Suppress("DEPRECATION") readNext()
+            readUntilNextCsvRow("")
         }.mapIndexedNotNull { idx, row ->
             // If no expected number of fields was passed in, then set it based on the first row.
             if (expectedNumFieldsInRow == null) expectedNumFieldsInRow = row.size
@@ -77,8 +65,7 @@ class CsvFileReader internal constructor(
      * read all csv rows as Sequence with header information
      */
     fun readAllWithHeaderAsSequence(): Sequence<Map<String, String>> {
-        @Suppress("DEPRECATION")
-        val headers = readNext() ?: return emptySequence()
+        val headers = readUntilNextCsvRow("") ?: return emptySequence()
         val duplicated = findDuplicate(headers)
         if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated.")
         return readAllAsSequence(headers.size).map { fields -> headers.zip(fields).toMap() }
