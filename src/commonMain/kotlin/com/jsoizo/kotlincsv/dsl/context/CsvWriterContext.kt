@@ -1,13 +1,10 @@
 package com.jsoizo.kotlincsv.dsl.context
 
-import com.jsoizo.kotlincsv.util.CsvDslMarker
-
 /**
  * Interface for CSV Writer settings
  *
  * @author doyaaaaaken
  */
-@CsvDslMarker
 interface ICsvWriterContext {
     /**
      * Charset encoding
@@ -73,7 +70,6 @@ interface ICsvWriterContext {
  *
  * @author doyaaaaaken
  */
-@CsvDslMarker
 class CsvWriterContext : ICsvWriterContext {
     override var charset = "UTF-8"
     override var delimiter: Char = ','

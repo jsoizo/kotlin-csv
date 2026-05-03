@@ -1,13 +1,10 @@
 package com.jsoizo.kotlincsv.dsl.context
 
-import com.jsoizo.kotlincsv.util.CsvDslMarker
-
 /**
  * DSL method for Quote settings on writing csv.
  *
  * @author doyaaaaaken
  */
-@CsvDslMarker
 class CsvWriteQuoteContext {
     /**
      * Character to quote each fields

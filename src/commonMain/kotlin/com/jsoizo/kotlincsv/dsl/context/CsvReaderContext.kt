@@ -1,13 +1,10 @@
 package com.jsoizo.kotlincsv.dsl.context
 
-import com.jsoizo.kotlincsv.util.CsvDslMarker
-
 /**
  * Interface for CSV Reader settings
  *
  * @author doyaaaaaken
  */
-@CsvDslMarker
 interface ICsvReaderContext {
 
     /**
@@ -106,7 +103,6 @@ enum class ExcessFieldsRowBehaviour {
  *
  * @author doyaaaaaken
  */
-@CsvDslMarker
 class CsvReaderContext : ICsvReaderContext {
     override var charset = "UTF-8"
     override var quoteChar: Char = '"'
