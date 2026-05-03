@@ -62,15 +62,6 @@ interface ICsvReaderContext {
     val skipMissMatchedRow: Boolean
 
     /**
-     * If a header occurs multiple times whether auto renaming should be applied when `readAllWithHeaderAsSequence()` (=throw an exception).
-     *
-     * Renaming is done based on occurrence and only applied from the first detected duplicate onwards.
-     * ex:
-     * [a,b,b,b,c,a] => [a,b,b_2,b_3,c,a_2]
-     */
-    val autoRenameDuplicateHeaders: Boolean
-
-    /**
      * If a row does not have the expected number of fields (columns), how, and if, the reader should proceed
      */
     val insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour
@@ -129,7 +120,6 @@ class CsvReaderContext : ICsvReaderContext {
     override var escapeChar: Char = '"'
     override var skipEmptyLine: Boolean = false
     override var skipMissMatchedRow: Boolean = false
-    override var autoRenameDuplicateHeaders: Boolean = false
     override var insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.ERROR
     override var excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = ExcessFieldsRowBehaviour.ERROR
 }

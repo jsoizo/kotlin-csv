@@ -330,22 +330,6 @@ class CsvReaderTest : WordSpec({
             shouldThrow<MalformedCSVException> { csvReader().readAllWithHeader(file) }
         }
 
-        "auto rename duplicated headers" {
-            val deduplicateExpected = listOf(
-                mapOf("a" to "1", "b" to "2", "b_2" to "3", "b_3" to "4", "c" to "5", "c_2" to "6"),
-            )
-            val file = readTestDataFile("with-duplicate-header.csv")
-            val result = csvReader {
-                autoRenameDuplicateHeaders = true
-            }.readAllWithHeader(file)
-            result shouldBe deduplicateExpected
-        }
-
-        "auto rename failed" {
-            val file = readTestDataFile("with-duplicate-header-auto-rename-failed.csv")
-            shouldThrow<MalformedCSVException> { csvReader().readAllWithHeader(file) }
-        }
-
         "read from String" {
             val data = """h1,h2,h3
                     |a,b,c

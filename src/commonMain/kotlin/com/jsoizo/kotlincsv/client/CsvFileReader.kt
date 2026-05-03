@@ -4,7 +4,6 @@ import com.jsoizo.kotlincsv.dsl.context.CsvReaderContext
 import com.jsoizo.kotlincsv.dsl.context.ExcessFieldsRowBehaviour
 import com.jsoizo.kotlincsv.dsl.context.InsufficientFieldsRowBehaviour
 import com.jsoizo.kotlincsv.parser.CsvParser
-import com.jsoizo.kotlincsv.util.CSVAutoRenameFailedException
 import com.jsoizo.kotlincsv.util.CSVFieldNumDifferentException
 import com.jsoizo.kotlincsv.util.MalformedCSVException
 
@@ -80,13 +79,9 @@ class CsvFileReader internal constructor(
      */
     fun readAllWithHeaderAsSequence(): Sequence<Map<String, String>> {
         @Suppress("DEPRECATION")
-        var headers = readNext() ?: return emptySequence()
-        if (ctx.autoRenameDuplicateHeaders) {
-            headers = deduplicateHeaders(headers)
-        } else {
-            val duplicated = findDuplicate(headers)
-            if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated. please consider to use 'autoRenameDuplicateHeaders' option.")
-        }
+        val headers = readNext() ?: return emptySequence()
+        val duplicated = findDuplicate(headers)
+        if (duplicated != null) throw MalformedCSVException("header '$duplicated' is duplicated.")
         return readAllAsSequence(headers.size).map { fields -> headers.zip(fields).toMap() }
     }
 
@@ -133,23 +128,4 @@ class CsvFileReader internal constructor(
         return null
     }
 
-    /**
-     * deduplicate headers based on occurrence by appending "_<NUM>"
-     * Ex: [a,b,b,b,c,a] => [a,b,b_2,b_3,c,a_2]
-     *
-     * @return return headers as List<String>.
-     */
-    private fun deduplicateHeaders(headers: List<String>): List<String> {
-        val occurrences = mutableMapOf<String, Int>()
-        return headers.map { header ->
-            val count = occurrences.getOrPut(header) { 0 } + 1
-            occurrences[header] = count
-            when {
-                count > 1 -> "${header}_$count"
-                else -> header
-            }
-        }.also { results ->
-            if (results.size != results.distinct().size) throw CSVAutoRenameFailedException()
-        }
-    }
 }
