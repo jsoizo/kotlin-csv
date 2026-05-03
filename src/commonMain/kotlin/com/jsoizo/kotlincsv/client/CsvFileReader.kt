@@ -6,7 +6,6 @@ import com.jsoizo.kotlincsv.dsl.context.InsufficientFieldsRowBehaviour
 import com.jsoizo.kotlincsv.parser.CsvParser
 import com.jsoizo.kotlincsv.util.CSVAutoRenameFailedException
 import com.jsoizo.kotlincsv.util.CSVFieldNumDifferentException
-import com.jsoizo.kotlincsv.util.logger.Logger
 import com.jsoizo.kotlincsv.util.MalformedCSVException
 
 /**
@@ -17,7 +16,6 @@ import com.jsoizo.kotlincsv.util.MalformedCSVException
 class CsvFileReader internal constructor(
     private val ctx: CsvReaderContext,
     reader: Reader,
-    private val logger: Logger,
 ) {
 
     private val reader = BufferedLineReader(reader)
@@ -52,16 +50,15 @@ class CsvFileReader internal constructor(
             @Suppress("DEPRECATION")
             if (row.size > numFieldsInRow) {
                 if (ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.TRIM) {
-                    logger.info("trimming excess rows. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of row = $numFieldsInRow]")
                     row.subList(0, numFieldsInRow)
                 } else if (ctx.skipMissMatchedRow || ctx.excessFieldsRowBehaviour == ExcessFieldsRowBehaviour.IGNORE) {
-                    skipMismatchedRow(idx, row, numFieldsInRow)
+                    skipMismatchedRow()
                 } else {
                     throw CSVFieldNumDifferentException(numFieldsInRow, row.size, idx + 1)
                 }
             } else if (numFieldsInRow != row.size) {
                 if (ctx.skipMissMatchedRow || ctx.insufficientFieldsRowBehaviour == InsufficientFieldsRowBehaviour.IGNORE) {
-                    skipMismatchedRow(idx, row, numFieldsInRow)
+                    skipMismatchedRow()
                 } else if (ctx.insufficientFieldsRowBehaviour == InsufficientFieldsRowBehaviour.EMPTY_STRING) {
                     val numOfMissingFields = numFieldsInRow - row.size
                     row.plus(List(numOfMissingFields) { "" })
@@ -74,12 +71,7 @@ class CsvFileReader internal constructor(
         }
     }
 
-    private fun skipMismatchedRow(
-        idx: Int,
-        row: List<String>,
-        numFieldsInRow: Int
-    ): Nothing? {
-        logger.info("skip miss matched row. [csv row num = ${idx + 1}, fields num = ${row.size}, fields num of first row = $numFieldsInRow]")
+    private fun skipMismatchedRow(): Nothing? {
         return null
     }
 

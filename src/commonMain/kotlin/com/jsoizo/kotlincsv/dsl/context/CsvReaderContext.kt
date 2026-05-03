@@ -1,8 +1,6 @@
 package com.jsoizo.kotlincsv.dsl.context
 
 import com.jsoizo.kotlincsv.util.CsvDslMarker
-import com.jsoizo.kotlincsv.util.logger.Logger
-import com.jsoizo.kotlincsv.util.logger.LoggerNop
 
 /**
  * Interface for CSV Reader settings
@@ -11,12 +9,6 @@ import com.jsoizo.kotlincsv.util.logger.LoggerNop
  */
 @CsvDslMarker
 interface ICsvReaderContext {
-
-    /**
-     * Logger instance for logging debug statements.
-     * Default instance does not log anything.
-     */
-    val logger: Logger
 
     /**
      * Charset encoding
@@ -131,7 +123,6 @@ enum class ExcessFieldsRowBehaviour {
  */
 @CsvDslMarker
 class CsvReaderContext : ICsvReaderContext {
-    override var logger: Logger = LoggerNop
     override var charset = "UTF-8"
     override var quoteChar: Char = '"'
     override var delimiter: Char = ','
