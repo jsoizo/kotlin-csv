@@ -3,7 +3,6 @@ package com.jsoizo.kotlincsv.client
 import com.jsoizo.kotlincsv.dsl.context.CsvWriterContext
 import com.jsoizo.kotlincsv.dsl.context.WriteQuoteMode
 import com.jsoizo.kotlincsv.dsl.csvWriter
-import com.jsoizo.kotlincsv.util.Const
 import io.kotest.assertions.assertSoftly
 import io.kotest.core.spec.style.WordSpec
 import io.kotest.matchers.shouldBe
@@ -24,7 +23,7 @@ class CsvWriterTest : WordSpec({
     "CsvWriter class constructor" should {
         "be created with no argument" {
             val writer = CsvWriter()
-            writer.charset shouldBe Const.defaultCharset
+            writer.charset shouldBe "UTF-8"
         }
         "be created with CsvWriterContext argument" {
             val context = CsvWriterContext().apply {

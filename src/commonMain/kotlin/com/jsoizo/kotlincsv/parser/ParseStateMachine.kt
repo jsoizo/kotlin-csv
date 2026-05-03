@@ -1,7 +1,6 @@
 package com.jsoizo.kotlincsv.parser
 
 import com.jsoizo.kotlincsv.util.CSVParseFormatException
-import com.jsoizo.kotlincsv.util.Const
 
 /**
  * @author doyaaaaaaken
@@ -30,7 +29,7 @@ internal class ParseStateMachine(
         when (state) {
             ParseState.START -> {
                 when (ch) {
-                    Const.BOM -> Unit
+                    '﻿' -> Unit
                     quoteChar -> state = ParseState.QUOTE_START
                     delimiter -> {
                         flushField()

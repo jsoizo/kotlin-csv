@@ -1,6 +1,5 @@
 package com.jsoizo.kotlincsv.dsl.context
 
-import com.jsoizo.kotlincsv.util.Const
 import com.jsoizo.kotlincsv.util.CsvDslMarker
 import com.jsoizo.kotlincsv.util.logger.Logger
 import com.jsoizo.kotlincsv.util.logger.LoggerNop
@@ -133,7 +132,7 @@ enum class ExcessFieldsRowBehaviour {
 @CsvDslMarker
 class CsvReaderContext : ICsvReaderContext {
     override var logger: Logger = LoggerNop
-    override var charset = Const.defaultCharset
+    override var charset = "UTF-8"
     override var quoteChar: Char = '"'
     override var delimiter: Char = ','
     override var escapeChar: Char = '"'

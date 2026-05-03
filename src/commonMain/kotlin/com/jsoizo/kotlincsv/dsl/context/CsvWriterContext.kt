@@ -1,6 +1,5 @@
 package com.jsoizo.kotlincsv.dsl.context
 
-import com.jsoizo.kotlincsv.util.Const
 import com.jsoizo.kotlincsv.util.CsvDslMarker
 
 /**
@@ -76,7 +75,7 @@ interface ICsvWriterContext {
  */
 @CsvDslMarker
 class CsvWriterContext : ICsvWriterContext {
-    override var charset = Const.defaultCharset
+    override var charset = "UTF-8"
     override var delimiter: Char = ','
     override var nullCode: String = ""
     override var lineTerminator: String = "\r\n"

@@ -6,7 +6,6 @@ import com.jsoizo.kotlincsv.dsl.context.InsufficientFieldsRowBehaviour
 import com.jsoizo.kotlincsv.dsl.csvReader
 import com.jsoizo.kotlincsv.util.CSVFieldNumDifferentException
 import com.jsoizo.kotlincsv.util.CSVParseFormatException
-import com.jsoizo.kotlincsv.util.Const
 import com.jsoizo.kotlincsv.util.MalformedCSVException
 import io.kotest.assertions.assertSoftly
 import io.kotest.assertions.throwables.shouldThrow
@@ -20,7 +19,7 @@ class CsvReaderTest : WordSpec({
     "CsvReader class constructor" should {
         "be created with no argument" {
             val reader = CsvReader()
-            reader.charset shouldBe Const.defaultCharset
+            reader.charset shouldBe "UTF-8"
         }
         "be created with CsvReaderContext argument" {
             val context = CsvReaderContext().apply {
