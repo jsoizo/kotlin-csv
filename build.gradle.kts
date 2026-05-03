@@ -53,6 +53,7 @@ kotlin {
         jvm().compilations["test"].defaultSourceSet {
             dependencies {
                 implementation(libs.bundles.kotest)
+                implementation(libs.kotlin.test.junit5)
             }
         }
         js().compilations["main"].defaultSourceSet {
