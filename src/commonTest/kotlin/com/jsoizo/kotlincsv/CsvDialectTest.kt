@@ -1,8 +1,9 @@
 package com.jsoizo.kotlincsv
 
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.string.shouldContain
 import kotlin.test.Test
-import kotlin.test.assertFailsWith
-import kotlin.test.assertTrue
 
 class CsvDialectTest {
 
@@ -18,34 +19,25 @@ class CsvDialectTest {
 
     @Test
     fun require_rejects_delimiterEqualToQuoteChar() {
-        val ex = assertFailsWith<IllegalArgumentException> {
+        val ex = shouldThrow<IllegalArgumentException> {
             CsvDialect(delimiter = ',', quoteChar = ',')
         }
-        assertTrue(
-            ex.message!!.contains(","),
-            "expected message to mention violating value, was: ${ex.message}",
-        )
+        ex.message.shouldNotBeNull() shouldContain ","
     }
 
     @Test
     fun require_rejects_delimiterEqualToEscapeChar() {
-        val ex = assertFailsWith<IllegalArgumentException> {
+        val ex = shouldThrow<IllegalArgumentException> {
             CsvDialect(delimiter = ',', escapeChar = ',')
         }
-        assertTrue(
-            ex.message!!.contains(","),
-            "expected message to mention violating value, was: ${ex.message}",
-        )
+        ex.message.shouldNotBeNull() shouldContain ","
     }
 
     @Test
     fun require_rejects_emptyLineTerminator() {
-        val ex = assertFailsWith<IllegalArgumentException> {
+        val ex = shouldThrow<IllegalArgumentException> {
             CsvDialect(lineTerminator = "")
         }
-        assertTrue(
-            ex.message!!.contains("lineTerminator"),
-            "expected message to mention violating field, was: ${ex.message}",
-        )
+        ex.message.shouldNotBeNull() shouldContain "lineTerminator"
     }
 }
