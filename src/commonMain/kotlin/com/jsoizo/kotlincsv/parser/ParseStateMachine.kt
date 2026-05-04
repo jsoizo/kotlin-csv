@@ -163,6 +163,14 @@ internal class ParseStateMachine(
     }
 
     /**
+     * @return `true` if the most recently consumed character finished a row
+     *   (state == END). The next call to [read] would raise an exception, so
+     *   external drivers must obtain the result via [getResult] and create a
+     *   fresh [ParseStateMachine] for the next row.
+     */
+    internal fun isLineComplete(): Boolean = state == ParseState.END
+
+    /**
      * @return return parsed CSV Fields.
      *         return null, if current position is on the way of csv row.
      */
