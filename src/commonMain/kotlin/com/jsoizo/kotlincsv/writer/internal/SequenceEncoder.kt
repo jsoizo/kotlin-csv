@@ -67,13 +67,13 @@ private fun encodeField(
 
     if (shouldQuote) yield(quoteChar)
     if (escapeChar == quoteChar) {
-        // RFC 4180 §2.7 doubling style. v1 Writer 互換 (kotlin-csv v1 はこのモードのみ).
+        // RFC 4180 §2.7 doubling style — v1 Writer-compatible (kotlin-csv v1 only supports this mode).
         for (ch in field) {
             if (ch == quoteChar) yield(quoteChar)
             yield(ch)
         }
     } else {
-        // Explicit escape style — v2 で新規対応 (CSV 標準からの拡張).
+        // Explicit escape style — new in v2 (a CSV-standard extension).
         for (ch in field) when (ch) {
             quoteChar, escapeChar -> { yield(escapeChar); yield(ch) }
             else                  -> yield(ch)

@@ -201,7 +201,7 @@ class CsvWriterTest {
 
     @Test
     fun write_returnsLazySequence() {
-        // 無限 sequence。lazy でなければ take の前で発散する。
+        // Infinite source — if write() were not lazy, take() would never terminate.
         val rows = generateSequence(0) { it + 1 }.map { listOf(it.toString()) }
         val partial = CsvWriter().write(rows).take(3).joinToString("")
         partial shouldBe "0\r\n"
