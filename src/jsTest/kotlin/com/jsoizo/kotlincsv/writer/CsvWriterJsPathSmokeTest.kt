@@ -64,6 +64,22 @@ class CsvWriterJsPathSmokeTest {
     }
 
     @Test
+    fun write_path_supplementaryPlaneEmoji_roundTrips() {
+        // U+1F600 surfaces in the input as a UTF-16 surrogate pair; the
+        // encoder has to recombine the pair into the original 4-byte UTF-8
+        // sequence on disk so a round-trip through Node.js fs preserves the
+        // grapheme.
+        val path = tempCsvPath("emoji")
+        try {
+            val emoji = "😀"
+            CsvWriter().write(listOf(listOf(emoji, "b")), path)
+            readText(path) shouldBe "$emoji,b\r\n"
+        } finally {
+            SystemFileSystem.delete(path)
+        }
+    }
+
+    @Test
     fun write_stringPath_overload_resolvesViaPath() {
         val path = tempCsvPath("strpath")
         try {

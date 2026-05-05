@@ -59,6 +59,24 @@ class CsvReaderJsPathSmokeTest {
     }
 
     @Test
+    fun read_path_supplementaryPlaneEmoji_decodesAsSurrogatePair() {
+        // U+1F600 sits above U+FFFF, so the UTF-8 -> Char decode in
+        // ReaderIo.toCharSequence has to emit a high/low surrogate pair to
+        // round-trip the grapheme through Sequence<Char>. The Node.js fs
+        // path has to preserve the underlying 4-byte UTF-8 sequence
+        // end-to-end.
+        val path = tempCsvPath("emoji")
+        try {
+            val emoji = "😀"
+            writeFile(path, "$emoji,b")
+            val rows = CsvReader().read(path) { it.toList() }
+            rows shouldBe listOf(listOf(emoji, "b"))
+        } finally {
+            SystemFileSystem.delete(path)
+        }
+    }
+
+    @Test
     fun read_stringPath_overload_resolvesViaPath() {
         val path = tempCsvPath("strpath")
         try {
