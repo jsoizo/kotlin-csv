@@ -6,8 +6,6 @@ import kotlin.test.Test
 /**
  * Core-layer round-trip tests: writing rows with [csvWriter] should produce
  * a CSV string that [csvReader] parses back into the original rows.
- *
- * I/O-layer round-trips (kotlinx-io Source/Sink) are added in Phase 5.
  */
 class RoundTripTest {
 
