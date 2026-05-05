@@ -1,5 +1,8 @@
 package com.jsoizo.kotlincsv.reader
 
+import com.jsoizo.kotlincsv.exceptions.CsvFieldNumDifferentException
+import com.jsoizo.kotlincsv.exceptions.CsvParseFormatException
+import kotlinx.io.IOException
 import kotlinx.io.Source
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
@@ -18,9 +21,10 @@ private const val LOW_TEN_BIT_MASK = 0x3FF
  * On JVM, bytes are decoded one Unicode code point at a time and pushed
  * through a lazy `Sequence<Char>`, so the parser can short-circuit (`take`,
  * `first`, ...) and stop pulling bytes from [source] mid-stream. On JS
- * (Node.js) the underlying `kotlinx-io` `FileSource` loads the whole file at
- * the first read, so streaming is effectively JVM-only — the `Sequence` shape
- * is preserved on JS for API uniformity but yields from an in-memory buffer.
+ * (Node.js) the underlying `kotlinx-io` `FileSource` reads the whole file
+ * into memory via `fs.readFileSync` on the first call, so streaming is
+ * effectively JVM-only — the `Sequence` shape is preserved on JS for API
+ * uniformity but yields from an in-memory buffer.
  * If [CsvReadIoOptions.stripBom] is `true` and the very first code point is
  * U+FEFF (BOM), it is dropped.
  *
@@ -28,6 +32,12 @@ private const val LOW_TEN_BIT_MASK = 0x3FF
  * while [source] is still open so iteration can pull bytes on demand.
  *
  * @return whatever [block] returns.
+ * @throws IOException on terminal operation, when [source] fails to deliver
+ *   bytes (read error, premature end of stream, ...).
+ * @throws CsvParseFormatException on terminal operation, when the decoded
+ *   character stream violates the CSV format.
+ * @throws CsvFieldNumDifferentException on terminal operation, when a row's
+ *   field count violates the configured row-count behaviour.
  */
 fun <T> CsvReader.read(
     source: Source,
@@ -59,11 +69,17 @@ private fun Source.toCharSequence(stripBom: Boolean): Sequence<Char> = sequence 
  * [block]. The underlying source is closed when [block] returns or throws.
  *
  * On JVM, [path] is interpreted via the system filesystem. On JS (Node.js),
- * the entire file is loaded into memory by `kotlinx-io` before parsing
- * starts; streaming behaviour is therefore JVM-only despite the [Sequence]
- * return type of the inner read.
+ * the underlying `kotlinx-io` `FileSource` loads the entire file into memory
+ * via `fs.readFileSync` on the first read; streaming behaviour is therefore
+ * JVM-only despite the [Sequence] return type of the inner read.
  *
  * @return whatever [block] returns.
+ * @throws IOException when [path] cannot be opened, or on terminal operation
+ *   when the file fails to deliver bytes.
+ * @throws CsvParseFormatException on terminal operation, when the file
+ *   contents violate the CSV format.
+ * @throws CsvFieldNumDifferentException on terminal operation, when a row's
+ *   field count violates the configured row-count behaviour.
  */
 fun <T> CsvReader.read(
     path: Path,
@@ -77,6 +93,16 @@ fun <T> CsvReader.read(
  * Convenience overload that builds a [Path] from a string. Lets callers avoid
  * importing `kotlinx.io.files.Path`. Relative paths follow `SystemFileSystem`
  * platform behaviour (typically the current working directory).
+ *
+ * The same JS in-memory-load caveat as the [Path] overload applies.
+ *
+ * @return whatever [block] returns.
+ * @throws IOException when [filePath] cannot be opened, or on terminal
+ *   operation when the file fails to deliver bytes.
+ * @throws CsvParseFormatException on terminal operation, when the file
+ *   contents violate the CSV format.
+ * @throws CsvFieldNumDifferentException on terminal operation, when a row's
+ *   field count violates the configured row-count behaviour.
  */
 fun <T> CsvReader.read(
     filePath: String,

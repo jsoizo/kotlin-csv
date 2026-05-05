@@ -1,6 +1,7 @@
 package com.jsoizo.kotlincsv.reader
 
 import com.jsoizo.kotlincsv.exceptions.CsvFieldNumDifferentException
+import com.jsoizo.kotlincsv.exceptions.CsvParseFormatException
 import com.jsoizo.kotlincsv.reader.internal.parseRows
 
 /**
@@ -25,6 +26,13 @@ class CsvReader(private val config: CsvReaderConfig = CsvReaderConfig()) {
      * rows may be filtered out, and per the row-count behaviour fields rows
      * with the wrong field count are either dropped, padded, truncated, or
      * cause [CsvFieldNumDifferentException] to be thrown at terminal time.
+     *
+     * @throws CsvParseFormatException on terminal operation, when [chars]
+     *   violates the CSV format (unbalanced quote, illegal escape, ...).
+     * @throws CsvFieldNumDifferentException on terminal operation, when a row
+     *   has more or fewer fields than the first row and the corresponding
+     *   policy is [ExcessFieldsRowBehaviour.ERROR] or
+     *   [InsufficientFieldsRowBehaviour.ERROR].
      */
     fun read(chars: Sequence<Char>): Sequence<List<String>> {
         val parsed = parseRows(chars, config.dialect)
@@ -36,7 +44,15 @@ class CsvReader(private val config: CsvReaderConfig = CsvReaderConfig()) {
         return applyFieldCountPolicy(filtered)
     }
 
-    /** Eagerly parse [text] into a list of rows. */
+    /**
+     * Eagerly parse [text] into a list of rows.
+     *
+     * @throws CsvParseFormatException when [text] violates the CSV format.
+     * @throws CsvFieldNumDifferentException when a row's field count differs
+     *   from the first row and the corresponding policy is
+     *   [ExcessFieldsRowBehaviour.ERROR] or
+     *   [InsufficientFieldsRowBehaviour.ERROR].
+     */
     fun readAll(text: String): List<List<String>> = read(text.asSequence()).toList()
 
     private fun isEmptyRow(row: List<String>): Boolean =

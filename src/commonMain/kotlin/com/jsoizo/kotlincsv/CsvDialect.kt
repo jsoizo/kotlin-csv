@@ -29,6 +29,8 @@ package com.jsoizo.kotlincsv
  *   (default `"\r\n"`, RFC 4180). This field is consulted only by the
  *   **writer**. The reader auto-detects line terminators (LF / CRLF /
  *   U+2028 / U+2029 / U+0085) regardless of this value.
+ * @throws IllegalArgumentException if [delimiter] equals [quoteChar] or
+ *   [escapeChar], or if [lineTerminator] is empty.
  */
 data class CsvDialect(
     val delimiter: Char = ',',

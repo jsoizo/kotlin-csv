@@ -19,6 +19,11 @@ import com.jsoizo.kotlincsv.exceptions.MalformedCsvException
  *   Renaming always succeeds.
  * - The return type is [LinkedHashMap] (not [Map]) to preserve and expose
  *   header insertion order.
+ *
+ * @throws MalformedCsvException on terminal operation, when
+ *   [autoRenameDuplicateHeaders] is `false` and the header row contains
+ *   duplicate names. Not thrown when [autoRenameDuplicateHeaders] is `true`,
+ *   since renaming is always successful.
  */
 fun Sequence<List<String>>.withHeader(
     autoRenameDuplicateHeaders: Boolean = false,

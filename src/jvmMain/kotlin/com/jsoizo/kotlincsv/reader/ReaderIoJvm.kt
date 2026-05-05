@@ -1,10 +1,16 @@
 package com.jsoizo.kotlincsv.reader
 
+import com.jsoizo.kotlincsv.exceptions.CsvFieldNumDifferentException
+import com.jsoizo.kotlincsv.exceptions.CsvParseFormatException
 import java.io.BufferedReader
 import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.nio.charset.Charset
+import java.nio.charset.IllegalCharsetNameException
+import java.nio.charset.UnsupportedCharsetException
 
 private const val BOM_CHAR = '\uFEFF'
 
@@ -21,6 +27,18 @@ private const val BOM_CHAR = '\uFEFF'
  * non-UTF-8 charset is required.
  *
  * @return whatever [block] returns.
+ * @throws FileNotFoundException at call time, when [file] does not exist or
+ *   cannot be opened for reading.
+ * @throws UnsupportedCharsetException at call time, when [charset] is not a
+ *   supported character set in this JVM.
+ * @throws IllegalCharsetNameException at call time, when [charset] is not a
+ *   legal charset name.
+ * @throws IOException on terminal operation, when the file fails to deliver
+ *   bytes during decoding.
+ * @throws CsvParseFormatException on terminal operation, when the file
+ *   contents violate the CSV format.
+ * @throws CsvFieldNumDifferentException on terminal operation, when a row's
+ *   field count violates the configured row-count behaviour.
  */
 fun <T> CsvReader.read(
     file: File,
@@ -49,6 +67,16 @@ fun <T> CsvReader.read(
  * this JVM overload when a non-UTF-8 charset is required.
  *
  * @return whatever [block] returns.
+ * @throws UnsupportedCharsetException at call time, when [charset] is not a
+ *   supported character set in this JVM.
+ * @throws IllegalCharsetNameException at call time, when [charset] is not a
+ *   legal charset name.
+ * @throws IOException on terminal operation, when [stream] fails to deliver
+ *   bytes during decoding.
+ * @throws CsvParseFormatException on terminal operation, when the decoded
+ *   character stream violates the CSV format.
+ * @throws CsvFieldNumDifferentException on terminal operation, when a row's
+ *   field count violates the configured row-count behaviour.
  */
 fun <T> CsvReader.read(
     stream: InputStream,
