@@ -1,6 +1,6 @@
 package com.jsoizo.kotlincsv.parser
 
-import com.jsoizo.kotlincsv.util.CSVParseFormatException
+import com.jsoizo.kotlincsv.exceptions.CsvParseFormatException
 
 /**
  * @author doyaaaaaaken
@@ -53,7 +53,7 @@ internal class ParseStateMachine(
             ParseState.FIELD -> {
                 when (ch) {
                     escapeChar -> {
-                        if (nextCh != escapeChar) throw CSVParseFormatException(
+                        if (nextCh != escapeChar) throw CsvParseFormatException(
                             rowNum,
                             pos,
                             ch,
@@ -108,8 +108,8 @@ internal class ParseStateMachine(
             }
             ParseState.QUOTE_START, ParseState.QUOTED_FIELD -> {
                 if (ch == escapeChar && escapeChar != quoteChar) {
-                    if (nextCh == null) throw CSVParseFormatException(rowNum, pos, ch, "end of quote doesn't exist")
-                    if (nextCh != escapeChar && nextCh != quoteChar) throw CSVParseFormatException(
+                    if (nextCh == null) throw CsvParseFormatException(rowNum, pos, ch, "end of quote doesn't exist")
+                    if (nextCh != escapeChar && nextCh != quoteChar) throw CsvParseFormatException(
                         rowNum,
                         pos,
                         ch,
@@ -147,7 +147,7 @@ internal class ParseStateMachine(
                         flushField()
                         state = ParseState.END
                     }
-                    else -> throw CSVParseFormatException(
+                    else -> throw CsvParseFormatException(
                         rowNum,
                         pos,
                         ch,
@@ -156,7 +156,7 @@ internal class ParseStateMachine(
                 }
                 pos += 1
             }
-            ParseState.END -> throw CSVParseFormatException(rowNum, pos, ch, "unexpected error")
+            ParseState.END -> throw CsvParseFormatException(rowNum, pos, ch, "unexpected error")
         }
         return pos - prevPos
     }

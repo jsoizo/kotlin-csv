@@ -1,9 +1,7 @@
 package com.jsoizo.kotlincsv.reader.internal
 
 import com.jsoizo.kotlincsv.CsvDialect
-import com.jsoizo.kotlincsv.exceptions.CsvParseFormatException
 import com.jsoizo.kotlincsv.parser.ParseStateMachine
-import com.jsoizo.kotlincsv.util.CSVParseFormatException as LegacyCsvParseFormatException
 
 /**
  * Lazily parse a [Sequence] of [Char] into a [Sequence] of CSV rows
@@ -12,11 +10,6 @@ import com.jsoizo.kotlincsv.util.CSVParseFormatException as LegacyCsvParseFormat
  * The parsing is driven by a fresh [ParseStateMachine] per row; the state
  * machine is recreated each time a row completes (state transitions to END).
  * Empty input produces an empty sequence.
- *
- * Exceptions thrown by [ParseStateMachine] (currently the legacy
- * [LegacyCsvParseFormatException] type) are converted to the new
- * [CsvParseFormatException] type so callers see a consistent exception
- * hierarchy.
  */
 internal fun parseRows(
     chars: Sequence<Char>,
@@ -41,11 +34,7 @@ internal fun parseRows(
         if (skipCount > 0L) {
             skipCount--
         } else {
-            skipCount = try {
-                stateMachine.read(current, nextCh, rowNum) - 1L
-            } catch (e: LegacyCsvParseFormatException) {
-                throw convertException(e)
-            }
+            skipCount = stateMachine.read(current, nextCh, rowNum) - 1L
             stateMachineHasInput = true
 
             if (stateMachine.isLineComplete()) {
@@ -63,15 +52,4 @@ internal fun parseRows(
     if (stateMachineHasInput) {
         stateMachine.getResult()?.let { yield(it) }
     }
-}
-
-private fun convertException(e: LegacyCsvParseFormatException): CsvParseFormatException {
-    val original = e.message?.substringBefore(" [rowNum = ")
-        ?: "Exception happened on parsing csv"
-    return CsvParseFormatException(
-        rowNum = e.rowNum,
-        colIndex = e.colIndex,
-        char = e.char,
-        message = original,
-    )
 }
