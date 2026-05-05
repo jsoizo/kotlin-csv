@@ -43,4 +43,11 @@ class RoundTripTest {
         val text = csvWriter { this.dialect = dialect }.writeAll(rows)
         csvReader { this.dialect = dialect }.readAll(text) shouldBe rows
     }
+
+    @Test
+    fun roundTrip_unicodeLineSeparators() {
+        val rows = listOf(listOf("\u2028", "\u2029", "\u0085"))
+        val text = csvWriter().writeAll(rows)
+        csvReader().readAll(text) shouldBe rows
+    }
 }

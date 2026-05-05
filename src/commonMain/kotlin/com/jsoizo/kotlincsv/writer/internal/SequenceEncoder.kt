@@ -91,7 +91,7 @@ private fun needsCanonicalQuote(
     val ltFirst = lineTerminator.firstOrNull()
     for (ch in field) {
         if (ch == quoteChar || ch == delimiter) return true
-        if (ch == '\n' || ch == '\r') return true
+        if (ch == '\n' || ch == '\r' || ch == '\u2028' || ch == '\u2029' || ch == '\u0085') return true
         if (ltFirst != null && ch == ltFirst) return true
     }
     return false
