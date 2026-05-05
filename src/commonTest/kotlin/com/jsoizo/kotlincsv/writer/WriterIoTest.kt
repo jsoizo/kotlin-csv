@@ -18,6 +18,9 @@ class WriterIoTest {
             CsvWriter().write(rows, sink)
         }
         raw.snapshot().decodeToString() shouldBe "a,b\r\nc,d\r\n"
+        // The writer flushes the buffered sink at the end of the call so
+        // downstream consumers see all bytes without waiting for close().
+        raw.flushCount shouldBe 1
     }
 
     @Test
