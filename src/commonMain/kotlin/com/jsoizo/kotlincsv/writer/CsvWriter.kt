@@ -23,10 +23,17 @@ class CsvWriter(private val config: CsvWriterConfig = CsvWriterConfig()) {
      * after the final row is emitted only when
      * [CsvWriterConfig.outputLastLineTerminator] is `true`. An empty input
      * sequence produces an empty output sequence — no terminator is emitted.
+     *
+     * The returned sequence does not throw by itself; iteration just produces
+     * characters. Failures arise only from I/O or sink consumers downstream.
      */
     fun write(rows: Sequence<List<String>>): Sequence<Char> = encodeRows(rows, config)
 
-    /** Eagerly encode [rows] into a single CSV string. */
+    /**
+     * Eagerly encode [rows] into a single CSV string.
+     *
+     * Pure encoding does not throw by itself.
+     */
     fun writeAll(rows: List<List<String>>): String =
         write(rows.asSequence()).joinToString("")
 }

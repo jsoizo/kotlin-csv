@@ -1,9 +1,13 @@
 package com.jsoizo.kotlincsv.writer
 
 import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.io.OutputStream
 import java.io.OutputStreamWriter
 import java.nio.charset.Charset
+import java.nio.charset.IllegalCharsetNameException
+import java.nio.charset.UnsupportedCharsetException
 
 private const val BOM_STRING = "\uFEFF"
 private const val WRITE_CHUNK_SIZE = 8192
@@ -20,6 +24,14 @@ private const val WRITE_CHUNK_SIZE = 8192
  * The `commonMain` overloads (`write(rows, sink: Sink, ...)` /
  * `write(rows, path: Path, ...)`) emit UTF-8 only; use this JVM overload when
  * a non-UTF-8 charset is required.
+ *
+ * @throws FileNotFoundException when [file] cannot be opened for writing
+ *   (parent directory missing, permission denied, ...).
+ * @throws UnsupportedCharsetException when [charset] is not a supported
+ *   character set in this JVM.
+ * @throws IllegalCharsetNameException when [charset] is not a legal charset
+ *   name.
+ * @throws IOException when writing or flushing fails during encoding.
  */
 fun CsvWriter.write(
     rows: Sequence<List<String>>,
@@ -53,6 +65,13 @@ fun CsvWriter.write(
  *
  * The `commonMain` overload `write(rows, sink: Sink, ...)` emits UTF-8 only;
  * use this JVM overload when a non-UTF-8 charset is required.
+ *
+ * @throws UnsupportedCharsetException when [charset] is not a supported
+ *   character set in this JVM.
+ * @throws IllegalCharsetNameException when [charset] is not a legal charset
+ *   name.
+ * @throws IOException when [stream] fails to accept bytes during encoding or
+ *   on the final flush.
  */
 fun CsvWriter.write(
     rows: Sequence<List<String>>,
@@ -78,7 +97,11 @@ fun CsvWriter.write(
     osw.flush()
 }
 
-/** Eager `List` overload that delegates to the [Sequence] file writer. */
+/**
+ * Eager `List` overload that delegates to the [Sequence] file writer.
+ *
+ * @see write
+ */
 fun CsvWriter.write(
     rows: List<List<String>>,
     file: File,
@@ -86,7 +109,11 @@ fun CsvWriter.write(
     options: CsvWriteIoOptions = CsvWriteIoOptions(),
 ) = write(rows.asSequence(), file, charset, options)
 
-/** Eager `List` overload that delegates to the [Sequence] stream writer. */
+/**
+ * Eager `List` overload that delegates to the [Sequence] stream writer.
+ *
+ * @see write
+ */
 fun CsvWriter.write(
     rows: List<List<String>>,
     stream: OutputStream,

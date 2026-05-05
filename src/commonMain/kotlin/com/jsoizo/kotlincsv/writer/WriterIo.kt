@@ -1,5 +1,6 @@
 package com.jsoizo.kotlincsv.writer
 
+import kotlinx.io.IOException
 import kotlinx.io.Sink
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
@@ -18,6 +19,9 @@ private const val WRITE_CHUNK_SIZE = 8192
  *
  * Resource ownership of [sink] stays with the caller. The sink is flushed at
  * the end of the call so written bytes are visible to downstream consumers.
+ *
+ * @throws IOException when [sink] fails to accept bytes during encoding or
+ *   on the final flush.
  */
 fun CsvWriter.write(
     rows: Sequence<List<String>>,
@@ -41,7 +45,11 @@ fun CsvWriter.write(
     sink.flush()
 }
 
-/** Eager `List` overload that delegates to the [Sequence] sink writer. */
+/**
+ * Eager `List` overload that delegates to the [Sequence] sink writer.
+ *
+ * @see write
+ */
 fun CsvWriter.write(
     rows: List<List<String>>,
     sink: Sink,
@@ -52,6 +60,9 @@ fun CsvWriter.write(
  * Encode [rows] and write the resulting bytes to the file at [path]. The
  * underlying sink is opened in truncate mode (matching the v1 default), is
  * flushed, and is closed when this function returns or throws.
+ *
+ * @throws IOException when [path] cannot be opened (parent directory missing,
+ *   permission denied, ...) or when writing / flushing fails during encoding.
  */
 fun CsvWriter.write(
     rows: Sequence<List<String>>,
@@ -63,7 +74,11 @@ fun CsvWriter.write(
     }
 }
 
-/** Eager `List` overload that delegates to the [Sequence] path writer. */
+/**
+ * Eager `List` overload that delegates to the [Sequence] path writer.
+ *
+ * @see write
+ */
 fun CsvWriter.write(
     rows: List<List<String>>,
     path: Path,
@@ -74,6 +89,9 @@ fun CsvWriter.write(
  * Convenience overload that builds a [Path] from a string. Lets callers avoid
  * importing `kotlinx.io.files.Path`. Relative paths follow `SystemFileSystem`
  * platform behaviour.
+ *
+ * @throws IOException when [filePath] cannot be opened or when writing /
+ *   flushing fails during encoding.
  */
 fun CsvWriter.write(
     rows: Sequence<List<String>>,
@@ -81,7 +99,11 @@ fun CsvWriter.write(
     options: CsvWriteIoOptions = CsvWriteIoOptions(),
 ) = write(rows, Path(filePath), options)
 
-/** Eager `List` overload that delegates to the [Sequence] string-path writer. */
+/**
+ * Eager `List` overload that delegates to the [Sequence] string-path writer.
+ *
+ * @see write
+ */
 fun CsvWriter.write(
     rows: List<List<String>>,
     filePath: String,
