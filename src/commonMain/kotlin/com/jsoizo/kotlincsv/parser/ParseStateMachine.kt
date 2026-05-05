@@ -29,7 +29,6 @@ internal class ParseStateMachine(
         when (state) {
             ParseState.START -> {
                 when (ch) {
-                    '﻿' -> Unit
                     quoteChar -> state = ParseState.QUOTE_START
                     delimiter -> {
                         flushField()

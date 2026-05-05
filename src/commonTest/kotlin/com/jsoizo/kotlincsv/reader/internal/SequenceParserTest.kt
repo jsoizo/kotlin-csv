@@ -90,8 +90,11 @@ class SequenceParserTest {
     }
 
     @Test
-    fun bomCharacter_skippedAtStart() {
-        parse("﻿a,b") shouldBe listOf(listOf("a", "b"))
+    fun bomCharacter_passedThroughByParser() {
+        // Parser no longer treats U+FEFF specially; BOM handling is owned by
+        // the I/O layer (CsvReadIoOptions.stripBom). The parser sees BOM as
+        // an ordinary data character.
+        parse("\uFEFFa,b") shouldBe listOf(listOf("\uFEFFa", "b"))
     }
 
     @Test

@@ -30,17 +30,13 @@ class ReaderIoTest {
     }
 
     @Test
-    fun read_source_stripBomFalse_doesNotStripAtIoLayer() {
-        // Note: even with stripBom = false, the parser (ParseStateMachine) skips a
-        // leading U+FEFF in its START state, so BOM never appears in the first
-        // field. This test asserts parity with stripBom = true for the trivial
-        // "BOM at file start" case. The I/O-layer stripBom flag becomes
-        // user-visible only after the parser stops doing this; that change is
-        // tracked separately.
+    fun read_source_stripBomFalse_keepsLeadingBomInFirstField() {
         val source = FakeRawSource(bomBytes() + csvBytes("a,b,c")).buffered()
         val reader = CsvReader()
         val rows = reader.read(source, CsvReadIoOptions(stripBom = false)) { seq -> seq.toList() }
-        rows shouldBe listOf(listOf("a", "b", "c"))
+        // With BOM handling owned by the I/O layer, opting out preserves the
+        // U+FEFF as the first character of the first field.
+        rows shouldBe listOf(listOf("\uFEFFa", "b", "c"))
     }
 
     @Test
