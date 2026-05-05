@@ -77,13 +77,13 @@ fun CsvWriter.write(
  */
 fun CsvWriter.write(
     rows: Sequence<List<String>>,
-    path: String,
+    filePath: String,
     options: CsvWriteIoOptions = CsvWriteIoOptions(),
-) = write(rows, Path(path), options)
+) = write(rows, Path(filePath), options)
 
 /** Eager `List` overload that delegates to the [Sequence] string-path writer. */
 fun CsvWriter.write(
     rows: List<List<String>>,
-    path: String,
+    filePath: String,
     options: CsvWriteIoOptions = CsvWriteIoOptions(),
-) = write(rows.asSequence(), path, options)
+) = write(rows.asSequence(), filePath, options)

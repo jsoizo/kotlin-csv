@@ -55,7 +55,7 @@ fun <T> CsvReader.read(
  * platform behaviour (typically the current working directory).
  */
 fun <T> CsvReader.read(
-    path: String,
+    filePath: String,
     options: CsvReadIoOptions = CsvReadIoOptions(),
     block: (Sequence<List<String>>) -> T,
-): T = read(Path(path), options, block)
+): T = read(Path(filePath), options, block)
