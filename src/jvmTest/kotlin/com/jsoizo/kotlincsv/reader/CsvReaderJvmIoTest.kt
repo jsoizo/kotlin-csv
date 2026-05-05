@@ -71,6 +71,20 @@ class CsvReaderJvmIoTest {
     }
 
     @Test
+    fun read_stream_takeShortCircuit_stopsPullingBytesEarly() {
+        // Lazy-pull contract: when block consumes only the first row, the
+        // overload must not drain the entire underlying stream. Padding has
+        // to exceed BufferedReader's fill-buffer size (8 KiB) so the early
+        // exit is observable as a strict-less-than byte count.
+        val firstRow = "first\n"
+        val padding = "x".repeat(64 * 1024)
+        val payload = (firstRow + padding).toByteArray(Charsets.UTF_8)
+        val counting = CountingInputStream(ByteArrayInputStream(payload))
+        CsvReader().read(counting) { it.first() }
+        (counting.bytesRead < payload.size.toLong()) shouldBe true
+    }
+
+    @Test
     fun read_stream_blockThrows_doesNotCloseCallerOwnedStream() {
         val raw = sampleCsv.toByteArray(Charsets.UTF_8)
         val counting = CountingInputStream(ByteArrayInputStream(raw))
