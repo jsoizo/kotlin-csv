@@ -32,6 +32,9 @@ kotlin {
     }
     js {
         browser {
+            testTask {
+                enabled = false
+            }
         }
         nodejs {
         }
