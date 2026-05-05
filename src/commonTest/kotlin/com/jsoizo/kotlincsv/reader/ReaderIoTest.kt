@@ -149,4 +149,18 @@ class ReaderIoTest {
         }
         callable shouldNotBe null
     }
+
+    @Test
+    fun readAll_source_basicCsv() {
+        val source = FakeRawSource(csvBytes("a,b,c\nd,e,f")).buffered()
+        val rows = CsvReader().readAll(source)
+        rows shouldBe listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
+    }
+
+    @Test
+    fun readAll_stringPathOverloadIsCallable() {
+        val reader = CsvReader()
+        val callable: (String) -> List<List<String>> = { path -> reader.readAll(path) }
+        callable shouldNotBe null
+    }
 }

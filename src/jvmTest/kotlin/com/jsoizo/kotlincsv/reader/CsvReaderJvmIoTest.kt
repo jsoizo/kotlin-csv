@@ -139,4 +139,23 @@ class CsvReaderJvmIoTest {
             ) { it.toList() }
         }
     }
+
+    @Test
+    fun readAll_file_utf8_basic_decodesRows() {
+        val tmp = Files.createTempFile("kotlin-csv-jvm-reader", ".csv")
+        try {
+            Files.writeString(tmp, sampleCsv, Charsets.UTF_8)
+            CsvReader().readAll(tmp.toFile()) shouldBe sampleRows
+        } finally {
+            tmp.deleteIfExists()
+        }
+    }
+
+    @Test
+    fun readAll_stream_utf8_basic_decodesRowsAndDoesNotCloseCallerStream() {
+        val raw = sampleCsv.toByteArray(Charsets.UTF_8)
+        val counting = CountingInputStream(ByteArrayInputStream(raw))
+        CsvReader().readAll(counting) shouldBe sampleRows
+        counting.closeCount shouldBe 0
+    }
 }

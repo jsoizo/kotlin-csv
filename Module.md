@@ -67,8 +67,21 @@ reader.read(file) { rows ->
 }  // file closed here
 ```
 
-Sequences are not exposed past the block boundary precisely so callers
-cannot leak the open descriptor.
+The contract is that callers must consume the `Sequence` inside the block.
+Returning it leaks a handle to a now-closed source, and later iteration may
+fail with `IOException` or surface garbage. The signature `(...) -> T` cannot
+forbid this at the type level, so it is a contract callers are expected to
+honour.
+
+When you need a fully materialised `List<List<String>>`, prefer the eager
+`readAll` overloads instead of writing `read(file) { it.toList() }` by hand:
+
+```kotlin
+val rows: List<List<String>> = reader.readAll(file)
+```
+
+`readAll` overloads exist for the same source shapes as `read` (common:
+`Source` / `Path` / `String`; JVM: `File` / `InputStream`).
 
 # Package com.jsoizo.kotlincsv
 

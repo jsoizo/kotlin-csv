@@ -50,6 +50,32 @@ fun <T> CsvReader.read(
 }
 
 /**
+ * Eagerly read all CSV rows from [file] using the given [charset].
+ *
+ * Equivalent to `read(file, charset, options) { it.toList() }`. The
+ * underlying file stream is opened and closed inside this call, and the
+ * returned list is safe to consume after the call returns. Java charset
+ * aliases (e.g. `"SJIS"`) are resolved through [Charset.forName].
+ *
+ * @throws FileNotFoundException at call time, when [file] does not exist or
+ *   cannot be opened for reading.
+ * @throws UnsupportedCharsetException at call time, when [charset] is not a
+ *   supported character set in this JVM.
+ * @throws IllegalCharsetNameException at call time, when [charset] is not a
+ *   legal charset name.
+ * @throws IOException when the file fails to deliver bytes during decoding.
+ * @throws CsvParseFormatException when the file contents violate the CSV
+ *   format.
+ * @throws CsvFieldNumDifferentException when a row's field count violates the
+ *   configured row-count behaviour.
+ */
+fun CsvReader.readAll(
+    file: File,
+    charset: String = "UTF-8",
+    options: CsvReadIoOptions = CsvReadIoOptions(),
+): List<List<String>> = read(file, charset, options) { it.toList() }
+
+/**
  * Read CSV rows from [stream] using the given [charset] and pass them to
  * [block].
  *
@@ -87,6 +113,30 @@ fun <T> CsvReader.read(
     val reader = InputStreamReader(stream, Charset.forName(charset)).buffered()
     return block(read(reader.toCharSequence(options.stripBom)))
 }
+
+/**
+ * Eagerly read all CSV rows from [stream] using the given [charset].
+ *
+ * Equivalent to `read(stream, charset, options) { it.toList() }`. Resource
+ * ownership of [stream] stays with the caller — this overload neither closes
+ * it nor the internally created `InputStreamReader` / `BufferedReader`. The
+ * returned list is safe to consume after the call returns.
+ *
+ * @throws UnsupportedCharsetException at call time, when [charset] is not a
+ *   supported character set in this JVM.
+ * @throws IllegalCharsetNameException at call time, when [charset] is not a
+ *   legal charset name.
+ * @throws IOException when [stream] fails to deliver bytes during decoding.
+ * @throws CsvParseFormatException when the decoded character stream violates
+ *   the CSV format.
+ * @throws CsvFieldNumDifferentException when a row's field count violates the
+ *   configured row-count behaviour.
+ */
+fun CsvReader.readAll(
+    stream: InputStream,
+    charset: String = "UTF-8",
+    options: CsvReadIoOptions = CsvReadIoOptions(),
+): List<List<String>> = read(stream, charset, options) { it.toList() }
 
 private fun BufferedReader.toCharSequence(stripBom: Boolean): Sequence<Char> = sequence {
     var first = true
