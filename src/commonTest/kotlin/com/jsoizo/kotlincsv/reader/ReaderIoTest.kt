@@ -111,4 +111,17 @@ class ReaderIoTest {
         b.closeCount shouldBe 0
         a shouldNotBe b
     }
+
+    @Test
+    fun read_stringPathOverloadIsCallable() {
+        // Compile-level smoke: the String overload exists and resolves. We
+        // bind it to a lambda instead of invoking it, since that would require
+        // a real file. End-to-end coverage of the String -> Path delegation
+        // lives in the jvmTest path smoke.
+        val reader = CsvReader()
+        val callable: (String) -> List<List<String>> = { path ->
+            reader.read(path) { seq -> seq.toList() }
+        }
+        callable shouldNotBe null
+    }
 }

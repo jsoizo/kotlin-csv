@@ -48,3 +48,14 @@ fun <T> CsvReader.read(
 ): T = SystemFileSystem.source(path).buffered().use { bufferedSource ->
     read(bufferedSource, options, block)
 }
+
+/**
+ * Convenience overload that builds a [Path] from a string. Lets callers avoid
+ * importing `kotlinx.io.files.Path`. Relative paths follow `SystemFileSystem`
+ * platform behaviour (typically the current working directory).
+ */
+fun <T> CsvReader.read(
+    path: String,
+    options: CsvReadIoOptions = CsvReadIoOptions(),
+    block: (Sequence<List<String>>) -> T,
+): T = read(Path(path), options, block)

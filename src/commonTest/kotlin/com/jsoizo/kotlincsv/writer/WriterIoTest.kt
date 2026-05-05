@@ -92,6 +92,21 @@ class WriterIoTest {
     }
 
     @Test
+    fun write_stringPathOverloadIsCallable() {
+        // Compile-level smoke: the String overloads exist and resolve for
+        // both Sequence and List inputs. End-to-end coverage of the String ->
+        // Path delegation lives in the jvmTest path smoke.
+        val writer = CsvWriter()
+        val callableSeq: (String) -> Unit = { path ->
+            writer.write(sequenceOf(listOf("a")), path)
+        }
+        val callableList: (String) -> Unit = { path ->
+            writer.write(listOf(listOf("a")), path)
+        }
+        (callableSeq to callableList) shouldBe (callableSeq to callableList)
+    }
+
+    @Test
     fun write_sink_largeOutputCrossesChunkBoundary() {
         // Force the chunked flushing path: produce >8192 chars of output.
         val row = List(200) { "x" }

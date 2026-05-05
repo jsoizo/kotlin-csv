@@ -69,3 +69,21 @@ fun CsvWriter.write(
     path: Path,
     options: CsvWriteIoOptions = CsvWriteIoOptions(),
 ) = write(rows.asSequence(), path, options)
+
+/**
+ * Convenience overload that builds a [Path] from a string. Lets callers avoid
+ * importing `kotlinx.io.files.Path`. Relative paths follow `SystemFileSystem`
+ * platform behaviour.
+ */
+fun CsvWriter.write(
+    rows: Sequence<List<String>>,
+    path: String,
+    options: CsvWriteIoOptions = CsvWriteIoOptions(),
+) = write(rows, Path(path), options)
+
+/** Eager `List` overload that delegates to the [Sequence] string-path writer. */
+fun CsvWriter.write(
+    rows: List<List<String>>,
+    path: String,
+    options: CsvWriteIoOptions = CsvWriteIoOptions(),
+) = write(rows.asSequence(), path, options)
