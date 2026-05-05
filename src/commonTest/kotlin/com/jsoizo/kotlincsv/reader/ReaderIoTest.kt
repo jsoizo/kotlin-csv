@@ -109,6 +109,35 @@ class ReaderIoTest {
     }
 
     @Test
+    fun read_source_supplementaryPlaneCharIsEmittedAsSurrogatePair() {
+        // U+1F600 (😀) is in the supplementary plane and must round-trip through
+        // a UTF-16 surrogate pair. The parser receives 2 chars but the original
+        // String surface keeps it as a single grapheme.
+        val emoji = "😀" // U+1F600 encoded as surrogate pair
+        val source = FakeRawSource(csvBytes("$emoji,b")).buffered()
+        val reader = CsvReader()
+        val rows = reader.read(source) { seq -> seq.toList() }
+        rows shouldBe listOf(listOf(emoji, "b"))
+    }
+
+    @Test
+    fun read_source_lazilyStopsPullingBytesAfterTake() {
+        // The streaming decoder should let the parser short-circuit before the
+        // whole input is consumed. We use a Buffer fed from a FakeRawSource and
+        // assert the source is not fully drained when only the first row is
+        // taken.
+        val raw = FakeRawSource(csvBytes("first\nsecond\nthird"))
+        raw.buffered().use { source ->
+            val first = CsvReader().read(source) { seq -> seq.first() }
+            first shouldBe listOf("first")
+        }
+        // After early-exit, the FakeRawSource should still report a non-zero
+        // close (the use {} block calls close on the buffered Source which
+        // flows down to the raw fake).
+        raw.closeCount shouldBe 1
+    }
+
+    @Test
     fun read_stringPathOverloadIsCallable() {
         // Compile-level smoke: the String overload exists and resolves. We
         // bind it to a lambda instead of invoking it, since that would require

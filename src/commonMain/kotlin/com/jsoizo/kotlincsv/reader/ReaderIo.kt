@@ -4,19 +4,24 @@ import kotlinx.io.Source
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
-import kotlinx.io.readString
+import kotlinx.io.readCodePointValue
 
-private const val BOM_CHAR = '\uFEFF'
+private const val BOM_CODE_POINT = 0xFEFF
+private const val SUPPLEMENTARY_PLANE_START = 0x10000
+private const val HIGH_SURROGATE_BASE = 0xD800
+private const val LOW_SURROGATE_BASE = 0xDC00
+private const val LOW_TEN_BIT_MASK = 0x3FF
 
 /**
  * Read CSV rows from [source] using a UTF-8 decode and pass them to [block].
  *
- * The [source] is consumed fully — its bytes are decoded as UTF-8 into a string
- * before parsing begins. If [CsvReadIoOptions.stripBom] is `true` and the
- * decoded text starts with U+FEFF (BOM), that one character is dropped before
- * parsing.
+ * Bytes are decoded one Unicode code point at a time and pushed through a lazy
+ * `Sequence<Char>`, so the parser can short-circuit (`take`, `first`, ...) and
+ * stop pulling bytes from [source] mid-stream. If [CsvReadIoOptions.stripBom]
+ * is `true` and the very first code point is U+FEFF (BOM), it is dropped.
  *
- * Resource ownership of [source] stays with the caller.
+ * Resource ownership of [source] stays with the caller; [block] is invoked
+ * while [source] is still open so iteration can pull bytes on demand.
  *
  * @return whatever [block] returns.
  */
@@ -24,10 +29,26 @@ fun <T> CsvReader.read(
     source: Source,
     options: CsvReadIoOptions = CsvReadIoOptions(),
     block: (Sequence<List<String>>) -> T,
-): T {
-    val raw = source.readString()
-    val text = if (options.stripBom && raw.startsWith(BOM_CHAR)) raw.substring(1) else raw
-    return block(read(text.asSequence()))
+): T = block(read(source.toCharSequence(options.stripBom)))
+
+private fun Source.toCharSequence(stripBom: Boolean): Sequence<Char> = sequence {
+    if (exhausted()) return@sequence
+    var first = true
+    while (!exhausted()) {
+        val codePoint = readCodePointValue()
+        if (first) {
+            first = false
+            if (stripBom && codePoint == BOM_CODE_POINT) continue
+        }
+        if (codePoint < SUPPLEMENTARY_PLANE_START) {
+            yield(codePoint.toChar())
+        } else {
+            // Supplementary plane: emit a UTF-16 surrogate pair.
+            val offset = codePoint - SUPPLEMENTARY_PLANE_START
+            yield((HIGH_SURROGATE_BASE + (offset shr 10)).toChar())
+            yield((LOW_SURROGATE_BASE + (offset and LOW_TEN_BIT_MASK)).toChar())
+        }
+    }
 }
 
 /**
