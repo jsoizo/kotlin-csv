@@ -45,8 +45,11 @@ fun CsvWriter.write(
  * before the encoded body. The exact bytes emitted depend on the charset
  * encoder: `"UTF-8"` produces `EF BB BF`; charsets without a BOM concept
  * (e.g. `"Shift_JIS"`, `"ISO-8859-1"`) typically replace U+FEFF with the
- * encoder's unmappable-character substitution (often `?`). Callers wanting
- * a BOM only when meaningful are responsible for filtering by charset.
+ * encoder's unmappable-character substitution (often `?`). Charsets such as
+ * `"UTF-16"` already emit their own BOM during encoding, so `prependBom`
+ * combined with them produces a double BOM — pick `"UTF-16BE"` / `"UTF-16LE"`
+ * when only one BOM is wanted. Callers wanting a BOM only when meaningful
+ * are responsible for filtering by charset.
  *
  * The `commonMain` overload `write(rows, sink: Sink, ...)` emits UTF-8 only;
  * use this JVM overload when a non-UTF-8 charset is required.
