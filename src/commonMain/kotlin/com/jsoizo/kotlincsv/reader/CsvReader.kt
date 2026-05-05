@@ -16,7 +16,7 @@ import com.jsoizo.kotlincsv.reader.internal.parseRows
  * - [readAll] is an eager wrapper that parses the entire input into a
  *   `List<List<String>>` up-front.
  */
-class CsvReader(private val config: CsvReaderConfig = CsvReaderConfig()) {
+class CsvReader(val config: CsvReaderConfig = CsvReaderConfig()) {
 
     /**
      * Parse [chars] into a lazy sequence of rows.

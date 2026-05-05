@@ -14,7 +14,7 @@ import com.jsoizo.kotlincsv.writer.internal.encodeRows
  * - [writeAll] is an eager wrapper that serialises the entire row list into
  *   a `String` up-front.
  */
-class CsvWriter(private val config: CsvWriterConfig = CsvWriterConfig()) {
+class CsvWriter(val config: CsvWriterConfig = CsvWriterConfig()) {
 
     /**
      * Encode [rows] into a lazy sequence of characters.
