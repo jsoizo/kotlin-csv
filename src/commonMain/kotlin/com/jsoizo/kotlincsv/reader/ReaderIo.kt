@@ -15,10 +15,14 @@ private const val LOW_TEN_BIT_MASK = 0x3FF
 /**
  * Read CSV rows from [source] using a UTF-8 decode and pass them to [block].
  *
- * Bytes are decoded one Unicode code point at a time and pushed through a lazy
- * `Sequence<Char>`, so the parser can short-circuit (`take`, `first`, ...) and
- * stop pulling bytes from [source] mid-stream. If [CsvReadIoOptions.stripBom]
- * is `true` and the very first code point is U+FEFF (BOM), it is dropped.
+ * On JVM, bytes are decoded one Unicode code point at a time and pushed
+ * through a lazy `Sequence<Char>`, so the parser can short-circuit (`take`,
+ * `first`, ...) and stop pulling bytes from [source] mid-stream. On JS
+ * (Node.js) the underlying `kotlinx-io` `FileSource` loads the whole file at
+ * the first read, so streaming is effectively JVM-only — the `Sequence` shape
+ * is preserved on JS for API uniformity but yields from an in-memory buffer.
+ * If [CsvReadIoOptions.stripBom] is `true` and the very first code point is
+ * U+FEFF (BOM), it is dropped.
  *
  * Resource ownership of [source] stays with the caller; [block] is invoked
  * while [source] is still open so iteration can pull bytes on demand.
@@ -32,7 +36,6 @@ fun <T> CsvReader.read(
 ): T = block(read(source.toCharSequence(options.stripBom)))
 
 private fun Source.toCharSequence(stripBom: Boolean): Sequence<Char> = sequence {
-    if (exhausted()) return@sequence
     var first = true
     while (!exhausted()) {
         val codePoint = readCodePointValue()
