@@ -1,6 +1,7 @@
 [versions]
 kotlin = "2.1.0"
 coroutines = "1.10.1"
+kotlinxIo = "0.7.0"
 maven-publish = "0.30.0"
 kover = "0.8.2"
 dokka = "2.0.0"
@@ -10,6 +11,7 @@ kotest = "5.9.1"
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-io-core = { module = "org.jetbrains.kotlinx:kotlinx-io-core", version.ref = "kotlinxIo" }
 kotest-runner-junit5 = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
 kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
 

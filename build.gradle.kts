@@ -37,7 +37,11 @@ kotlin {
         }
     }
     sourceSets {
-        commonMain {}
+        commonMain {
+            dependencies {
+                implementation(libs.kotlinx.io.core)
+            }
+        }
         commonTest {
             dependencies {
                 implementation(kotlin("test-common"))
