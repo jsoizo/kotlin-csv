@@ -80,6 +80,12 @@ tasks.withType<Test>() {
     useJUnitPlatform()
 }
 
+tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+    dokkaSourceSets.named("commonMain") {
+        includes.from("Module.md")
+    }
+}
+
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
