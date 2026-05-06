@@ -76,7 +76,7 @@ implementation 'com.jsoizo:kotlin-csv-js:1.10.0' // for Kotlin JS platform
 ### SNAPSHOT builds
 
 Snapshots of the next development version are published to
-[Sonatype Central Portal Snapshots](https://central.sonatype.com/repository/maven-snapshots/) on every push to the active development branch.
+[Sonatype Central Portal Snapshots](https://central.sonatype.com/repository/maven-snapshots/) from the active development branch.
 SNAPSHOTs are unstable and may change at any time, but they let you try in-progress changes early.
 
 Add the snapshots repository to your build, then declare the dependency with the corresponding `-SNAPSHOT` version
