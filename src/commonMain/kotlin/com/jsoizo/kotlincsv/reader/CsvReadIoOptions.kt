@@ -1,11 +1,10 @@
 package com.jsoizo.kotlincsv.reader
 
 /**
- * I/O-layer options applied when a [CsvReader] reads from a `Source` or `Path`.
+ * I/O-layer options for [CsvReader].
  *
- * @property stripBom Whether to strip a leading U+FEFF (BOM) from the decoded text
- *   before parsing. Defaults to `true` so that BOM-prefixed UTF-8 files produced by
- *   Excel and similar tools are read transparently.
+ * @property stripBom Drop a leading U+FEFF after charset decoding. Defaults
+ *   to `true` so BOM-prefixed UTF-8 files (e.g. produced by Excel) parse cleanly.
  */
 data class CsvReadIoOptions(
     val stripBom: Boolean = true,

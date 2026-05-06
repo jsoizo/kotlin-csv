@@ -1,33 +1,25 @@
 package com.jsoizo.kotlincsv.reader
 
-/**
- * Strategy for handling rows that have fewer fields than expected.
- *
- * The expected field count is determined by the first row of the CSV input.
- */
+/** Strategy for rows with fewer fields than the first row. */
 enum class InsufficientFieldsRowBehaviour {
     /** Throw [com.jsoizo.kotlincsv.exceptions.CsvFieldNumDifferentException] (default). */
     ERROR,
 
-    /** Skip the row and continue. */
+    /** Drop the row and continue. */
     IGNORE,
 
     /** Pad the row with empty strings up to the expected field count. */
     EMPTY_STRING,
 }
 
-/**
- * Strategy for handling rows that have more fields than expected.
- *
- * The expected field count is determined by the first row of the CSV input.
- */
+/** Strategy for rows with more fields than the first row. */
 enum class ExcessFieldsRowBehaviour {
     /** Throw [com.jsoizo.kotlincsv.exceptions.CsvFieldNumDifferentException] (default). */
     ERROR,
 
-    /** Skip the row and continue. */
+    /** Drop the row and continue. */
     IGNORE,
 
-    /** Truncate the row to the expected field count. */
+    /** Truncate excess fields off the end of the row. */
     TRIM,
 }

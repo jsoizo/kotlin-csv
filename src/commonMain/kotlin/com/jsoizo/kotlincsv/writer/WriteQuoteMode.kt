@@ -1,13 +1,10 @@
 package com.jsoizo.kotlincsv.writer
 
-/**
- * Strategy used by [CsvWriter] for deciding when a field is wrapped in
- * `quoteChar`s.
- */
+/** Strategy for when [CsvWriter] wraps a field in `quoteChar`. */
 enum class WriteQuoteMode {
     /**
-     * Quote a field only when it contains a delimiter, line break, the quote
-     * character, or the escape character (RFC 4180 §2). The default.
+     * Quote only when required by RFC 4180 §2 (delimiter, line break, quote,
+     * escape).
      */
     CANONICAL,
 
@@ -15,8 +12,8 @@ enum class WriteQuoteMode {
     ALL,
 
     /**
-     * Quote any field that does not parse as a decimal number — digits with at
-     * most one '.'. Empty strings are not numeric, so they get quoted.
+     * Quote any field that is not a decimal number (digits with at most one
+     * `.`). Empty strings are non-numeric and therefore quoted.
      */
     NON_NUMERIC,
 }

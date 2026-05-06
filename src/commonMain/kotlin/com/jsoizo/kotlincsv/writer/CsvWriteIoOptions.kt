@@ -1,11 +1,10 @@
 package com.jsoizo.kotlincsv.writer
 
 /**
- * I/O-layer options applied when a [CsvWriter] writes to a `Sink` or `Path`.
+ * I/O-layer options for [CsvWriter].
  *
- * @property prependBom Whether to write a U+FEFF (BOM) before the encoded CSV body.
- *   Defaults to `false`. Enable when the consumer expects a BOM-prefixed UTF-8 stream,
- *   e.g. Excel-friendly output.
+ * @property prependBom Write a U+FEFF before the encoded body. Defaults to
+ *   `false`. Enable for Excel-friendly UTF-8 output.
  */
 data class CsvWriteIoOptions(
     val prependBom: Boolean = false,

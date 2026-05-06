@@ -1,13 +1,9 @@
 package com.jsoizo.kotlincsv.exceptions
 
-/**
- * General purpose CSV exception.
- */
+/** Base type for all CSV parse failures raised by kotlin-csv. */
 open class MalformedCsvException(message: String) : RuntimeException(message)
 
-/**
- * Exception thrown when parsing a CSV row fails at a specific position.
- */
+/** Parse failure at a specific row/column/character. */
 class CsvParseFormatException(
     val rowNum: Long,
     val colIndex: Long,
@@ -16,7 +12,7 @@ class CsvParseFormatException(
 ) : MalformedCsvException("$message [rowNum = $rowNum, colIndex = $colIndex, char = $char]")
 
 /**
- * Exception thrown when a row's field count differs from the expected count.
+ * A row's field count differs from the count established by the first row.
  *
  * See [RFC 4180 §2](https://tools.ietf.org/html/rfc4180#section-2):
  * > Each line should contain the same number of fields throughout the file.

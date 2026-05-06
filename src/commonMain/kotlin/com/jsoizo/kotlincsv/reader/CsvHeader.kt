@@ -3,27 +3,15 @@ package com.jsoizo.kotlincsv.reader
 import com.jsoizo.kotlincsv.exceptions.MalformedCsvException
 
 /**
- * Treat the first row of this sequence as a header and zip subsequent rows
- * into [LinkedHashMap]s keyed by the header values.
+ * Treat the first row as a header and zip subsequent rows into
+ * [LinkedHashMap]s keyed by the header values.
  *
- * - The first row is consumed as the header. Iteration over the returned
- *   sequence skips it.
- * - Header / data rows of differing field counts are zipped to the shorter
- *   length (matching v1 semantics).
- * - When the header contains duplicates and [autoRenameDuplicateHeaders] is
- *   `false` (the default), iteration throws [MalformedCsvException] at the
- *   point the duplicate would first be observed.
- * - When [autoRenameDuplicateHeaders] is `true`, duplicate header names are
- *   renamed deterministically by appending the smallest unused `_n` suffix
- *   that does not collide with any header (original or already-renamed).
- *   Renaming always succeeds.
- * - The return type is [LinkedHashMap] (not [Map]) to preserve and expose
- *   header insertion order.
+ * Duplicate headers throw [MalformedCsvException] by default; with
+ * [autoRenameDuplicateHeaders] = `true` they are deterministically renamed
+ * with the smallest unused `_n` suffix.
  *
- * @throws MalformedCsvException on terminal operation, when
- *   [autoRenameDuplicateHeaders] is `false` and the header row contains
- *   duplicate names. Not thrown when [autoRenameDuplicateHeaders] is `true`,
- *   since renaming is always successful.
+ * @throws MalformedCsvException on terminal operation when the header has
+ *   duplicates and [autoRenameDuplicateHeaders] is `false`.
  */
 fun Sequence<List<String>>.withHeader(
     autoRenameDuplicateHeaders: Boolean = false,

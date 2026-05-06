@@ -3,14 +3,7 @@ package com.jsoizo.kotlincsv.reader.internal
 import com.jsoizo.kotlincsv.CsvDialect
 import com.jsoizo.kotlincsv.parser.ParseStateMachine
 
-/**
- * Lazily parse a [Sequence] of [Char] into a [Sequence] of CSV rows
- * (`List<String>`).
- *
- * The parsing is driven by a fresh [ParseStateMachine] per row; the state
- * machine is recreated each time a row completes (state transitions to END).
- * Empty input produces an empty sequence.
- */
+/** Lazily parse a `Sequence<Char>` into a `Sequence<List<String>>` of CSV rows. */
 internal fun parseRows(
     chars: Sequence<Char>,
     dialect: CsvDialect,

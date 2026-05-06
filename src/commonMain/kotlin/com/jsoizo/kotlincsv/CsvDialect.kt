@@ -1,34 +1,19 @@
 package com.jsoizo.kotlincsv
 
 /**
- * Immutable value object describing a CSV format (the "dialect").
+ * Immutable CSV format specification shared by reader and writer.
  *
- * Captures the four characters/strings that define the CSV format itself
- * and are shared between reader and writer: [delimiter], [quoteChar],
- * [escapeChar], and [lineTerminator].
+ * When `escapeChar == quoteChar` (the default) the writer uses RFC 4180 §2.7
+ * doubling style. When `escapeChar != quoteChar` it uses explicit escape
+ * style — a CSV extension where literal `quoteChar` and `escapeChar` are
+ * each prefixed with `escapeChar`.
  *
- * Construction is validated via `require` and throws
- * [IllegalArgumentException] on inconsistent combinations.
- *
- * @property delimiter Field separator character (default `,`).
- *   Must differ from both [quoteChar] and [escapeChar].
- * @property quoteChar Character used to enclose fields that contain
- *   the delimiter, line terminator, or the quote character itself
- *   (default `"`).
- * @property escapeChar Character used to escape [quoteChar] inside a
- *   quoted field (default `"`). The writer's output rule depends on
- *   whether this equals [quoteChar]:
- *   - `escapeChar == quoteChar` (default): doubling style as defined
- *     by RFC 4180 §2.7. A literal quote becomes two quote characters
- *     (e.g. `a"b` -> `"a""b"`).
- *   - `escapeChar != quoteChar`: explicit escape style (a CSV
- *     extension). A literal quote becomes `<escapeChar><quoteChar>`,
- *     and a literal `escapeChar` becomes `<escapeChar><escapeChar>`
- *     (e.g. with `escapeChar = '\'`, `a"b\c` -> `"a\"b\\c"`).
- * @property lineTerminator Row separator written between records
- *   (default `"\r\n"`, RFC 4180). This field is consulted only by the
- *   **writer**. The reader auto-detects line terminators (LF / CRLF /
- *   U+2028 / U+2029 / U+0085) regardless of this value.
+ * @property delimiter Field separator (default `,`).
+ * @property quoteChar Field-enclosing character (default `"`).
+ * @property escapeChar Character used to escape [quoteChar] inside a quoted
+ *   field (default `"`).
+ * @property lineTerminator Row separator written by the writer (default
+ *   `"\r\n"`). Ignored by the reader, which auto-detects line terminators.
  * @throws IllegalArgumentException if [delimiter] equals [quoteChar] or
  *   [escapeChar], or if [lineTerminator] is empty.
  */
@@ -51,16 +36,10 @@ data class CsvDialect(
     }
 
     companion object {
-        /**
-         * RFC 4180 dialect: `,` delimiter, `"` quote and escape, `\r\n`
-         * line terminator. Equivalent to the no-arg [CsvDialect] default.
-         */
+        /** RFC 4180: `,` delimiter, `"` quote/escape, `\r\n` terminator. */
         val RFC4180: CsvDialect = CsvDialect()
 
-        /**
-         * Tab-separated values dialect: `\t` delimiter, `"` quote and
-         * escape, `\n` line terminator.
-         */
+        /** TSV: `\t` delimiter, `"` quote/escape, `\n` terminator. */
         val TSV: CsvDialect = CsvDialect(
             delimiter = '\t',
             lineTerminator = "\n",

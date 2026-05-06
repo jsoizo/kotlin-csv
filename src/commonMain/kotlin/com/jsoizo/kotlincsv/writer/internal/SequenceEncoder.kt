@@ -5,17 +5,8 @@ import com.jsoizo.kotlincsv.writer.CsvWriterConfig
 import com.jsoizo.kotlincsv.writer.WriteQuoteMode
 
 /**
- * Lazily encode a [Sequence] of CSV rows (`List<String>`) into a [Sequence]
- * of [Char].
- *
- * A single line terminator is emitted between rows. A trailing terminator
- * after the final row is emitted only when [CsvWriterConfig.outputLastLineTerminator]
- * is `true`. An empty input sequence produces an empty output sequence with
- * no terminator at all.
- *
- * The implementation pulls one row at a time using the source sequence's
- * iterator, so the laziness of the input is preserved end-to-end and a
- * downstream `take(n)` consumes only the rows it needs.
+ * Lazily encode CSV rows into a `Sequence<Char>`. A trailing line terminator
+ * is emitted only when [CsvWriterConfig.outputLastLineTerminator] is `true`.
  */
 internal fun encodeRows(
     rows: Sequence<List<String>>,
@@ -67,13 +58,13 @@ private fun encodeField(
 
     if (shouldQuote) yield(quoteChar)
     if (escapeChar == quoteChar) {
-        // RFC 4180 §2.7 doubling style — v1 Writer-compatible (kotlin-csv v1 only supports this mode).
+        // RFC 4180 §2.7 doubling style.
         for (ch in field) {
             if (ch == quoteChar) yield(quoteChar)
             yield(ch)
         }
     } else {
-        // Explicit escape style — new in v2 (a CSV-standard extension).
+        // Explicit escape style (CSV extension).
         for (ch in field) when (ch) {
             quoteChar, escapeChar -> { yield(escapeChar); yield(ch) }
             else                  -> yield(ch)
