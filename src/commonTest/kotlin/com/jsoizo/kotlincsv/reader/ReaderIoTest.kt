@@ -145,7 +145,7 @@ class ReaderIoTest {
         // lives in the jvmTest path smoke.
         val reader = CsvReader()
         val callable: (String) -> List<List<String>> = { path ->
-            reader.read(path) { seq -> seq.toList() }
+            reader.readFromFile(path) { seq -> seq.toList() }
         }
         callable shouldNotBe null
     }
@@ -158,9 +158,9 @@ class ReaderIoTest {
     }
 
     @Test
-    fun readAll_stringPathOverloadIsCallable() {
+    fun readAllFromFile_stringPathOverloadIsCallable() {
         val reader = CsvReader()
-        val callable: (String) -> List<List<String>> = { path -> reader.readAll(path) }
+        val callable: (String) -> List<List<String>> = { path -> reader.readAllFromFile(path) }
         callable shouldNotBe null
     }
 }

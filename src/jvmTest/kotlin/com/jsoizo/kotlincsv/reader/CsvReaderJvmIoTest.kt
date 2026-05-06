@@ -16,11 +16,11 @@ class CsvReaderJvmIoTest {
     private val sampleRows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
 
     @Test
-    fun read_file_utf8_basic_decodesRows() {
+    fun readFromFile_file_utf8_basic_decodesRows() {
         val tmp = Files.createTempFile("kotlin-csv-jvm-reader", ".csv")
         try {
             Files.writeString(tmp, sampleCsv, Charsets.UTF_8)
-            val rows = CsvReader().read(tmp.toFile()) { it.toList() }
+            val rows = CsvReader().readFromFile(tmp.toFile()) { it.toList() }
             rows shouldBe sampleRows
         } finally {
             tmp.deleteIfExists()
@@ -28,11 +28,11 @@ class CsvReaderJvmIoTest {
     }
 
     @Test
-    fun read_file_shiftJis_decodesJapaneseCharacters() {
+    fun readFromFile_file_shiftJis_decodesJapaneseCharacters() {
         val tmp = Files.createTempFile("kotlin-csv-jvm-reader", ".csv")
         try {
             Files.write(tmp, "あ,い\n".toByteArray(Charset.forName("Shift_JIS")))
-            val rows = CsvReader().read(tmp.toFile(), charset = "Shift_JIS") { it.toList() }
+            val rows = CsvReader().readFromFile(tmp.toFile(), charset = "Shift_JIS") { it.toList() }
             rows shouldBe listOf(listOf("あ", "い"))
         } finally {
             tmp.deleteIfExists()
@@ -40,11 +40,11 @@ class CsvReaderJvmIoTest {
     }
 
     @Test
-    fun read_file_sjisAlias_resolvesToShiftJis() {
+    fun readFromFile_file_sjisAlias_resolvesToShiftJis() {
         val tmp = Files.createTempFile("kotlin-csv-jvm-reader", ".csv")
         try {
             Files.write(tmp, "あ,い\n".toByteArray(Charset.forName("Shift_JIS")))
-            val rows = CsvReader().read(tmp.toFile(), charset = "SJIS") { it.toList() }
+            val rows = CsvReader().readFromFile(tmp.toFile(), charset = "SJIS") { it.toList() }
             rows shouldBe listOf(listOf("あ", "い"))
         } finally {
             tmp.deleteIfExists()
@@ -141,11 +141,11 @@ class CsvReaderJvmIoTest {
     }
 
     @Test
-    fun readAll_file_utf8_basic_decodesRows() {
+    fun readAllFromFile_file_utf8_basic_decodesRows() {
         val tmp = Files.createTempFile("kotlin-csv-jvm-reader", ".csv")
         try {
             Files.writeString(tmp, sampleCsv, Charsets.UTF_8)
-            CsvReader().readAll(tmp.toFile()) shouldBe sampleRows
+            CsvReader().readAllFromFile(tmp.toFile()) shouldBe sampleRows
         } finally {
             tmp.deleteIfExists()
         }

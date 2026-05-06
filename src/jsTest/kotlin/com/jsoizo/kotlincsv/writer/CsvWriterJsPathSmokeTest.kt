@@ -22,11 +22,11 @@ class CsvWriterJsPathSmokeTest {
         SystemFileSystem.source(path).buffered().use { it.readByteArray() }
 
     @Test
-    fun write_path_basic_writesFile() {
+    fun writeToFile_path_basic_writesFile() {
         val path = tempCsvPath("basic")
         try {
             val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
-            CsvWriter().write(rows, path)
+            CsvWriter().writeToFile(rows, path)
             readText(path) shouldBe "a,b,c\r\nd,e,f\r\n"
         } finally {
             SystemFileSystem.delete(path)
@@ -34,11 +34,11 @@ class CsvWriterJsPathSmokeTest {
     }
 
     @Test
-    fun write_path_utf8NonAscii_roundTrips() {
+    fun writeToFile_path_utf8NonAscii_roundTrips() {
         val path = tempCsvPath("utf8")
         try {
             val rows = listOf(listOf("あ", "い"), listOf("う", "え"))
-            CsvWriter().write(rows, path)
+            CsvWriter().writeToFile(rows, path)
             readText(path) shouldBe "あ,い\r\nう,え\r\n"
         } finally {
             SystemFileSystem.delete(path)
@@ -46,10 +46,10 @@ class CsvWriterJsPathSmokeTest {
     }
 
     @Test
-    fun write_path_prependBom_emitsBomBytes() {
+    fun writeToFile_path_prependBom_emitsBomBytes() {
         val path = tempCsvPath("bom")
         try {
-            CsvWriter().write(
+            CsvWriter().writeToFile(
                 listOf(listOf("a", "b", "c")),
                 path,
                 options = CsvWriteIoOptions(prependBom = true),
@@ -64,7 +64,7 @@ class CsvWriterJsPathSmokeTest {
     }
 
     @Test
-    fun write_path_supplementaryPlaneEmoji_roundTrips() {
+    fun writeToFile_path_supplementaryPlaneEmoji_roundTrips() {
         // U+1F600 surfaces in the input as a UTF-16 surrogate pair; the
         // encoder has to recombine the pair into the original 4-byte UTF-8
         // sequence on disk so a round-trip through Node.js fs preserves the
@@ -72,7 +72,7 @@ class CsvWriterJsPathSmokeTest {
         val path = tempCsvPath("emoji")
         try {
             val emoji = "😀"
-            CsvWriter().write(listOf(listOf(emoji, "b")), path)
+            CsvWriter().writeToFile(listOf(listOf(emoji, "b")), path)
             readText(path) shouldBe "$emoji,b\r\n"
         } finally {
             SystemFileSystem.delete(path)
@@ -80,11 +80,11 @@ class CsvWriterJsPathSmokeTest {
     }
 
     @Test
-    fun write_stringPath_overload_resolvesViaPath() {
+    fun writeToFile_stringPath_overload_resolvesViaPath() {
         val path = tempCsvPath("strpath")
         try {
             val rows = listOf(listOf("x", "y"), listOf("1", "2"))
-            CsvWriter().write(rows, path.toString())
+            CsvWriter().writeToFile(rows, path.toString())
             readText(path) shouldBe "x,y\r\n1,2\r\n"
         } finally {
             SystemFileSystem.delete(path)

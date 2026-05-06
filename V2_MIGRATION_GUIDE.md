@@ -9,9 +9,10 @@ A reference for upgrading from kotlin-csv 1.x to 2.0.
 - **Config + Dialect**: `*Context` mutable holders are replaced by
   immutable `CsvReaderConfig` / `CsvWriterConfig` data classes plus a shared
   `CsvDialect` value object.
-- **Function-style I/O**: `csvReader().open(...) { ... }` becomes
-  `reader.read(...) { rows -> ... }`, and `csvWriter().writeAll(rows, file)`
-  becomes `writer.write(rows, file)`. The lambda owns the open resource.
+- **Function-style I/O**: `csvReader().open(file) { ... }` becomes
+  `reader.readFromFile(file) { rows -> ... }`, and
+  `csvWriter().writeAll(rows, file)` becomes `writer.writeToFile(rows, file)`.
+  The lambda owns the open resource.
 - **Sequence-first core**: `read` returns `Sequence<List<String>>`, `write`
   takes `Sequence<List<String>>`. `take(n)` and `first()` short-circuit
   cleanly.
@@ -30,7 +31,8 @@ A reference for upgrading from kotlin-csv 1.x to 2.0.
 - **kotlinx-io**: added as a transitive dependency. JS gets file I/O for
   the first time (Node.js only).
 - **No suspend API**: `openAsync` / `writeAllAsync` are removed. Wrap
-  `read` / `write` calls in `withContext(Dispatchers.IO) { ... }` if needed.
+  `readFromFile` / `writeToFile` (or `read` / `write` for in-memory streams)
+  in `withContext(Dispatchers.IO) { ... }` if needed.
 
 ## 2. Updating dependencies
 
@@ -137,12 +139,12 @@ The four format characters (`delimiter` / `quoteChar` / `escapeChar` /
 val rows: List<List<String>> = csvReader().readAll(file)
 
 // 2.0
-val rows: List<List<String>> = reader.read(file) { it.toList() }
+val rows: List<List<String>> = reader.readFromFile(file) { it.toList() }
 ```
 
-`open { ... }` blocks become straight `read(file) { rows -> ... }` lambdas.
-The block receives a `Sequence<List<String>>`; the underlying `Source` is
-closed when the block returns or throws.
+`open { ... }` blocks become straight `readFromFile(file) { rows -> ... }`
+lambdas. The block receives a `Sequence<List<String>>`; the underlying
+`Source` is closed when the block returns or throws.
 
 ### Reading with header
 
@@ -151,7 +153,7 @@ closed when the block returns or throws.
 val rows: List<Map<String, String>> = csvReader().readAllWithHeader(file)
 
 // 2.0
-val rows: List<Map<String, String>> = reader.read(file) {
+val rows: List<Map<String, String>> = reader.readFromFile(file) {
     it.withHeader().toList()
 }
 ```
@@ -215,8 +217,8 @@ csvWriter().open(file) {
 }
 
 // 2.0
-writer.write(rows, file)
-writer.write(
+writer.writeToFile(rows, file)
+writer.writeToFile(
     sequence {
         yield(listOf("a", "b", "c"))
         yieldAll(rows)
@@ -225,7 +227,7 @@ writer.write(
 )
 ```
 
-`write` accepts either a `List<List<String>>` (eager) or
+`writeToFile` accepts either a `List<List<String>>` (eager) or
 `Sequence<List<String>>` (lazy). Build the sequence yourself instead of
 calling `writeRow` inside an `open` block.
 
@@ -239,8 +241,8 @@ overload that wraps `Path(filePath)` for callers who do not want to import
 behaviour.
 
 ```kotlin
-reader.read(Path("data.csv")) { ... }   // kotlinx-io Path
-reader.read("data.csv") { ... }         // String convenience overload
+reader.readFromFile(Path("data.csv")) { ... }   // kotlinx-io Path
+reader.readFromFile("data.csv") { ... }         // String convenience overload
 ```
 
 ### Charset
@@ -255,7 +257,7 @@ reader.readAll(file)
 
 // 2.0
 val reader = csvReader()
-reader.read(file, charset = "Shift_JIS") { it.toList() }
+reader.readFromFile(file, charset = "Shift_JIS") { it.toList() }
 ```
 
 `commonMain` and JS overloads are UTF-8 only. Java charset aliases
@@ -273,10 +275,10 @@ val writer = csvWriter { prependBOM = true }
 writer.writeAll(rows, file)
 
 // 2.0
-writer.write(rows, file, options = CsvWriteIoOptions(prependBom = true))
+writer.writeToFile(rows, file, options = CsvWriteIoOptions(prependBom = true))
 
 // Reading: strip the leading U+FEFF (default = true, opt out if needed)
-reader.read(file, options = CsvReadIoOptions(stripBom = false)) { ... }
+reader.readFromFile(file, options = CsvReadIoOptions(stripBom = false)) { ... }
 ```
 
 ## 7. Removed features and replacements
@@ -287,8 +289,8 @@ reader.read(file, options = CsvReadIoOptions(stripBom = false)) { ... }
 | `csvReader { autoRenameDuplicateHeaders = true }` | Pass it to `withHeader(autoRenameDuplicateHeaders = true)` (see §10.3). |
 | `csvReader { skipMissMatchedRow = true }` | Set `excessFieldsRowBehaviour = IGNORE` and / or `insufficientFieldsRowBehaviour = IGNORE`. |
 | `csvWriter { nullCode = "NULL" }` | Map nulls explicitly: `rows.map { row -> row.map { it ?: "NULL" } }`. See §10.11. |
-| `csvReader().openAsync { ... }` / `csvWriter().openAsync { ... }` | Wrap the synchronous call in `withContext(Dispatchers.IO) { reader.read(file) { ... } }`. See §10.6. |
-| `csvReader().open { readNext() }` (line-by-line) | `reader.read(file) { it.first() }` or `it.iterator()`. See §10.5. |
+| `csvReader().openAsync { ... }` / `csvWriter().openAsync { ... }` | Wrap the synchronous call in `withContext(Dispatchers.IO) { reader.readFromFile(file) { ... } }`. See §10.6. |
+| `csvReader().open { readNext() }` (line-by-line) | `reader.readFromFile(file) { it.first() }` or `it.iterator()`. See §10.5. |
 | `csvWriter().openAndGetRawWriter(file)` (manual close) | Hold a `kotlinx.io.Sink` yourself and call `writer.write(rows, sink)`. See §10.15. |
 | `csvWriter().writeAll(rows, file, append = true)` | Open a JVM `FileOutputStream(file, append = true)` and pass it to `writer.write(rows, stream)`. See §10.16. JVM only. |
 | `@KotlinCsvExperimental` | Removed; the APIs it guarded are either stable or removed. |
@@ -300,15 +302,15 @@ reader.read(file, options = CsvReadIoOptions(stripBom = false)) { ... }
 
 - **`CsvDialect`** is the shared format value object. Two presets are
   built in: `CsvDialect.RFC4180` (the default) and `CsvDialect.TSV`.
-- **JS file I/O** (Node.js): `reader.read(path) { ... }` and
-  `writer.write(rows, path)` work on Kotlin/JS for the first time. See §9
-  for the streaming caveat.
+- **JS file I/O** (Node.js): `reader.readFromFile(path) { ... }` and
+  `writer.writeToFile(rows, path)` work on Kotlin/JS for the first time.
+  See §9 for the streaming caveat.
 - **`Sequence`-first core**: `reader.read(chars: Sequence<Char>)` returns
   a cold `Sequence<List<String>>`; `writer.write(rows: Sequence<List<String>>)`
   returns a cold `Sequence<Char>`. Combine with `take(n)` and friends to
   short-circuit.
-- **`String` path overload**: `reader.read("data.csv") { ... }` /
-  `writer.write(rows, "out.csv")` skip the explicit `Path(...)` import.
+- **`String` path overload**: `reader.readFromFile("data.csv") { ... }` /
+  `writer.writeToFile(rows, "out.csv")` skip the explicit `Path(...)` import.
 - **`withHeader()`** as an extension on `Sequence<List<String>>`. Returns
   `Sequence<LinkedHashMap<String, String>>` so header order is preserved.
 - **`escapeChar != quoteChar` writer support**: when the dialect's escape
@@ -325,7 +327,7 @@ reader.read(file, options = CsvReadIoOptions(stripBom = false)) { ... }
   sequence:
 
   ```kotlin
-  reader.read(file) { rows ->
+  reader.readFromFile(file) { rows ->
       try {
           rows.forEach { ... }
       } catch (e: CsvParseFormatException) { ... }
@@ -385,8 +387,9 @@ val rows = reader.readAll("a,b,c\nd,e,f")
 val rows = csvReader().readAll(File("data.csv"))
 
 // 2.0
-val rows = reader.read(File("data.csv")) { it.toList() }
-// or: reader.read("data.csv") { it.toList() }
+val rows = reader.readFromFile(File("data.csv")) { it.toList() }
+// or: reader.readFromFile("data.csv") { it.toList() }
+// or eager: reader.readAllFromFile(File("data.csv"))
 ```
 
 #### 10.3 Read with header
@@ -396,10 +399,10 @@ val rows = reader.read(File("data.csv")) { it.toList() }
 val rows = csvReader().readAllWithHeader(File("data.csv"))
 
 // 2.0
-val rows = reader.read(File("data.csv")) { it.withHeader().toList() }
+val rows = reader.readFromFile(File("data.csv")) { it.withHeader().toList() }
 
 // Auto-rename duplicate headers
-val deduped = reader.read(File("data.csv")) {
+val deduped = reader.readFromFile(File("data.csv")) {
     it.withHeader(autoRenameDuplicateHeaders = true).toList()
 }
 ```
@@ -413,7 +416,7 @@ csvReader().open(File("data.csv")) {
 }
 
 // 2.0 — short-circuit with take(n)
-reader.read(File("data.csv")) { rows ->
+reader.readFromFile(File("data.csv")) { rows ->
     rows.take(100).forEach { println(it) }
 }
 ```
@@ -430,13 +433,13 @@ csvReader().open(File("data.csv")) {
 }
 
 // 2.0
-reader.read(File("data.csv")) { rows ->
+reader.readFromFile(File("data.csv")) { rows ->
     val first: List<String>? = rows.firstOrNull()
     /* ... */
 }
 
 // 2.0 — manual iterator if you want to step through one at a time
-reader.read(File("data.csv")) { rows ->
+reader.readFromFile(File("data.csv")) { rows ->
     val iter = rows.iterator()
     while (iter.hasNext()) {
         val row = iter.next()
@@ -455,7 +458,7 @@ csvReader().openAsync(File("data.csv")) {
 
 // 2.0
 withContext(Dispatchers.IO) {
-    reader.read(File("data.csv")) { rows ->
+    reader.readFromFile(File("data.csv")) { rows ->
         rows.forEach { /* ... */ }
     }
 }
@@ -473,7 +476,7 @@ val rows = tsvReader.readAll(File("data.tsv"))
 
 // 2.0
 val tsvReader = csvReader { dialect = CsvDialect.TSV }
-val rows = tsvReader.read(File("data.tsv")) { it.toList() }
+val rows = tsvReader.readFromFile(File("data.tsv")) { it.toList() }
 ```
 
 #### 10.8 Read with a non-UTF-8 charset (JVM only)
@@ -484,7 +487,7 @@ val sjisReader = csvReader { charset = "Shift_JIS" }
 val rows = sjisReader.readAll(File("data.csv"))
 
 // 2.0 — charset moves to the I/O call
-val rows = reader.read(File("data.csv"), charset = "Shift_JIS") { it.toList() }
+val rows = reader.readFromFile(File("data.csv"), charset = "Shift_JIS") { it.toList() }
 ```
 
 ### Write
@@ -496,7 +499,7 @@ val rows = reader.read(File("data.csv"), charset = "Shift_JIS") { it.toList() }
 csvWriter().writeAll(rows, "out.csv")
 
 // 2.0
-writer.write(rows, "out.csv")
+writer.writeToFile(rows, "out.csv")
 ```
 
 #### 10.10 Write row by row
@@ -509,7 +512,7 @@ csvWriter().open("out.csv") {
 }
 
 // 2.0
-writer.write(
+writer.writeToFile(
     sequence {
         yield(listOf("a", "b", "c"))
         yield(listOf("d", "e", "f"))
@@ -527,7 +530,7 @@ writer.writeAll(listOf(listOf("a", null, "c")), "out.csv")
 
 // 2.0 — map the nulls yourself
 val rows: List<List<String?>> = listOf(listOf("a", null, "c"))
-writer.write(rows.map { row -> row.map { it ?: "NULL" } }, "out.csv")
+writer.writeToFile(rows.map { row -> row.map { it ?: "NULL" } }, "out.csv")
 ```
 
 #### 10.12 Write to a `String`
@@ -547,7 +550,7 @@ val csv: String = writer.writeAll(rows)
 csvWriter { prependBOM = true }.writeAll(rows, "out.csv")
 
 // 2.0
-writer.write(rows, "out.csv", options = CsvWriteIoOptions(prependBom = true))
+writer.writeToFile(rows, "out.csv", options = CsvWriteIoOptions(prependBom = true))
 ```
 
 #### 10.14 Always quote every field
@@ -624,7 +627,7 @@ time with `IllegalArgumentException`.
 // (No file I/O APIs were exposed.)
 
 // 2.0 — Node.js only, UTF-8
-val rows = reader.read("data.csv") { it.toList() }
+val rows = reader.readFromFile("data.csv") { it.toList() }
 ```
 
 The browser target has no file I/O. Pass already-loaded text to

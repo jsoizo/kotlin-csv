@@ -18,10 +18,10 @@ class CsvWriterJvmIoTest {
     private val sampleRowsEncoded = "a,b,c\r\nd,e,f\r\n"
 
     @Test
-    fun write_file_utf8_basic_writesEncodedBytes() {
+    fun writeToFile_file_utf8_basic_writesEncodedBytes() {
         val tmp = Files.createTempFile("kotlin-csv-jvm-writer", ".csv")
         try {
-            CsvWriter().write(sampleRows, tmp.toFile())
+            CsvWriter().writeToFile(sampleRows, tmp.toFile())
             Files.readString(tmp, Charsets.UTF_8) shouldBe sampleRowsEncoded
         } finally {
             tmp.deleteIfExists()
@@ -29,10 +29,10 @@ class CsvWriterJvmIoTest {
     }
 
     @Test
-    fun write_file_shiftJis_encodesJapaneseCharacters() {
+    fun writeToFile_file_shiftJis_encodesJapaneseCharacters() {
         val tmp = Files.createTempFile("kotlin-csv-jvm-writer", ".csv")
         try {
-            CsvWriter().write(listOf(listOf("あ", "い")), tmp.toFile(), charset = "Shift_JIS")
+            CsvWriter().writeToFile(listOf(listOf("あ", "い")), tmp.toFile(), charset = "Shift_JIS")
             val text = String(Files.readAllBytes(tmp), Charset.forName("Shift_JIS"))
             text shouldBe "あ,い\r\n"
         } finally {
@@ -41,10 +41,10 @@ class CsvWriterJvmIoTest {
     }
 
     @Test
-    fun write_file_sjisAlias_resolvesToShiftJis() {
+    fun writeToFile_file_sjisAlias_resolvesToShiftJis() {
         val tmp = Files.createTempFile("kotlin-csv-jvm-writer", ".csv")
         try {
-            CsvWriter().write(listOf(listOf("あ", "い")), tmp.toFile(), charset = "SJIS")
+            CsvWriter().writeToFile(listOf(listOf("あ", "い")), tmp.toFile(), charset = "SJIS")
             val text = String(Files.readAllBytes(tmp), Charset.forName("Shift_JIS"))
             text shouldBe "あ,い\r\n"
         } finally {

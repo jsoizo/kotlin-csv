@@ -22,8 +22,8 @@ private const val WRITE_CHUNK_SIZE = 8192
  * [Charset.forName].
  *
  * The `commonMain` overloads (`write(rows, sink: Sink, ...)` /
- * `write(rows, path: Path, ...)`) emit UTF-8 only; use this JVM overload when
- * a non-UTF-8 charset is required.
+ * `writeToFile(rows, path: Path, ...)`) emit UTF-8 only; use this JVM
+ * overload when a non-UTF-8 charset is required.
  *
  * @throws FileNotFoundException when [file] cannot be opened for writing
  *   (parent directory missing, permission denied, ...).
@@ -33,7 +33,7 @@ private const val WRITE_CHUNK_SIZE = 8192
  *   name.
  * @throws IOException when writing or flushing fails during encoding.
  */
-fun CsvWriter.write(
+fun CsvWriter.writeToFile(
     rows: Sequence<List<String>>,
     file: File,
     charset: String = "UTF-8",
@@ -100,14 +100,14 @@ fun CsvWriter.write(
 /**
  * Eager `List` overload that delegates to the [Sequence] file writer.
  *
- * @see write
+ * @see writeToFile
  */
-fun CsvWriter.write(
+fun CsvWriter.writeToFile(
     rows: List<List<String>>,
     file: File,
     charset: String = "UTF-8",
     options: CsvWriteIoOptions = CsvWriteIoOptions(),
-) = write(rows.asSequence(), file, charset, options)
+) = writeToFile(rows.asSequence(), file, charset, options)
 
 /**
  * Eager `List` overload that delegates to the [Sequence] stream writer.

@@ -64,7 +64,7 @@ fun CsvWriter.write(
  * @throws IOException when [path] cannot be opened (parent directory missing,
  *   permission denied, ...) or when writing / flushing fails during encoding.
  */
-fun CsvWriter.write(
+fun CsvWriter.writeToFile(
     rows: Sequence<List<String>>,
     path: Path,
     options: CsvWriteIoOptions = CsvWriteIoOptions(),
@@ -77,13 +77,13 @@ fun CsvWriter.write(
 /**
  * Eager `List` overload that delegates to the [Sequence] path writer.
  *
- * @see write
+ * @see writeToFile
  */
-fun CsvWriter.write(
+fun CsvWriter.writeToFile(
     rows: List<List<String>>,
     path: Path,
     options: CsvWriteIoOptions = CsvWriteIoOptions(),
-) = write(rows.asSequence(), path, options)
+) = writeToFile(rows.asSequence(), path, options)
 
 /**
  * Convenience overload that builds a [Path] from a string. Lets callers avoid
@@ -93,19 +93,19 @@ fun CsvWriter.write(
  * @throws IOException when [filePath] cannot be opened or when writing /
  *   flushing fails during encoding.
  */
-fun CsvWriter.write(
+fun CsvWriter.writeToFile(
     rows: Sequence<List<String>>,
     filePath: String,
     options: CsvWriteIoOptions = CsvWriteIoOptions(),
-) = write(rows, Path(filePath), options)
+) = writeToFile(rows, Path(filePath), options)
 
 /**
  * Eager `List` overload that delegates to the [Sequence] string-path writer.
  *
- * @see write
+ * @see writeToFile
  */
-fun CsvWriter.write(
+fun CsvWriter.writeToFile(
     rows: List<List<String>>,
     filePath: String,
     options: CsvWriteIoOptions = CsvWriteIoOptions(),
-) = write(rows.asSequence(), filePath, options)
+) = writeToFile(rows.asSequence(), filePath, options)

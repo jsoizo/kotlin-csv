@@ -23,8 +23,8 @@ private const val BOM_CHAR = '\uFEFF'
  * [Charset.forName].
  *
  * The `commonMain` overloads (`read(source: Source, ...)` /
- * `read(path: Path, ...)`) decode UTF-8 only; use this JVM overload when a
- * non-UTF-8 charset is required.
+ * `readFromFile(path: Path, ...)`) decode UTF-8 only; use this JVM overload
+ * when a non-UTF-8 charset is required.
  *
  * @return whatever [block] returns.
  * @throws FileNotFoundException at call time, when [file] does not exist or
@@ -40,7 +40,7 @@ private const val BOM_CHAR = '\uFEFF'
  * @throws CsvFieldNumDifferentException on terminal operation, when a row's
  *   field count violates the configured row-count behaviour.
  */
-fun <T> CsvReader.read(
+fun <T> CsvReader.readFromFile(
     file: File,
     charset: String = "UTF-8",
     options: CsvReadIoOptions = CsvReadIoOptions(),
@@ -52,7 +52,7 @@ fun <T> CsvReader.read(
 /**
  * Eagerly read all CSV rows from [file] using the given [charset].
  *
- * Equivalent to `read(file, charset, options) { it.toList() }`. The
+ * Equivalent to `readFromFile(file, charset, options) { it.toList() }`. The
  * underlying file stream is opened and closed inside this call, and the
  * returned list is safe to consume after the call returns. Java charset
  * aliases (e.g. `"SJIS"`) are resolved through [Charset.forName].
@@ -69,11 +69,11 @@ fun <T> CsvReader.read(
  * @throws CsvFieldNumDifferentException when a row's field count violates the
  *   configured row-count behaviour.
  */
-fun CsvReader.readAll(
+fun CsvReader.readAllFromFile(
     file: File,
     charset: String = "UTF-8",
     options: CsvReadIoOptions = CsvReadIoOptions(),
-): List<List<String>> = read(file, charset, options) { it.toList() }
+): List<List<String>> = readFromFile(file, charset, options) { it.toList() }
 
 /**
  * Read CSV rows from [stream] using the given [charset] and pass them to

@@ -73,21 +73,23 @@ val writer = csvWriter()
 val rows: List<List<String>> = reader.readAll("a,b,c\nd,e,f")
 
 // From a File — lambda owns the open resource and closes it on exit
-reader.read(File("data.csv")) { rows ->
+reader.readFromFile(File("data.csv")) { rows ->
     rows.forEach { println(it) }
 }
 
 // With a header row (returns LinkedHashMap to preserve column order)
-reader.read(File("data.csv")) { rows ->
+reader.readFromFile(File("data.csv")) { rows ->
     val records = rows.withHeader().toList()
     println(records.first()["id"])
 }
 ```
 
-`reader.read(...)` accepts `String` paths, `kotlinx.io.files.Path`,
-`kotlinx.io.Source`, and (on JVM) `java.io.File` / `java.io.InputStream`.
-The block receives a cold `Sequence<List<String>>`; `take(n)` and friends
-short-circuit cleanly without parsing the rest of the file.
+`reader.readFromFile(...)` accepts `String` paths, `kotlinx.io.files.Path`,
+and (on JVM) `java.io.File`. The block receives a cold
+`Sequence<List<String>>`; `take(n)` and friends short-circuit cleanly
+without parsing the rest of the file. For in-memory streams use
+`reader.read(source)` (commonMain `kotlinx.io.Source`) or
+`reader.read(stream)` (JVM `java.io.InputStream`).
 
 ## Write
 
@@ -101,13 +103,15 @@ val rows = listOf(
 val csv: String = writer.writeAll(rows)
 
 // To a File
-writer.write(rows, File("out.csv"))
+writer.writeToFile(rows, File("out.csv"))
 ```
 
-`writer.write(...)` accepts `String` paths, `kotlinx.io.files.Path`,
-`kotlinx.io.Sink`, and (on JVM) `java.io.File` / `java.io.OutputStream`.
-Both `Sequence<List<String>>` and `List<List<String>>` are accepted as the
-row source.
+`writer.writeToFile(...)` accepts `String` paths, `kotlinx.io.files.Path`,
+and (on JVM) `java.io.File`. For in-memory streams use
+`writer.write(rows, sink)` (commonMain `kotlinx.io.Sink`) or
+`writer.write(rows, stream)` (JVM `java.io.OutputStream`). Both
+`Sequence<List<String>>` and `List<List<String>>` are accepted as the row
+source.
 
 # Configuration
 
@@ -144,8 +148,8 @@ val customWriter = csvWriter {
 Charset is JVM-only and is passed as an argument on the I/O call:
 
 ```kotlin
-reader.read(File("data.csv"), charset = "Shift_JIS") { it.toList() }
-writer.write(rows, File("out.csv"), charset = "UTF-16LE")
+reader.readFromFile(File("data.csv"), charset = "Shift_JIS") { it.toList() }
+writer.writeToFile(rows, File("out.csv"), charset = "UTF-16LE")
 ```
 
 `commonMain` and JS overloads are UTF-8 only.
@@ -153,9 +157,9 @@ writer.write(rows, File("out.csv"), charset = "UTF-16LE")
 BOM stripping on read defaults to ON (matches Excel-produced files):
 
 ```kotlin
-reader.read(File("data.csv"), options = CsvReadIoOptions(stripBom = false))
+reader.readFromFile(File("data.csv"), options = CsvReadIoOptions(stripBom = false))
 
-writer.write(rows, File("out.csv"), options = CsvWriteIoOptions(prependBom = true))
+writer.writeToFile(rows, File("out.csv"), options = CsvWriteIoOptions(prependBom = true))
 ```
 
 # More
