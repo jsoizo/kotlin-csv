@@ -1,6 +1,5 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
-import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -11,7 +10,7 @@ plugins {
 }
 
 group = "com.jsoizo"
-version = "1.10.0"
+version = "2.0.0-SNAPSHOT"
 val projectName = "kotlin-csv"
 
 buildscript {
@@ -87,9 +86,11 @@ tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
 }
 
 mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    publishToMavenCentral()
 
-    if (project.hasProperty("signing.keyId")) {
+    val isSnapshot = version.toString().endsWith("-SNAPSHOT")
+    val hasSigningKey = project.hasProperty("signing.keyId") || project.hasProperty("signingInMemoryKey")
+    if (!isSnapshot && hasSigningKey) {
         signAllPublications()
     }
 
