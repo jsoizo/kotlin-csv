@@ -1,4 +1,4 @@
-package com.jsoizo.kotlincsv.parser
+package com.jsoizo.kotlincsv.reader.internal
 
 import com.jsoizo.kotlincsv.exceptions.CsvParseFormatException
 

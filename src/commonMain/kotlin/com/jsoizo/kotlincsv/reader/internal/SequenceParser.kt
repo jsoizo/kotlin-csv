@@ -1,7 +1,6 @@
 package com.jsoizo.kotlincsv.reader.internal
 
 import com.jsoizo.kotlincsv.CsvDialect
-import com.jsoizo.kotlincsv.parser.ParseStateMachine
 
 /** Lazily parse a `Sequence<Char>` into a `Sequence<List<String>>` of CSV rows. */
 internal fun parseRows(
