@@ -73,6 +73,48 @@ implementation 'com.jsoizo:kotlin-csv-js:1.10.0' // for Kotlin JS platform
 @file:DependsOn("com.jsoizo:kotlin-csv-js:1.10.0") // for Kotlin JS platform
 ```
 
+### SNAPSHOT builds
+
+Snapshots of the next development version are published to
+[Sonatype Central Portal Snapshots](https://central.sonatype.com/repository/maven-snapshots/) from the active development branch.
+SNAPSHOTs are unstable and may change at any time, but they let you try in-progress changes early.
+
+Add the snapshots repository to your build, then declare the dependency with the corresponding `-SNAPSHOT` version
+(see the active development branch's `build.gradle.kts` for the current value, for example `2.0.0-SNAPSHOT`).
+
+#### Gradle (Kotlin DSL)
+
+```kotlin
+// settings.gradle.kts
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven("https://central.sonatype.com/repository/maven-snapshots/") {
+            mavenContent { snapshotsOnly() }
+        }
+    }
+}
+```
+
+```kotlin
+// build.gradle.kts
+implementation("com.jsoizo:kotlin-csv-jvm:<VERSION>-SNAPSHOT") // for JVM platform
+implementation("com.jsoizo:kotlin-csv-js:<VERSION>-SNAPSHOT")  // for Kotlin JS platform
+```
+
+#### Maven
+
+```xml
+<repositories>
+  <repository>
+    <id>central-portal-snapshots</id>
+    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+    <releases><enabled>false</enabled></releases>
+    <snapshots><enabled>true</enabled></snapshots>
+  </repository>
+</repositories>
+```
+
 ## Examples
 
 ### CSV Read examples
