@@ -117,4 +117,92 @@ class SequenceParserTest {
     fun tsvDialect() {
         parse("a\tb\nc\td", CsvDialect.TSV) shouldBe listOf(listOf("a", "b"), listOf("c", "d"))
     }
+
+    @Test
+    fun crlf_atRowStart_inStartState() {
+        // START state immediately receives CR with LF as next, exercising the
+        // CRLF skip-second-byte branch before any field characters arrive.
+        parse("\r\nrow") shouldBe listOf(listOf(""), listOf("row"))
+    }
+
+    @Test
+    fun escapeChar_inFieldState_invalidEscape_throws() {
+        // Default dialect: escapeChar == quoteChar == '"'. Once a field starts
+        // unquoted, encountering a lone '"' is not a valid double-quote escape
+        // and must be reported via CsvParseFormatException.
+        shouldThrow<CsvParseFormatException> { parse("a\"b") }
+    }
+
+    @Test
+    fun delimiterState_thenU2028() {
+        parse(", b") shouldBe listOf(listOf("", ""), listOf("b"))
+    }
+
+    @Test
+    fun delimiterState_thenU2029() {
+        parse(", b") shouldBe listOf(listOf("", ""), listOf("b"))
+    }
+
+    @Test
+    fun delimiterState_thenU0085() {
+        parse(",b") shouldBe listOf(listOf("", ""), listOf("b"))
+    }
+
+    @Test
+    fun delimiterState_thenCr() {
+        parse(",\rb") shouldBe listOf(listOf("", ""), listOf("b"))
+    }
+
+    @Test
+    fun delimiterState_thenCrLf() {
+        parse(",\r\nb") shouldBe listOf(listOf("", ""), listOf("b"))
+    }
+
+    @Test
+    fun quoteEnd_thenU2028() {
+        parse("\"a\" b") shouldBe listOf(listOf("a"), listOf("b"))
+    }
+
+    @Test
+    fun quoteEnd_thenU2029() {
+        parse("\"a\" b") shouldBe listOf(listOf("a"), listOf("b"))
+    }
+
+    @Test
+    fun quoteEnd_thenU0085() {
+        parse("\"a\"b") shouldBe listOf(listOf("a"), listOf("b"))
+    }
+
+    @Test
+    fun quoteEnd_thenCr() {
+        parse("\"a\"\rb") shouldBe listOf(listOf("a"), listOf("b"))
+    }
+
+    @Test
+    fun quoteEnd_thenCrLf() {
+        parse("\"a\"\r\nb") shouldBe listOf(listOf("a"), listOf("b"))
+    }
+
+    @Test
+    fun escapeCharDifferent_invalidEscape_throws() {
+        // With escapeChar='\\' inside a quoted field, the escape must be
+        // followed by either another '\\' or the quote char. 'x' is neither.
+        val dialect = CsvDialect(escapeChar = '\\')
+        shouldThrow<CsvParseFormatException> { parse("\"a\\xb\"", dialect) }
+    }
+
+    @Test
+    fun escapeCharDifferent_escapeAtEof_throws() {
+        // Same dialect: '\\' immediately before EOF leaves the parser unable
+        // to determine the escaped char. Must surface as a parse error.
+        val dialect = CsvDialect(escapeChar = '\\')
+        shouldThrow<CsvParseFormatException> { parse("\"a\\", dialect) }
+    }
+
+    @Test
+    fun unterminatedQuote_atEof_yieldsNoFinalRow() {
+        // The state machine ends in QUOTED_FIELD, so getResult() returns null
+        // and the in-flight row is dropped rather than emitted partial.
+        parse("\"abc") shouldBe emptyList()
+    }
 }
