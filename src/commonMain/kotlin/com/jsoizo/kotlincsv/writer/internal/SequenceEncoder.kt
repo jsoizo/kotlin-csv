@@ -52,7 +52,7 @@ private fun encodeField(
     val shouldQuote = when (quoteMode) {
         WriteQuoteMode.ALL -> true
         WriteQuoteMode.CANONICAL ->
-            needsCanonicalQuote(field, quoteChar, dialect.delimiter, dialect.lineTerminator)
+            needsCanonicalQuote(field, quoteChar, escapeChar, dialect.delimiter, dialect.lineTerminator)
         WriteQuoteMode.NON_NUMERIC -> !isDecimalNumber(field)
     }
 
@@ -76,12 +76,15 @@ private fun encodeField(
 private fun needsCanonicalQuote(
     field: String,
     quoteChar: Char,
+    escapeChar: Char,
     delimiter: Char,
     lineTerminator: String,
 ): Boolean {
     val ltFirst = lineTerminator.firstOrNull()
+    val explicitEscape = escapeChar != quoteChar
     for (ch in field) {
         if (ch == quoteChar || ch == delimiter) return true
+        if (explicitEscape && ch == escapeChar) return true
         if (ch == '\n' || ch == '\r' || ch == '\u2028' || ch == '\u2029' || ch == '\u0085') return true
         if (ltFirst != null && ch == ltFirst) return true
     }

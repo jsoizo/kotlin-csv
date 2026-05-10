@@ -154,9 +154,7 @@ class CsvWriterTest {
     fun escape_explicit_escapeCharEscaped() {
         val dialect = CsvDialect(escapeChar = '\\')
         val writer = CsvWriter(CsvWriterConfig(dialect = dialect))
-        // 'a\b' contains no quote/delimiter/newline, so CANONICAL does not
-        // wrap it in quotes. The lone `\` is still doubled to `\\`.
-        writer.writeAll(listOf(listOf("a\\b"))) shouldBe "a\\\\b\r\n"
+        writer.writeAll(listOf(listOf("a\\b"))) shouldBe "\"a\\\\b\"\r\n"
     }
 
     @Test

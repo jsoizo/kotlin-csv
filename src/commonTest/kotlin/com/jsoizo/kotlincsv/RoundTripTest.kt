@@ -45,6 +45,14 @@ class RoundTripTest {
     }
 
     @Test
+    fun explicitEscape_roundTrip_escapeCharOnlyField() {
+        val dialect = CsvDialect(escapeChar = '\\')
+        val rows = listOf(listOf("plain", "a\\b"))
+        val text = csvWriter { this.dialect = dialect }.writeAll(rows)
+        csvReader { this.dialect = dialect }.readAll(text) shouldBe rows
+    }
+
+    @Test
     fun roundTrip_unicodeLineSeparators() {
         val rows = listOf(listOf("\u2028", "\u2029", "\u0085"))
         val text = csvWriter().writeAll(rows)
