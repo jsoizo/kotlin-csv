@@ -6,8 +6,6 @@ import io.kotest.property.Arb
 import io.kotest.property.RandomSource
 import io.kotest.property.arbitrary.bind
 import io.kotest.property.arbitrary.boolean
-import io.kotest.property.arbitrary.choice
-import io.kotest.property.arbitrary.filter
 import io.kotest.property.arbitrary.flatMap
 import io.kotest.property.arbitrary.int
 import io.kotest.property.arbitrary.list
@@ -25,32 +23,8 @@ class RoundTripPropertyTest {
         val rows: List<List<String>>,
     )
 
-    private val targetedChar: Arb<Char> = Arb.of(
-        ',', '\t', '"', '\\',
-        '\n', '\r', ' ', ' ', '',
-        ' ', 'a', '0', '.',
-    )
-
-    private val nonSurrogateChar: Arb<Char> =
-        Arb.int(0..0xFFFF)
-            .filter { it !in 0xD800..0xDFFF }
-            .map { it.toChar() }
-
-    // weighted ~7:3 targeted vs full unicode
-    private val fieldChar: Arb<Char> = Arb.choice(
-        targetedChar, targetedChar, targetedChar, targetedChar,
-        targetedChar, targetedChar, targetedChar,
-        nonSurrogateChar, nonSurrogateChar, nonSurrogateChar,
-    )
-
     private val fieldArb: Arb<String> =
         Arb.list(fieldChar, 0..16).map { it.joinToString("") }
-
-    private val dialectArb: Arb<CsvDialect> = Arb.of(
-        CsvDialect.RFC4180,
-        CsvDialect.TSV,
-        CsvDialect(escapeChar = '\\'),
-    )
 
     private val quoteModeArb: Arb<WriteQuoteMode> = Arb.of(
         WriteQuoteMode.CANONICAL,
