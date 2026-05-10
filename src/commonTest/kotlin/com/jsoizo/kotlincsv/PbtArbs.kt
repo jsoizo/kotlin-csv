@@ -18,11 +18,23 @@ internal val nonSurrogateChar: Arb<Char> =
         .filter { it !in 0xD800..0xDFFF }
         .map { it.toChar() }
 
+internal val surrogateChar: Arb<Char> =
+    Arb.int(0xD800..0xDFFF).map { it.toChar() }
+
 // weighted ~7:3 targeted vs full unicode
 internal val fieldChar: Arb<Char> = Arb.choice(
     targetedChar, targetedChar, targetedChar, targetedChar,
     targetedChar, targetedChar, targetedChar,
     nonSurrogateChar, nonSurrogateChar, nonSurrogateChar,
+)
+
+// fieldChar with occasional lone surrogates mixed in (~1/10 surrogate).
+// Use only in tests that must accept arbitrary `String`s, e.g. parser
+// crash-freedom; round-trip writes assume well-formed Unicode.
+internal val anyChar: Arb<Char> = Arb.choice(
+    fieldChar, fieldChar, fieldChar, fieldChar, fieldChar,
+    fieldChar, fieldChar, fieldChar, fieldChar,
+    surrogateChar,
 )
 
 internal val dialectArb: Arb<CsvDialect> = Arb.of(

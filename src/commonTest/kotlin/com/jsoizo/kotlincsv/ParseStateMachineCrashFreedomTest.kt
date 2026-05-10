@@ -14,7 +14,7 @@ class ParseStateMachineCrashFreedomTest {
     private data class TestCase(val dialect: CsvDialect, val text: String)
 
     private val textArb: Arb<String> =
-        Arb.list(fieldChar, 0..64).map { it.joinToString("") }
+        Arb.list(anyChar, 0..64).map { it.joinToString("") }
 
     private val caseArb: Arb<TestCase> = Arb.bind(dialectArb, textArb, ::TestCase)
 
