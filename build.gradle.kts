@@ -50,6 +50,7 @@ kotlin {
                 implementation(kotlin("test-annotations-common"))
                 implementation(libs.kotest.assertions.core)
                 implementation(libs.kotest.property)
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
 
