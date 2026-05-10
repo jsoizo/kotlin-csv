@@ -1,9 +1,12 @@
 package com.jsoizo.kotlincsv
 
+import com.jsoizo.kotlincsv.writer.WriteQuoteMode
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.choice
 import io.kotest.property.arbitrary.filter
+import io.kotest.property.arbitrary.flatMap
 import io.kotest.property.arbitrary.int
+import io.kotest.property.arbitrary.list
 import io.kotest.property.arbitrary.map
 import io.kotest.property.arbitrary.of
 
@@ -42,3 +45,20 @@ internal val dialectArb: Arb<CsvDialect> = Arb.of(
     CsvDialect.TSV,
     CsvDialect(escapeChar = '\\'),
 )
+
+internal val quoteModeArb: Arb<WriteQuoteMode> = Arb.of(
+    WriteQuoteMode.CANONICAL,
+    WriteQuoteMode.ALL,
+    WriteQuoteMode.NON_NUMERIC,
+)
+
+internal val fieldArb: Arb<String> =
+    Arb.list(fieldChar, 0..16).map { it.joinToString("") }
+
+internal val rowsArb: Arb<List<List<String>>> =
+    Arb.int(1..5).flatMap { columns ->
+        Arb.int(1..6).flatMap { rowCount ->
+            val rowArb = Arb.list(fieldArb, columns..columns)
+            Arb.list(rowArb, rowCount..rowCount)
+        }
+    }

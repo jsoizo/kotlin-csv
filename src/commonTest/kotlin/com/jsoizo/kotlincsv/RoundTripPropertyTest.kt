@@ -6,11 +6,6 @@ import io.kotest.property.Arb
 import io.kotest.property.RandomSource
 import io.kotest.property.arbitrary.bind
 import io.kotest.property.arbitrary.boolean
-import io.kotest.property.arbitrary.flatMap
-import io.kotest.property.arbitrary.int
-import io.kotest.property.arbitrary.list
-import io.kotest.property.arbitrary.map
-import io.kotest.property.arbitrary.of
 import io.kotest.property.arbitrary.take
 import kotlin.test.Test
 
@@ -22,23 +17,6 @@ class RoundTripPropertyTest {
         val outputLastLineTerminator: Boolean,
         val rows: List<List<String>>,
     )
-
-    private val fieldArb: Arb<String> =
-        Arb.list(fieldChar, 0..16).map { it.joinToString("") }
-
-    private val quoteModeArb: Arb<WriteQuoteMode> = Arb.of(
-        WriteQuoteMode.CANONICAL,
-        WriteQuoteMode.ALL,
-        WriteQuoteMode.NON_NUMERIC,
-    )
-
-    private val rowsArb: Arb<List<List<String>>> =
-        Arb.int(1..5).flatMap { columns ->
-            Arb.int(1..6).flatMap { rowCount ->
-                val rowArb = Arb.list(fieldArb, columns..columns)
-                Arb.list(rowArb, rowCount..rowCount)
-            }
-        }
 
     private val caseArb: Arb<TestCase> = Arb.bind(
         dialectArb,
