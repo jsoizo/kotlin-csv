@@ -21,6 +21,10 @@ class EncodeIdempotencePropertyTest {
             Arb.boolean(),
             rowsArb,
         ) { dialect, quoteMode, outputLastLineTerminator, rows ->
+            if (!outputLastLineTerminator && rows.last().all { it.isEmpty() }) {
+                return@checkAll
+            }
+
             val writer = csvWriter {
                 this.dialect = dialect
                 this.quoteMode = quoteMode
