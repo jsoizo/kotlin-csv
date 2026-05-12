@@ -62,3 +62,19 @@ internal val rowsArb: Arb<List<List<String>>> =
             Arb.list(rowArb, rowCount..rowCount)
         }
     }
+
+internal val variableWidthRowsArb: Arb<List<List<String>>> =
+    Arb.int(1..5).flatMap { firstRowColumns ->
+        Arb.int(1..8).flatMap { rowCount ->
+            val firstRowArb = Arb.list(fieldArb, firstRowColumns..firstRowColumns)
+            val laterRowsArb = Arb.list(
+                Arb.int(1..8).flatMap { columns ->
+                    Arb.list(fieldArb, columns..columns)
+                },
+                (rowCount - 1)..(rowCount - 1),
+            )
+            firstRowArb.flatMap { firstRow ->
+                laterRowsArb.map { laterRows -> listOf(firstRow) + laterRows }
+            }
+        }
+    }
