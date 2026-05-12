@@ -31,16 +31,26 @@ kotlin {
     }
     js {
         browser {
+            testTask {
+                enabled = false
+            }
         }
         nodejs {
         }
     }
     sourceSets {
-        commonMain {}
+        commonMain {
+            dependencies {
+                implementation(libs.kotlinx.io.core)
+            }
+        }
         commonTest {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
+                implementation(libs.kotest.assertions.core)
+                implementation(libs.kotest.property)
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
 
@@ -52,6 +62,7 @@ kotlin {
         jvm().compilations["test"].defaultSourceSet {
             dependencies {
                 implementation(libs.bundles.kotest)
+                implementation(libs.kotlin.test.junit5)
             }
         }
         js().compilations["main"].defaultSourceSet {
@@ -68,6 +79,12 @@ kotlin {
 
 tasks.withType<Test>() {
     useJUnitPlatform()
+}
+
+tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+    dokkaSourceSets.named("commonMain") {
+        includes.from("Module.md")
+    }
 }
 
 mavenPublishing {
