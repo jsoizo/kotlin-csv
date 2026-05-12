@@ -1,6 +1,8 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
+import com.vanniktech.maven.publish.SourcesJar
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -13,17 +15,9 @@ group = "com.jsoizo"
 version = "2.0.0-SNAPSHOT"
 val projectName = "kotlin-csv"
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
 kotlin {
+    jvmToolchain(21)
+
     jvm {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_1_8)
@@ -46,42 +40,41 @@ kotlin {
         }
         commonTest {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(kotlin("test"))
                 implementation(libs.kotest.assertions.core)
                 implementation(libs.kotest.property)
                 implementation(libs.kotlinx.coroutines.test)
             }
         }
 
-        jvm().compilations["main"].defaultSourceSet {
+        jvmMain {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
             }
         }
-        jvm().compilations["test"].defaultSourceSet {
+        jvmTest {
             dependencies {
                 implementation(libs.bundles.kotest)
                 implementation(libs.kotlin.test.junit5)
             }
         }
-        js().compilations["main"].defaultSourceSet {
-            dependencies {
-            }
-        }
-        js().compilations["test"].defaultSourceSet {
-            dependencies {
-                implementation(kotlin("test-js"))
-            }
-        }
     }
 }
 
-tasks.withType<Test>() {
+tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
 
-tasks.withType<org.jetbrains.dokka.gradle.DokkaTask>().configureEach {
+// Kotest 6.x JVM artifacts are built with Java 11 bytecode, while the library
+// artifact itself still targets Java 8 for consumer compatibility.
+tasks.named<KotlinJvmCompile>("compileTestKotlinJvm") {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
+    }
+}
+
+dokka {
+    moduleName.set(projectName)
     dokkaSourceSets.named("commonMain") {
         includes.from("Module.md")
     }
@@ -100,9 +93,8 @@ mavenPublishing {
 
     configure(
         KotlinMultiplatform(
-            javadocJar = JavadocJar.Dokka("dokkaHtml"),
-            sourcesJar = true,
-            androidVariantsToPublish = listOf("debug", "release"),
+            javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationHtml"),
+            sourcesJar = SourcesJar.Sources(),
         )
     )
 
