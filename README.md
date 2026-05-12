@@ -1,7 +1,7 @@
 <h1 align="center">kotlin-csv</h1>
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.10.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-2.0.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/jsoizo/kotlin-csv/blob/master/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
@@ -20,15 +20,15 @@ Pure Kotlin Multiplatform CSV reader and writer.
 ### Gradle (Kotlin DSL)
 
 ```kotlin
-implementation("com.jsoizo:kotlin-csv-jvm:1.10.0") // JVM
-implementation("com.jsoizo:kotlin-csv-js:1.10.0")  // Kotlin/JS (Node.js)
+implementation("com.jsoizo:kotlin-csv-jvm:2.0.0") // JVM
+implementation("com.jsoizo:kotlin-csv-js:2.0.0")  // Kotlin/JS (Node.js)
 ```
 
 ### Gradle (Groovy DSL)
 
 ```groovy
-implementation 'com.jsoizo:kotlin-csv-jvm:1.10.0' // JVM
-implementation 'com.jsoizo:kotlin-csv-js:1.10.0'  // Kotlin/JS (Node.js)
+implementation 'com.jsoizo:kotlin-csv-jvm:2.0.0' // JVM
+implementation 'com.jsoizo:kotlin-csv-js:2.0.0'  // Kotlin/JS (Node.js)
 ```
 
 ### Maven
@@ -37,20 +37,20 @@ implementation 'com.jsoizo:kotlin-csv-js:1.10.0'  // Kotlin/JS (Node.js)
 <dependency>
   <groupId>com.jsoizo</groupId>
   <artifactId>kotlin-csv-jvm</artifactId>
-  <version>1.10.0</version>
+  <version>2.0.0</version>
 </dependency>
 <dependency>
   <groupId>com.jsoizo</groupId>
   <artifactId>kotlin-csv-js</artifactId>
-  <version>1.10.0</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
 ### [kscript](https://github.com/holgerbrandl/kscript)
 
 ```kotlin
-@file:DependsOn("com.jsoizo:kotlin-csv-jvm:1.10.0")
-@file:DependsOn("com.jsoizo:kotlin-csv-js:1.10.0")
+@file:DependsOn("com.jsoizo:kotlin-csv-jvm:2.0.0")
+@file:DependsOn("com.jsoizo:kotlin-csv-js:2.0.0")
 ```
 
 ### SNAPSHOT builds
