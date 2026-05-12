@@ -167,7 +167,7 @@ slices in.
 ## Reader and lineTerminator
 
 The reader auto-detects line terminators (LF, CRLF, U+2028, U+2029, U+0085)
-regardless of [CsvDialect.lineTerminator]. The dialect's `lineTerminator`
+regardless of [CsvDialect.lineTerminator][com.jsoizo.kotlincsv.CsvDialect.lineTerminator]. The dialect's `lineTerminator`
 field is consulted only by the writer. This keeps the reader permissive
 across files produced by different platforms while still letting writer
 output respect the dialect — `CsvDialect.RFC4180` writes CRLF and
@@ -200,7 +200,7 @@ fields in `quoteChar`:
 ## Escape character output rules
 
 The writer's escape behaviour follows the configured
-[CsvDialect.escapeChar]:
+[CsvDialect.escapeChar][com.jsoizo.kotlincsv.CsvDialect.escapeChar]:
 
 - When `escapeChar == quoteChar` (the default, both `"`), the encoder uses
   the RFC 4180 doubling style: a literal quote inside a quoted field is
