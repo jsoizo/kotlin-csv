@@ -29,7 +29,8 @@ A reference for upgrading from kotlin-csv 1.x to 2.0.
   `CSVFieldNumDifferentException` -> `CsvFieldNumDifferentException`.
   Row indices on exceptions are now `Long`.
 - **kotlinx-io**: added as a transitive dependency. JS gets file I/O for
-  the first time (Node.js only).
+  the first time (Node.js only), and the same common I/O API is available
+  on Kotlin/Native.
 - **No suspend API**: `openAsync` / `writeAllAsync` are removed. Wrap
   `readFromFile` / `writeToFile` (or `read` / `write` for in-memory streams)
   in `withContext(Dispatchers.IO) { ... }` if needed.
@@ -41,15 +42,22 @@ A reference for upgrading from kotlin-csv 1.x to 2.0.
 ### Gradle (Kotlin DSL)
 
 ```kotlin
-implementation("com.jsoizo:kotlin-csv-jvm:2.0.0") // JVM
-implementation("com.jsoizo:kotlin-csv-js:2.0.0")  // Kotlin/JS
+implementation("com.jsoizo:kotlin-csv:2.0.0")
 ```
+
+The multiplatform artifact resolves JVM, JS, and supported Kotlin/Native
+variants from Kotlin Multiplatform projects. Published Native targets are
+`macosArm64`, `iosArm64`, `iosSimulatorArm64`, `linuxX64`, `linuxArm64`,
+and `mingwX64`.
+
+Single-platform Gradle projects can also depend on the platform artifact
+directly, for example `kotlin-csv-jvm`, `kotlin-csv-js`,
+`kotlin-csv-macosarm64`, or `kotlin-csv-linuxx64`.
 
 ### Gradle (Groovy DSL)
 
 ```groovy
-implementation 'com.jsoizo:kotlin-csv-jvm:2.0.0'
-implementation 'com.jsoizo:kotlin-csv-js:2.0.0'
+implementation 'com.jsoizo:kotlin-csv:2.0.0'
 ```
 
 ### Maven
@@ -302,8 +310,9 @@ reader.readFromFile(file, options = CsvReadIoOptions(stripBom = false)) { ... }
 
 - **`CsvDialect`** is the shared format value object. Two presets are
   built in: `CsvDialect.RFC4180` (the default) and `CsvDialect.TSV`.
-- **JS file I/O** (Node.js): `reader.readFromFile(path) { ... }` and
-  `writer.writeToFile(rows, path)` work on Kotlin/JS for the first time.
+- **JS and Native file I/O**: `reader.readFromFile(path) { ... }` and
+  `writer.writeToFile(rows, path)` work from common code through
+  `kotlinx.io.files.Path`. JS file I/O is Node.js only.
   See §9 for the streaming caveat.
 - **`Sequence`-first core**: `reader.read(chars: Sequence<Char>)` returns
   a cold `Sequence<List<String>>`; `writer.write(rows: Sequence<List<String>>)`

@@ -1,4 +1,4 @@
-<h1 align="center">kotlin-csv</h1>
+# kotlin-csv
 
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-2.0.0-blue.svg?cacheSeconds=2592000" />
@@ -15,20 +15,26 @@
 
 Pure Kotlin Multiplatform CSV reader and writer.
 
-# Setup
+## Setup
 
 ### Gradle (Kotlin DSL)
 
 ```kotlin
-implementation("com.jsoizo:kotlin-csv-jvm:2.0.0") // JVM
-implementation("com.jsoizo:kotlin-csv-js:2.0.0")  // Kotlin/JS (Node.js)
+implementation("com.jsoizo:kotlin-csv:2.0.0")
 ```
+
+The multiplatform artifact resolves JVM, JS, and supported Kotlin/Native variants
+from Kotlin Multiplatform projects. Published Native targets are
+`macosArm64`, `iosArm64`, `iosSimulatorArm64`, `linuxX64`, `linuxArm64`, and `mingwX64`.
+
+Single-platform Gradle projects can also depend on the platform artifact
+directly, for example `kotlin-csv-jvm`, `kotlin-csv-js`,
+`kotlin-csv-macosarm64`, or `kotlin-csv-linuxx64`.
 
 ### Gradle (Groovy DSL)
 
 ```groovy
-implementation 'com.jsoizo:kotlin-csv-jvm:2.0.0' // JVM
-implementation 'com.jsoizo:kotlin-csv-js:2.0.0'  // Kotlin/JS (Node.js)
+implementation 'com.jsoizo:kotlin-csv:2.0.0'
 ```
 
 ### Maven
@@ -44,13 +50,6 @@ implementation 'com.jsoizo:kotlin-csv-js:2.0.0'  // Kotlin/JS (Node.js)
   <artifactId>kotlin-csv-js</artifactId>
   <version>2.0.0</version>
 </dependency>
-```
-
-### [kscript](https://github.com/holgerbrandl/kscript)
-
-```kotlin
-@file:DependsOn("com.jsoizo:kotlin-csv-jvm:2.0.0")
-@file:DependsOn("com.jsoizo:kotlin-csv-js:2.0.0")
 ```
 
 ### SNAPSHOT builds
@@ -78,24 +77,10 @@ dependencyResolutionManagement {
 
 ```kotlin
 // build.gradle.kts
-implementation("com.jsoizo:kotlin-csv-jvm:<VERSION>-SNAPSHOT") // for JVM platform
-implementation("com.jsoizo:kotlin-csv-js:<VERSION>-SNAPSHOT")  // for Kotlin JS platform
+implementation("com.jsoizo:kotlin-csv:<VERSION>-SNAPSHOT")
 ```
 
-#### Maven
-
-```xml
-<repositories>
-  <repository>
-    <id>central-portal-snapshots</id>
-    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-    <releases><enabled>false</enabled></releases>
-    <snapshots><enabled>true</enabled></snapshots>
-  </repository>
-</repositories>
-```
-
-# Quick start
+## Quick start
 
 The DSL builders return reusable, stateless instances; create them once and
 share them across calls.
@@ -108,7 +93,7 @@ val reader = csvReader()
 val writer = csvWriter()
 ```
 
-## Read
+### Read
 
 ```kotlin
 // From a String — eager
@@ -133,7 +118,7 @@ without parsing the rest of the file. For in-memory streams use
 `reader.read(source)` (commonMain `kotlinx.io.Source`) or
 `reader.read(stream)` (JVM `java.io.InputStream`).
 
-## Write
+### Write
 
 ```kotlin
 val rows = listOf(
@@ -155,7 +140,7 @@ and (on JVM) `java.io.File`. For in-memory streams use
 `Sequence<List<String>>` and `List<List<String>>` are accepted as the row
 source.
 
-# Configuration
+## Configuration
 
 Reader and writer share a `CsvDialect` value object that holds the four
 characters defining the CSV format itself: `delimiter`, `quoteChar`,
@@ -204,7 +189,7 @@ reader.readFromFile(File("data.csv"), options = CsvReadIoOptions(stripBom = fals
 writer.writeToFile(rows, File("out.csv"), options = CsvWriteIoOptions(prependBom = true))
 ```
 
-# More
+## More
 
 - **Migration from kotlin-csv 1.x**:
   see [V2_MIGRATION_GUIDE.md](./V2_MIGRATION_GUIDE.md).
@@ -212,14 +197,14 @@ writer.writeToFile(rows, File("out.csv"), options = CsvWriteIoOptions(prependBom
   HTML to `build/dokka/html/`.
 - **Change Logs**: see [GitHub releases](https://github.com/jsoizo/kotlin-csv/releases).
 
-# Miscellaneous
+## Miscellaneous
 
-## 🤝 Contributing
+### 🤝 Contributing
 
 Contributions, [issues](https://github.com/jsoizo/kotlin-csv/issues) and feature requests are welcome!
 If you have questions, ask away in [Kotlin Slack's](https://kotlinlang.slack.com) `kotlin-csv` room.
 
-## 💻 Development
+### 💻 Development
 
 ```sh
 git clone git@github.com:jsoizo/kotlin-csv.git
@@ -227,18 +212,11 @@ cd kotlin-csv
 ./gradlew check
 ```
 
-## Show your support
-
-Give a ⭐️ if this project helped you!
-
-## 📝 License
+### 📝 License
 
 Copyright © 2024 [jsoizo](https://github.com/jsoizo).
 This project is licensed under [Apache 2.0](LICENSE).
 
-***
-_This project is inspired ❤️ by [scala-csv](https://github.com/tototoshi/scala-csv)_
-
-## Acknowledgments
+### Acknowledgments
 
 This project was originally created by [@doyaaaaaken](https://github.com/doyaaaaaken). The initial work and contributions are greatly appreciated.
