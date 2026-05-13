@@ -1,6 +1,7 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.SourcesJar
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
@@ -40,6 +41,11 @@ kotlin {
     linuxArm64()
     mingwX64()
 
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmWasi {
+        nodejs()
+    }
+
     sourceSets {
         commonMain {
             dependencies {
@@ -71,6 +77,12 @@ kotlin {
 
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
+}
+
+// Kotest 6.x does not publish wasmWasi artifacts yet, so commonTest cannot be
+// compiled for this target. Validate main compilation only until upstream support lands.
+listOf("compileTestKotlinWasmWasi", "wasmWasiTest", "wasmWasiNodeTest").forEach { taskName ->
+    tasks.matching { it.name == taskName }.configureEach { enabled = false }
 }
 
 // Kotest 6.x JVM artifacts are built with Java 11 bytecode, while the library
