@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package com.github.doyaaaaaken.kotlincsv.util.logger
 
 /**

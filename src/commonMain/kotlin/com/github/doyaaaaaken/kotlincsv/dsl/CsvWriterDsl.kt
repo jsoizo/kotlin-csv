@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package com.github.doyaaaaaken.kotlincsv.dsl
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
@@ -28,6 +29,15 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
  *
  * @author doyaaaaaken
  */
+@Deprecated(
+    message = "Migrate to com.jsoizo.kotlincsv.csvWriter. " +
+            "The DSL block receiver changes from CsvWriterContext to CsvWriterConfigBuilder, " +
+            "and properties such as `delimiter` and `quoteChar` move under `dialect = CsvDialect(...)`; " +
+            "`quote { mode = ... }` moves to top-level `quoteMode = WriteQuoteMode.X`. " +
+            "Rewrite the block body manually — IDE Quick Fix cannot translate it.",
+    level = DeprecationLevel.WARNING
+)
+@Suppress("DEPRECATION")
 fun csvWriter(init: CsvWriterContext.() -> Unit = {}): CsvWriter {
     val context = CsvWriterContext().apply(init)
     return CsvWriter(context)

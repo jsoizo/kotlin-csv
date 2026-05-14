@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package com.github.doyaaaaaken.kotlincsv.dsl.context
 
 import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
@@ -7,6 +8,11 @@ import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
  *
  * @author doyaaaaaken
  */
+@Deprecated(
+    message = "Replaced in v2.0: quote character moves to com.jsoizo.kotlincsv.CsvDialect.quoteChar, " +
+            "and mode moves to com.jsoizo.kotlincsv.writer.CsvWriterConfig.quoteMode.",
+    level = DeprecationLevel.WARNING
+)
 @CsvDslMarker
 class CsvWriteQuoteContext {
     /**
@@ -39,6 +45,10 @@ class CsvWriteQuoteContext {
  *  ALL:
  *      Quote all fields.
  */
+@Deprecated(
+    message = "Replaced by com.jsoizo.kotlincsv.writer.WriteQuoteMode in v2.0.",
+    level = DeprecationLevel.WARNING
+)
 enum class WriteQuoteMode {
     CANONICAL,
     ALL,

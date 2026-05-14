@@ -3,11 +3,20 @@ package com.github.doyaaaaaken.kotlincsv.util
 /**
  * General purpose Exception
  */
+@Deprecated(
+    message = "Replaced by com.jsoizo.kotlincsv.exceptions.MalformedCsvException in v2.0.",
+    level = DeprecationLevel.WARNING
+)
 open class MalformedCSVException(message: String) : RuntimeException(message)
 
 /**
  * Exception when parsing each csv row
  */
+@Deprecated(
+    message = "Replaced by com.jsoizo.kotlincsv.exceptions.CsvParseFormatException in v2.0.",
+    level = DeprecationLevel.WARNING
+)
+@Suppress("DEPRECATION")
 class CSVParseFormatException(
     val rowNum: Long,
     val colIndex: Long,
@@ -28,11 +37,21 @@ class CSVParseFormatException(
  * f,g,h
  * </pre>
  */
+@Deprecated(
+    message = "Replaced by com.jsoizo.kotlincsv.exceptions.CsvFieldNumDifferentException in v2.0.",
+    level = DeprecationLevel.WARNING
+)
+@Suppress("DEPRECATION")
 class CSVFieldNumDifferentException(
     val fieldNum: Int,
     val fieldNumOnFailedRow: Int,
     val csvRowNum: Int
 ) : MalformedCSVException("Fields num seems to be $fieldNum on each row, but on ${csvRowNum}th csv row, fields num is $fieldNumOnFailedRow.")
 
+@Deprecated(
+    message = "v2.0 removes header auto-rename; this exception type no longer has a counterpart.",
+    level = DeprecationLevel.WARNING
+)
+@Suppress("DEPRECATION")
 class CSVAutoRenameFailedException :
     MalformedCSVException("auto renaming by 'autoRenameDuplicateHeaders' option is failed.")

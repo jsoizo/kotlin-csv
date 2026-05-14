@@ -1,8 +1,6 @@
-@file:Suppress("DEPRECATION")
-package com.github.doyaaaaaken.kotlincsv.parser
+package com.jsoizo.kotlincsv.reader.internal
 
-import com.github.doyaaaaaken.kotlincsv.util.CSVParseFormatException
-import com.github.doyaaaaaken.kotlincsv.util.Const
+import com.jsoizo.kotlincsv.exceptions.CsvParseFormatException
 
 /**
  * @author doyaaaaaaken
@@ -31,7 +29,6 @@ internal class ParseStateMachine(
         when (state) {
             ParseState.START -> {
                 when (ch) {
-                    Const.BOM -> Unit
                     quoteChar -> state = ParseState.QUOTE_START
                     delimiter -> {
                         flushField()
@@ -56,7 +53,7 @@ internal class ParseStateMachine(
             ParseState.FIELD -> {
                 when (ch) {
                     escapeChar -> {
-                        if (nextCh != escapeChar) throw CSVParseFormatException(
+                        if (nextCh != escapeChar) throw CsvParseFormatException(
                             rowNum,
                             pos,
                             ch,
@@ -111,8 +108,8 @@ internal class ParseStateMachine(
             }
             ParseState.QUOTE_START, ParseState.QUOTED_FIELD -> {
                 if (ch == escapeChar && escapeChar != quoteChar) {
-                    if (nextCh == null) throw CSVParseFormatException(rowNum, pos, ch, "end of quote doesn't exist")
-                    if (nextCh != escapeChar && nextCh != quoteChar) throw CSVParseFormatException(
+                    if (nextCh == null) throw CsvParseFormatException(rowNum, pos, ch, "end of quote doesn't exist")
+                    if (nextCh != escapeChar && nextCh != quoteChar) throw CsvParseFormatException(
                         rowNum,
                         pos,
                         ch,
@@ -150,7 +147,7 @@ internal class ParseStateMachine(
                         flushField()
                         state = ParseState.END
                     }
-                    else -> throw CSVParseFormatException(
+                    else -> throw CsvParseFormatException(
                         rowNum,
                         pos,
                         ch,
@@ -159,10 +156,16 @@ internal class ParseStateMachine(
                 }
                 pos += 1
             }
-            ParseState.END -> throw CSVParseFormatException(rowNum, pos, ch, "unexpected error")
+            ParseState.END -> throw CsvParseFormatException(rowNum, pos, ch, "unexpected error")
         }
         return pos - prevPos
     }
+
+    /**
+     * `true` after a row terminator has been consumed. Drivers must read the
+     * row via [getResult] and create a fresh instance before the next row.
+     */
+    internal fun isLineComplete(): Boolean = state == ParseState.END
 
     /**
      * @return return parsed CSV Fields.

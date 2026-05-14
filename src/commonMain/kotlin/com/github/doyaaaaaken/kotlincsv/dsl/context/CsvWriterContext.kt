@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package com.github.doyaaaaaken.kotlincsv.dsl.context
 
 import com.github.doyaaaaaken.kotlincsv.util.Const
@@ -8,6 +9,10 @@ import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
  *
  * @author doyaaaaaken
  */
+@Deprecated(
+    message = "Replaced by com.jsoizo.kotlincsv.writer.CsvWriterConfig in v2.0.",
+    level = DeprecationLevel.WARNING
+)
 @CsvDslMarker
 interface ICsvWriterContext {
     /**
@@ -74,6 +79,11 @@ interface ICsvWriterContext {
  *
  * @author doyaaaaaken
  */
+@Deprecated(
+    message = "Replaced by com.jsoizo.kotlincsv.writer.CsvWriterConfigBuilder in v2.0.",
+    level = DeprecationLevel.WARNING
+)
+@Suppress("DEPRECATION")
 @CsvDslMarker
 class CsvWriterContext : ICsvWriterContext {
     override var charset = Const.defaultCharset

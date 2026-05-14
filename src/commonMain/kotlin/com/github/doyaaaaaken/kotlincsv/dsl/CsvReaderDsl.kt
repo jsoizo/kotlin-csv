@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package com.github.doyaaaaaken.kotlincsv.dsl
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvReader
@@ -29,7 +30,17 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
  *
  * @author doyaaaaaken
  */
-fun csvReader(init: CsvReaderContext.() -> Unit = {}): CsvReader {
+@Deprecated(
+    message = "Migrate to com.jsoizo.kotlincsv.csvReader. " +
+            "The DSL block receiver changes from CsvReaderContext to CsvReaderConfigBuilder, " +
+            "and properties such as `delimiter` and `quoteChar` move under `dialect = CsvDialect(...)`. " +
+            "Rewrite the block body manually — IDE Quick Fix cannot translate it.",
+    level = DeprecationLevel.WARNING
+)
+fun csvReader(init: CsvReaderContext.() -> Unit = fun CsvReaderContext.() {
+
+}
+): CsvReader {
     val context = CsvReaderContext().apply(init)
     return CsvReader(context)
 }

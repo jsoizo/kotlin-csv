@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvReaderContext
@@ -14,6 +15,10 @@ import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
  *
  * @author doyaaaaaken
  */
+@Deprecated(
+    message = "v1 internal type; replaced in v2.0 by com.jsoizo.kotlincsv.reader.CsvReader operating on Sequence<Char>.",
+    level = DeprecationLevel.WARNING
+)
 class CsvFileReader internal constructor(
     private val ctx: CsvReaderContext,
     reader: Reader,

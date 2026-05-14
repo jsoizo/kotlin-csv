@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
 package com.github.doyaaaaaken.kotlincsv.dsl.context
 
 import com.github.doyaaaaaken.kotlincsv.util.Const
@@ -10,6 +11,10 @@ import com.github.doyaaaaaken.kotlincsv.util.logger.LoggerNop
  *
  * @author doyaaaaaken
  */
+@Deprecated(
+    message = "Replaced by com.jsoizo.kotlincsv.reader.CsvReaderConfig in v2.0.",
+    level = DeprecationLevel.WARNING
+)
 @CsvDslMarker
 interface ICsvReaderContext {
 
@@ -90,6 +95,10 @@ interface ICsvReaderContext {
     val excessFieldsRowBehaviour: ExcessFieldsRowBehaviour
 }
 
+@Deprecated(
+    message = "Replaced by com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour in v2.0.",
+    level = DeprecationLevel.WARNING
+)
 enum class InsufficientFieldsRowBehaviour {
 
     /**
@@ -107,6 +116,10 @@ enum class InsufficientFieldsRowBehaviour {
     EMPTY_STRING
 }
 
+@Deprecated(
+    message = "Replaced by com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour in v2.0.",
+    level = DeprecationLevel.WARNING
+)
 enum class ExcessFieldsRowBehaviour {
 
     /**
@@ -130,6 +143,11 @@ enum class ExcessFieldsRowBehaviour {
  *
  * @author doyaaaaaken
  */
+@Deprecated(
+    message = "Replaced by com.jsoizo.kotlincsv.reader.CsvReaderConfigBuilder in v2.0.",
+    level = DeprecationLevel.WARNING
+)
+@Suppress("DEPRECATION")
 @CsvDslMarker
 class CsvReaderContext : ICsvReaderContext {
     override var logger: Logger = LoggerNop

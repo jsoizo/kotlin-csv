@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package com.github.doyaaaaaken.kotlincsv.client
 
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
@@ -13,6 +14,10 @@ import java.io.PrintWriter
  *
  * @author doyaaaaaken
  */
+@Deprecated(
+    message = "v1 internal type; replaced in v2.0 by com.jsoizo.kotlincsv.writer.CsvWriter operating on Sequence<Char>.",
+    level = DeprecationLevel.WARNING
+)
 class CsvFileWriter internal constructor(
     private val ctx: CsvWriterContext,
     private val writer: PrintWriter
