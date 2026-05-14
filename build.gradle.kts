@@ -55,14 +55,16 @@ kotlin {
 
         jvm().compilations["main"].defaultSourceSet {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
             }
         }
         jvm().compilations["test"].defaultSourceSet {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-                implementation("io.kotest:kotest-runner-junit5:4.6.3")
-                implementation("io.kotest:kotest-assertions-core:4.6.3")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+                implementation("io.kotest:kotest-runner-junit5:5.5.5")
+                implementation("io.kotest:kotest-assertions-core:5.5.5")
+                implementation("io.kotest:kotest-property:5.5.5")
                 implementation(kotlin("test-junit5"))
             }
         }
