@@ -63,6 +63,7 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
                 implementation("io.kotest:kotest-runner-junit5:4.6.3")
                 implementation("io.kotest:kotest-assertions-core:4.6.3")
+                implementation(kotlin("test-junit5"))
             }
         }
         js().compilations["main"].defaultSourceSet {
