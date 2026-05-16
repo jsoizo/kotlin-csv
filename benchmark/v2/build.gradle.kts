@@ -38,7 +38,10 @@ jmh {
             timeOnIteration.set("5s")
             warmup.set("5s")
             benchmarkMode.set(listOf("thrpt", "avgt"))
-            benchmarkParameters.put("dataset", listOf("SMALL", "HARD"))
+            benchmarkParameters.put(
+                "dataset",
+                objects.listProperty(String::class.java).apply { set(listOf("SMALL", "HARD")) },
+            )
         }
         "large" -> {
             warmupIterations.set(2)
