@@ -2,6 +2,7 @@ package com.jsoizo.kotlincsv.reader
 
 import com.jsoizo.kotlincsv.CsvDialect
 import com.jsoizo.kotlincsv.exceptions.CsvFieldNumDifferentException
+import com.jsoizo.kotlincsv.exceptions.CsvParseFormatException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
@@ -133,5 +134,63 @@ class CsvReaderTest {
         val reader = CsvReader(CsvReaderConfig())
         val seq = reader.read("a,b,c\nd,e".asSequence())
         seq.take(1).toList() shouldBe listOf(listOf("a", "b", "c"))
+    }
+
+    // --- Unquoted-field escape (issue #168) ---
+
+    private val explicitEscapeReader =
+        CsvReader(CsvReaderConfig(dialect = CsvDialect(escapeChar = '\\')))
+
+    @Test
+    fun unquotedEscape_doubledEscape_inField() {
+        explicitEscapeReader.readAll("x,a\\\\b\n") shouldBe listOf(listOf("x", "a\\b"))
+    }
+
+    @Test
+    fun unquotedEscape_atRowStart() {
+        explicitEscapeReader.readAll("\\\\b\n") shouldBe listOf(listOf("\\b"))
+    }
+
+    @Test
+    fun unquotedEscape_quoteCharEscaped_atRowStart() {
+        explicitEscapeReader.readAll("\\\"y\n") shouldBe listOf(listOf("\"y"))
+    }
+
+    @Test
+    fun unquotedEscape_quoteCharEscaped_afterDelimiter() {
+        explicitEscapeReader.readAll("x,\\\"y\n") shouldBe listOf(listOf("x", "\"y"))
+    }
+
+    @Test
+    fun unquotedEscape_quoteCharEscaped_inField() {
+        explicitEscapeReader.readAll("a\\\"b\n") shouldBe listOf(listOf("a\"b"))
+    }
+
+    @Test
+    fun unquotedEscape_escapeAtEof_throws() {
+        shouldThrow<CsvParseFormatException> { explicitEscapeReader.readAll("a\\") }
+    }
+
+    @Test
+    fun unquotedEscape_followedByOrdinaryChar_throws() {
+        shouldThrow<CsvParseFormatException> { explicitEscapeReader.readAll("a\\c") }
+    }
+
+    @Test
+    fun unquotedEscape_followedByCr_throws() {
+        shouldThrow<CsvParseFormatException> { explicitEscapeReader.readAll("a\\\r\n") }
+    }
+
+    @Test
+    fun unquotedEscape_followedByLf_throws() {
+        shouldThrow<CsvParseFormatException> { explicitEscapeReader.readAll("a\\\n") }
+    }
+
+    @Test
+    fun unquotedEscape_multipleRows() {
+        explicitEscapeReader.readAll("a\\\\b\nc\\\\d\n") shouldBe listOf(
+            listOf("a\\b"),
+            listOf("c\\d"),
+        )
     }
 }
