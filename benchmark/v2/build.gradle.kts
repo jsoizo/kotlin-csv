@@ -31,6 +31,18 @@ jmh {
     (project.findProperty("jmh.fork") as String?)?.toInt()?.let { fork.set(it) }
 
     when (project.findProperty("bench.profile") as String?) {
+        "primary" -> {
+            warmupIterations.set(5)
+            iterations.set(5)
+            fork.set(2)
+            timeOnIteration.set("10s")
+            warmup.set("10s")
+            benchmarkMode.set(listOf("thrpt", "avgt"))
+            benchmarkParameters.put(
+                "dataset",
+                objects.listProperty(String::class.java).apply { set(listOf("SMALL", "MEDIUM", "HARD")) },
+            )
+        }
         "quick" -> {
             warmupIterations.set(3)
             iterations.set(3)
