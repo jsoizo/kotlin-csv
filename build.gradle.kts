@@ -7,9 +7,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinJvm) apply false
     alias(libs.plugins.dokka)
     alias(libs.plugins.kover)
     alias(libs.plugins.mavenPublish)
+    alias(libs.plugins.jmh) apply false
 }
 
 group = "com.jsoizo"

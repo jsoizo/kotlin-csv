@@ -12,3 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
+include(":benchmark:shared", ":benchmark:v1", ":benchmark:v2", ":benchmark:parity")
