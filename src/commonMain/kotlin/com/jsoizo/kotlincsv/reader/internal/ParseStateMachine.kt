@@ -157,9 +157,17 @@ internal class ParseStateMachine(
 
     /**
      * `true` after a row terminator has been consumed. Drivers must read the
-     * row via [getResult] and create a fresh instance before the next row.
+     * row via [getResult] and call [reset] before the next row.
      */
     internal fun isLineComplete(): Boolean = state == ParseState.END
+
+    /** Reset the machine so it can parse the next row without re-allocating. */
+    fun reset() {
+        state = ParseState.START
+        fields.clear()
+        field.clear()
+        pos = 0L
+    }
 
     /**
      * @return return parsed CSV Fields.
