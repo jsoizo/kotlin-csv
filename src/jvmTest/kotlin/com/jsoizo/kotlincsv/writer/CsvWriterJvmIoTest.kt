@@ -110,6 +110,23 @@ class CsvWriterJvmIoTest {
     }
 
     @Test
+    fun write_stream_matchesLazyAndEagerPathsForComplexRows() {
+        val rows = listOf(
+            listOf("a,b", "c\"d", "plain"),
+            emptyList(),
+            listOf("line\nbreak", "slash\\value", ""),
+        )
+        val writer = CsvWriter()
+        val expected = writer.write(rows.asSequence()).joinToString("")
+
+        writer.writeAll(rows) shouldBe expected
+
+        val raw = ByteArrayOutputStream()
+        writer.write(rows, raw)
+        raw.toByteArray().toString(Charsets.UTF_8) shouldBe expected
+    }
+
+    @Test
     fun write_stream_largeOutputCrossesChunkBoundary() {
         // Force the chunked flushing path: produce >8192 chars of output.
         val row = List(200) { "x" }

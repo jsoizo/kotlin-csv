@@ -1,5 +1,6 @@
 package com.jsoizo.kotlincsv.writer
 
+import com.jsoizo.kotlincsv.writer.internal.appendRows
 import kotlinx.io.Sink
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
@@ -22,17 +23,9 @@ fun CsvWriter.write(
     if (options.prependBom) {
         sink.writeString(BOM_STRING)
     }
-    val buffer = StringBuilder(WRITE_CHUNK_SIZE)
-    for (ch in write(rows)) {
-        buffer.append(ch)
-        if (buffer.length >= WRITE_CHUNK_SIZE) {
-            sink.writeString(buffer.toString())
-            buffer.clear()
-        }
-    }
-    if (buffer.isNotEmpty()) {
-        sink.writeString(buffer.toString())
-    }
+    val out = SinkAppendable(sink)
+    appendRows(rows, config, out)
+    out.flush()
     sink.flush()
 }
 
@@ -77,3 +70,42 @@ fun CsvWriter.writeToFile(
     filePath: String,
     options: CsvWriteIoOptions = CsvWriteIoOptions(),
 ) = writeToFile(rows.asSequence(), filePath, options)
+
+private class SinkAppendable(
+    private val sink: Sink,
+) : Appendable {
+    private val buffer = StringBuilder(WRITE_CHUNK_SIZE)
+
+    override fun append(value: Char): Appendable {
+        buffer.append(value)
+        flushIfFull()
+        return this
+    }
+
+    override fun append(value: CharSequence?): Appendable {
+        val text = value ?: "null"
+        return append(text, 0, text.length)
+    }
+
+    override fun append(value: CharSequence?, startIndex: Int, endIndex: Int): Appendable {
+        val text = value ?: "null"
+        for (index in startIndex until endIndex) {
+            buffer.append(text[index])
+            flushIfFull()
+        }
+        return this
+    }
+
+    fun flush() {
+        if (buffer.isNotEmpty()) {
+            sink.writeString(buffer.toString())
+            buffer.clear()
+        }
+    }
+
+    private fun flushIfFull() {
+        if (buffer.length >= WRITE_CHUNK_SIZE) {
+            flush()
+        }
+    }
+}
