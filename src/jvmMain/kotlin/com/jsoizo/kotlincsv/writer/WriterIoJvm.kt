@@ -1,12 +1,13 @@
 package com.jsoizo.kotlincsv.writer
 
+import com.jsoizo.kotlincsv.writer.internal.appendRows
+import java.io.BufferedWriter
 import java.io.File
 import java.io.OutputStream
 import java.io.OutputStreamWriter
 import java.nio.charset.Charset
 
 private const val BOM_STRING = "\uFEFF"
-private const val WRITE_CHUNK_SIZE = 8192
 
 /**
  * Encode [rows] and write to [file] using [charset]. The file is truncated,
@@ -33,22 +34,12 @@ fun CsvWriter.write(
     charset: String = "UTF-8",
     options: CsvWriteIoOptions = CsvWriteIoOptions(),
 ) {
-    val osw = OutputStreamWriter(stream, Charset.forName(charset))
+    val writer = BufferedWriter(OutputStreamWriter(stream, Charset.forName(charset)))
     if (options.prependBom) {
-        osw.write(BOM_STRING)
+        writer.write(BOM_STRING)
     }
-    val buffer = StringBuilder(WRITE_CHUNK_SIZE)
-    for (ch in write(rows)) {
-        buffer.append(ch)
-        if (buffer.length >= WRITE_CHUNK_SIZE) {
-            osw.write(buffer.toString())
-            buffer.clear()
-        }
-    }
-    if (buffer.isNotEmpty()) {
-        osw.write(buffer.toString())
-    }
-    osw.flush()
+    appendRows(rows, config, writer)
+    writer.flush()
 }
 
 /** @see writeToFile */
