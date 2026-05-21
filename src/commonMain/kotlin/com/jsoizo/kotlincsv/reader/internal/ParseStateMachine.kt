@@ -30,6 +30,8 @@ internal class ParseStateMachine(
             ParseState.START -> {
                 when (ch) {
                     quoteChar -> state = ParseState.QUOTE_START
+                    // When `escapeChar == quoteChar`, the quoteChar arm above wins; this arm is unreachable.
+                    escapeChar -> state = handleUnquotedEscape(nextCh, rowNum)
                     delimiter -> {
                         flushField()
                         state = ParseState.DELIMITER
@@ -52,17 +54,7 @@ internal class ParseStateMachine(
             }
             ParseState.FIELD -> {
                 when (ch) {
-                    escapeChar -> {
-                        if (nextCh != escapeChar) throw CsvParseFormatException(
-                            rowNum,
-                            pos,
-                            ch,
-                            "must appear escapeChar($escapeChar) after escapeChar($escapeChar)"
-                        )
-                        field.append(nextCh)
-                        state = ParseState.FIELD
-                        pos += 1
-                    }
+                    escapeChar -> state = handleUnquotedEscape(nextCh, rowNum)
                     delimiter -> {
                         flushField()
                         state = ParseState.DELIMITER
@@ -86,6 +78,8 @@ internal class ParseStateMachine(
             ParseState.DELIMITER -> {
                 when (ch) {
                     quoteChar -> state = ParseState.QUOTE_START
+                    // When `escapeChar == quoteChar`, the quoteChar arm above wins; this arm is unreachable.
+                    escapeChar -> state = handleUnquotedEscape(nextCh, rowNum)
                     delimiter -> {
                         flushField()
                         state = ParseState.DELIMITER
@@ -189,6 +183,32 @@ internal class ParseStateMachine(
     private fun flushField() {
         fields.add(field.toString())
         field.clear()
+    }
+
+    /**
+     * Consume one additional character following an escape character at an
+     * unquoted position (START/DELIMITER/FIELD). The caller must already have
+     * accounted for the escape char itself in [pos]; this method advances
+     * [pos] by 1 more to consume the escaped char, appends it to [field], and
+     * returns [ParseState.FIELD].
+     *
+     * Accepted [nextCh] values are [escapeChar] and [quoteChar]. When
+     * `escapeChar == quoteChar` the accepted set degenerates to a single value,
+     * preserving the RFC 4180 strict-doubling behaviour for the default
+     * dialect.
+     */
+    private fun handleUnquotedEscape(nextCh: Char?, rowNum: Long): ParseState {
+        if (nextCh != escapeChar && nextCh != quoteChar) {
+            throw CsvParseFormatException(
+                rowNum,
+                pos,
+                escapeChar,
+                "escape character must be followed by escapeChar($escapeChar) or quoteChar($quoteChar)"
+            )
+        }
+        field.append(nextCh)
+        pos += 1
+        return ParseState.FIELD
     }
 }
 
