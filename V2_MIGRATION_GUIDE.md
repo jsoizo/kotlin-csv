@@ -364,7 +364,8 @@ reader.readFromFile(file, options = CsvReadIoOptions(stripBom = false)) { ... }
 - **Field-count exception field names changed.** On
   `CsvFieldNumDifferentException`, `fieldNum` -> `expectedFieldCount`,
   `fieldNumOnFailedRow` -> `actualFieldCount`, `csvRowNum` -> `rowNum`
-  (now `Long`).
+  (now `Long`). `rowNum` counts CSV rows after reader filters such as
+  `skipEmptyLine`; it is not a physical source line number.
 
 ## 10. Cookbook
 
@@ -626,8 +627,9 @@ val reader = csvReader {
 ```
 
 `CsvDialect` rejects inconsistent combinations
-(`delimiter == quoteChar`, empty `lineTerminator`, ...) at construction
-time with `IllegalArgumentException`.
+(`delimiter == quoteChar`, empty `lineTerminator`, reader line terminator
+characters as `delimiter` / `quoteChar` / `escapeChar`, ...) at
+construction time with `IllegalArgumentException`.
 
 #### 10.18 Read a CSV from Node.js
 

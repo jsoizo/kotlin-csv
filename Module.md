@@ -128,7 +128,9 @@ count:
   `EMPTY_STRING` pads with empty strings to the expected count.
 
 `CsvReaderConfig.skipEmptyLine` filters out fully empty rows before the
-field-count check.
+field-count check. When `ERROR` raises `CsvFieldNumDifferentException`,
+`rowNum` counts the CSV rows that remain after this filter; it is not a
+physical source line number.
 
 ## Header processing
 
@@ -259,10 +261,11 @@ context for the more specific failures.
 ## Field semantics
 
 - [CsvParseFormatException] carries `rowNum: Long`, `colIndex: Long`, and
-  `char: Char` — the row, column, and character that the parser refused.
+  `char: Char` — the CSV row, column, and character that the parser refused.
 - [CsvFieldNumDifferentException] carries `expectedFieldCount: Int`,
   `actualFieldCount: Int`, and `rowNum: Long`. The expected count is fixed
-  by the first row.
+  by the first row, and `rowNum` is counted after reader filters such as
+  `skipEmptyLine`.
 
 Row and column indices are `Long` so files with more than `Int.MAX_VALUE`
 rows can still report meaningful positions.

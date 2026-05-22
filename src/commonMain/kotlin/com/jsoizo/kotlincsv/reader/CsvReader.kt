@@ -17,7 +17,8 @@ class CsvReader(val config: CsvReaderConfig = CsvReaderConfig()) {
      * @throws CsvParseFormatException on terminal operation when [chars]
      *   violates the CSV format.
      * @throws CsvFieldNumDifferentException on terminal operation when a row
-     *   violates the configured field-count policy.
+     *   violates the configured field-count policy. Its `rowNum` is a CSV row
+     *   number after reader filters such as `skipEmptyLine`.
      */
     fun read(chars: Sequence<Char>): Sequence<List<String>> =
         applyPipeline(parseRows(chars, config.dialect))

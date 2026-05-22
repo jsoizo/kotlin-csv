@@ -157,7 +157,7 @@ internal class ParseStateMachine(
 
     /**
      * `true` after a row terminator has been consumed. Drivers must read the
-     * row via [getResult] and call [reset] before the next row.
+     * row via [finishRow] and call [reset] before the next row.
      */
     internal fun isLineComplete(): Boolean = state == ParseState.END
 
@@ -169,11 +169,7 @@ internal class ParseStateMachine(
         pos = 0L
     }
 
-    /**
-     * @return return parsed CSV Fields.
-     *         return null, if current position is on the way of csv row.
-     */
-    fun getResult(): List<String>? {
+    fun finishRow(): List<String>? {
         return when (state) {
             ParseState.DELIMITER -> {
                 fields.add("")
@@ -188,11 +184,11 @@ internal class ParseStateMachine(
         }
     }
 
-    fun getFinalResult(rowNum: Long): List<String>? {
+    fun finishFinalRow(rowNum: Long): List<String>? {
         if (state == ParseState.QUOTE_START || state == ParseState.QUOTED_FIELD) {
             throw CsvParseFormatException(rowNum, pos, quoteChar, "end of quote doesn't exist")
         }
-        return getResult()
+        return finishRow()
     }
 
     private fun flushField() {

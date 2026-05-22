@@ -6,7 +6,7 @@
 
 `src`、テスト、README / migration guide / Dokka向け `Module.md`、benchmark を対象に、v2 リリース前の一貫性・不要ロジック・性能・スタイル・コメントを確認した。
 
-現時点でライブラリ本体に P0 の実装破綻は見つからない。`./gradlew check` は成功している。一方で、リリース前に判断したい仕様不整合と、コミット前に必ず外すべきローカル機密ファイルがある。
+監査時点でライブラリ本体に P0 の実装破綻は見つからなかった。`./gradlew check` は成功している。監査後、P0 / P1 / P2 のうちリリース前に固定したい仕様とドキュメント差分は対応済み。
 
 優先度の意味:
 
@@ -71,6 +71,7 @@
 - 関連箇所: `src/commonMain/.../ParseStateMachine.kt:176`
 - 影響: 今後 driver を増やす場合に、`getResult()` が getter ではなく finalize 操作であることを知らないと重複 field を作る。
 - 推奨対応: `finishRowOrNull()` のような名前へ変える、または finalize と snapshot を分ける。少なくとも KDoc に one-shot 契約を書く。
+- 対応メモ: `getResult()` / `getFinalResult()` を `finishRow()` / `finishFinalRow()` に改名し、getterではなく行確定操作であることが分かる名前にした。
 
 ### P2-2: `skipEmptyLine` 有効時の field-count 例外 `rowNum` が物理行番号ではない
 
@@ -78,6 +79,12 @@
 - 関連箇所: `src/commonMain/.../CsvReader.kt:33`, `src/commonMain/.../CsvReader.kt:45`
 - 影響: 利用者がファイル上の行番号として `CsvFieldNumDifferentException.rowNum` を使うと、`skipEmptyLine = true` のとき位置がずれる。
 - 推奨対応: 物理行番号を維持するか、論理行番号であることを明記する。リリース前に仕様だけでも固定する。
+- 外部実装メモ:
+  - Python `csvreader.line_num` は source iterator から読んだ行数で、返却レコード数とは別物として説明している: https://docs.python.org/3/library/csv.html#csv.csvreader.line_num
+  - Apache Commons CSV は `CSVRecord.getRecordNumber()` と `CSVParser.getCurrentLineNumber()` を分けており、multi-line value では一致しないと明記している: https://commons.apache.org/proper/commons-csv/apidocs/org/apache/commons/csv/CSVRecord.html
+  - Ruby CSV の `lineno` は parsed / generated rows の数として説明され、`skip_blanks` は blank lines を入力から無視する option として扱われる: https://ruby-doc.org/stdlib-3.0.2/libdoc/csv/rdoc/CSV.html
+- 判断: kotlin-csv v2 は物理行番号を追跡する公開APIを持っていないため、`CsvFieldNumDifferentException.rowNum` は CSV row number として固定する。`skipEmptyLine = true` の場合は filter 後のCSV行番号であり、物理 source line ではない。
+- 対応メモ: README / `Module.md` / migration guide / exception KDoc に `rowNum` の意味を追記した。挙動は変更しない。
 
 ### P2-3: `CsvDialect` の validation が line terminator 系の矛盾を許す
 
@@ -85,6 +92,8 @@
 - 関連箇所: `src/commonMain/.../CsvDialect.kt:26`, `src/commonMain/.../ParseStateMachine.kt:31`
 - 影響: `delimiter = '\n'` のような dialect は reader / writer の直感的な round-trip を壊しやすい。現状は delimiter 分岐が行終端分岐より先に評価される。
 - 推奨対応: line terminator 系を delimiter / quote / escape に許すのか明文化する。許さないなら `CsvDialect` で reject する。
+- 判断: reader が常に行終端として扱う文字は dialect token として許可しない。
+- 対応メモ: `CsvDialect` が delimiter / quoteChar / escapeChar に LF / CR / U+2028 / U+2029 / U+0085 を受け取った場合、構築時に `IllegalArgumentException` を投げるようにした。`lineTerminator` 自体は writer 用なので、従来どおり CRLF / LF などを許可する。
 
 ### P2-4: I/O fast path 後も ASCII 大規模入力の allocation は v1 同等ではない
 
@@ -92,6 +101,7 @@
 - 関連箇所: `.work/pr-177-overview.md:147`
 - 影響: throughput / long-tail は大きく改善済みだが、「alloc/op を v1同等まで落とす」が受け入れ条件なら未達。
 - 推奨対応: v2.0.0 の受け入れ条件を明文化する。alloc追跡を続けるなら、field list / row list / StringBuilder snapshot 周辺を次の候補にする。
+- 対応メモ: `.work/v2-benchmark-summary.md` で「v2.0.0 は long-tail 解消を受け入れ基準にし、alloc の v1同等化は follow-up」と明記した。追加JMHは行わない。
 
 ## P3
 
@@ -126,7 +136,6 @@
 
 ## 推奨の次アクション
 
-1. P0-1 を即時対応し、`.env` がコミットされない状態にする。
-2. P1-1 と P1-2 は仕様を決めて、実装修正またはドキュメント修正を小さなPRに分ける。
-3. P1-3 と P1-4 は v2 リリース前のドキュメント整備としてまとめて処理する。
-4. P2 は v2.0.0 の受け入れ条件に関わるものだけ前倒しし、それ以外は v2.0.x follow-up に回す。
+1. P0 / P1 / P2 対応を含む最終 `./gradlew check` を通してからコミットする。
+2. P3-1 は別PRでコメントと軽微なスタイルだけを整理する。
+3. P3-2 / P3-3 はリポジトリ運用判断を確認してから扱う。

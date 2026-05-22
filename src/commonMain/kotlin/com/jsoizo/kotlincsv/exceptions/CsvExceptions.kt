@@ -3,7 +3,7 @@ package com.jsoizo.kotlincsv.exceptions
 /** Base type for all CSV parse failures raised by kotlin-csv. */
 open class MalformedCsvException(message: String) : RuntimeException(message)
 
-/** Parse failure at a specific row/column/character. */
+/** Parse failure at a specific CSV row/column/character. */
 class CsvParseFormatException(
     val rowNum: Long,
     val colIndex: Long,
@@ -13,6 +13,8 @@ class CsvParseFormatException(
 
 /**
  * A row's field count differs from the count established by the first row.
+ * [rowNum] is a CSV row number after reader filters such as `skipEmptyLine`,
+ * not a physical source line number.
  *
  * See [RFC 4180 §2](https://tools.ietf.org/html/rfc4180#section-2):
  * > Each line should contain the same number of fields throughout the file.

@@ -32,7 +32,7 @@ internal fun parseRows(
             stateMachineHasInput = true
 
             if (stateMachine.isLineComplete()) {
-                stateMachine.getResult()?.let { yield(it) }
+                stateMachine.finishRow()?.let { yield(it) }
                 rowNum++
                 stateMachine.reset()
                 stateMachineHasInput = false
@@ -44,7 +44,7 @@ internal fun parseRows(
     }
 
     if (stateMachineHasInput) {
-        stateMachine.getFinalResult(rowNum)?.let { yield(it) }
+        stateMachine.finishFinalRow(rowNum)?.let { yield(it) }
     }
 }
 
@@ -123,7 +123,7 @@ internal fun parseRowsFromChunks(
             machineHasInput = true
 
             if (machine.isLineComplete()) {
-                machine.getResult()?.let { yield(it) }
+                machine.finishRow()?.let { yield(it) }
                 rowNum++
                 machine.reset()
                 machineHasInput = false
@@ -134,6 +134,6 @@ internal fun parseRowsFromChunks(
     }
 
     if (machineHasInput) {
-        machine.getFinalResult(rowNum)?.let { yield(it) }
+        machine.finishFinalRow(rowNum)?.let { yield(it) }
     }
 }

@@ -169,6 +169,9 @@ val customWriter = csvWriter {
 | `excessFieldsRowBehaviour` | `ERROR` | What to do when a row has more fields than the first row: `ERROR` / `IGNORE` / `TRIM`. |
 | `insufficientFieldsRowBehaviour` | `ERROR` | What to do when a row has fewer fields: `ERROR` / `IGNORE` / `EMPTY_STRING`. |
 
+`CsvFieldNumDifferentException.rowNum` counts CSV rows after reader filters
+such as `skipEmptyLine`; it is not a physical source line number.
+
 | Writer option | Default | Description |
 | --- | --- | --- |
 | `dialect` | `CsvDialect.RFC4180` | Shared CSV format (delimiter / quote / escape / line terminator). |
