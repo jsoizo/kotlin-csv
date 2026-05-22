@@ -205,4 +205,76 @@ class SequenceParserTest {
         // and the in-flight row is dropped rather than emitted partial.
         parse("\"abc") shouldBe emptyList()
     }
+
+    private fun chunkedReader(text: String): (CharArray) -> Int {
+        var offset = 0
+        return { buffer ->
+            if (offset >= text.length) {
+                0
+            } else {
+                val end = minOf(text.length, offset + buffer.size)
+                val written = end - offset
+                for (i in 0 until written) buffer[i] = text[offset + i]
+                offset = end
+                written
+            }
+        }
+    }
+
+    private fun parseChunked(
+        text: String,
+        bufferSize: Int = 8192,
+        stripBom: Boolean = false,
+        dialect: CsvDialect = rfc4180,
+    ): List<List<String>> =
+        parseRowsFromChunks(chunkedReader(text), dialect, stripBom, bufferSize).toList()
+
+    @Test
+    fun chunked_emptyInput_yieldsEmptySequence() {
+        // First readInto returns 0 — early-return path.
+        parseChunked("") shouldBe emptyList()
+    }
+
+    @Test
+    fun chunked_smallBuffer_forcesChunkBoundaryAcrossRows() {
+        // bufferSize=4 forces the parser to swap chunks several times mid-row
+        // and to consult the cross-buffer lookahead path.
+        val rows = parseChunked("a,bbb\nccc,d\nef,gh", bufferSize = 4)
+        rows shouldBe listOf(listOf("a", "bbb"), listOf("ccc", "d"), listOf("ef", "gh"))
+    }
+
+    @Test
+    fun chunked_bufferBoundaryLandsOnCrLf() {
+        // Tail CR is the last char of one chunk; LF starts the next. The CR
+        // branch must consult lookahead via the next-buffer slot to swallow LF.
+        val rows = parseChunked("ab\r\ncd", bufferSize = 3)
+        rows shouldBe listOf(listOf("ab"), listOf("cd"))
+    }
+
+    @Test
+    fun chunked_requireBufferSizeAtLeastTwo() {
+        shouldThrow<IllegalArgumentException> {
+            parseRowsFromChunks(chunkedReader("a"), rfc4180, bufferSize = 1).toList()
+        }
+    }
+
+    @Test
+    fun chunked_stripsBomWhenRequested() {
+        // bufferSize chosen so BOM and the first field share the leading chunk.
+        val rows = parseChunked("﻿a,b", bufferSize = 4, stripBom = true)
+        rows shouldBe listOf(listOf("a", "b"))
+    }
+
+    @Test
+    fun chunked_preservesBomWhenStripDisabled() {
+        // Default stripBom = false — exercises the default-parameter call.
+        val rows = parseRowsFromChunks(chunkedReader("﻿a"), rfc4180).toList()
+        rows shouldBe listOf(listOf("﻿a"))
+    }
+
+    @Test
+    fun chunked_unterminatedQuote_atChunkBoundary_yieldsNoFinalRow() {
+        // tail-flush path runs but getResult() returns null (QUOTED_FIELD state).
+        parseChunked("\"abc", bufferSize = 2) shouldBe emptyList()
+    }
 }

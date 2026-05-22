@@ -1,12 +1,12 @@
 package com.jsoizo.kotlincsv.reader
 
+import com.jsoizo.kotlincsv.reader.internal.parseRowsFromChunks
 import kotlinx.io.Source
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readCodePointValue
 
-private const val BOM_CODE_POINT = 0xFEFF
 private const val SUPPLEMENTARY_PLANE_START = 0x10000
 private const val HIGH_SURROGATE_BASE = 0xD800
 private const val LOW_SURROGATE_BASE = 0xDC00
@@ -21,7 +21,10 @@ fun <T> CsvReader.read(
     source: Source,
     options: CsvReadIoOptions = CsvReadIoOptions(),
     block: (Sequence<List<String>>) -> T,
-): T = block(read(source.toCharSequence(options.stripBom)))
+): T {
+    val parsed = parseRowsFromChunks(source.asChunkReader(), config.dialect, options.stripBom)
+    return block(applyPipeline(parsed))
+}
 
 /** Eagerly read all CSV rows from [source] (UTF-8). [source] is caller-owned. */
 fun CsvReader.readAll(
@@ -29,23 +32,22 @@ fun CsvReader.readAll(
     options: CsvReadIoOptions = CsvReadIoOptions(),
 ): List<List<String>> = read(source, options) { it.toList() }
 
-private fun Source.toCharSequence(stripBom: Boolean): Sequence<Char> = sequence {
-    var first = true
-    while (!exhausted()) {
+private fun Source.asChunkReader(): (CharArray) -> Int = { buffer ->
+    var index = 0
+    // Stop one slot before the end so a supplementary code point's UTF-16
+    // surrogate pair never spans two chunks. Caller guarantees buffer.size >= 2.
+    val limit = buffer.size - 1
+    while (index < limit && !exhausted()) {
         val codePoint = readCodePointValue()
-        if (first) {
-            first = false
-            if (stripBom && codePoint == BOM_CODE_POINT) continue
-        }
         if (codePoint < SUPPLEMENTARY_PLANE_START) {
-            yield(codePoint.toChar())
+            buffer[index++] = codePoint.toChar()
         } else {
-            // Supplementary plane: emit a UTF-16 surrogate pair.
             val offset = codePoint - SUPPLEMENTARY_PLANE_START
-            yield((HIGH_SURROGATE_BASE + (offset shr 10)).toChar())
-            yield((LOW_SURROGATE_BASE + (offset and LOW_TEN_BIT_MASK)).toChar())
+            buffer[index++] = (HIGH_SURROGATE_BASE + (offset shr 10)).toChar()
+            buffer[index++] = (LOW_SURROGATE_BASE + (offset and LOW_TEN_BIT_MASK)).toChar()
         }
     }
+    index
 }
 
 /**

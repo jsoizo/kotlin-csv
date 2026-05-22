@@ -25,9 +25,6 @@ jmh {
 
     val include = (project.findProperty("jmh.include") as String?)?.let { listOf(it) }
     if (include != null) includes.set(include)
-    (project.findProperty("jmh.warmupIterations") as String?)?.toInt()?.let { warmupIterations.set(it) }
-    (project.findProperty("jmh.iterations") as String?)?.toInt()?.let { iterations.set(it) }
-    (project.findProperty("jmh.fork") as String?)?.toInt()?.let { fork.set(it) }
 
     when (project.findProperty("bench.profile") as String?) {
         "primary" -> {
@@ -75,4 +72,10 @@ jmh {
             profilers.set(listOf("stack"))
         }
     }
+
+    (project.findProperty("jmh.warmupIterations") as String?)?.toInt()?.let { warmupIterations.set(it) }
+    (project.findProperty("jmh.iterations") as String?)?.toInt()?.let { iterations.set(it) }
+    (project.findProperty("jmh.fork") as String?)?.toInt()?.let { fork.set(it) }
+    (project.findProperty("jmh.timeOnIteration") as String?)?.let { timeOnIteration.set(it) }
+    (project.findProperty("jmh.warmup") as String?)?.let { warmup.set(it) }
 }

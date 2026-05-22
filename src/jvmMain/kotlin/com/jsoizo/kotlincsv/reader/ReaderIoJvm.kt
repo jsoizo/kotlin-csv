@@ -1,12 +1,11 @@
 package com.jsoizo.kotlincsv.reader
 
-import java.io.BufferedReader
+import com.jsoizo.kotlincsv.reader.internal.parseRowsFromChunks
 import java.io.File
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.io.Reader
 import java.nio.charset.Charset
-
-private const val BOM_CHAR = '\uFEFF'
 
 /**
  * Read CSV rows from [file] decoded with [charset] and pass them to [block].
@@ -41,7 +40,8 @@ fun <T> CsvReader.read(
     block: (Sequence<List<String>>) -> T,
 ): T {
     val reader = InputStreamReader(stream, Charset.forName(charset)).buffered()
-    return block(read(reader.toCharSequence(options.stripBom)))
+    val parsed = parseRowsFromChunks(reader.asChunkReader(), config.dialect, options.stripBom)
+    return block(applyPipeline(parsed))
 }
 
 /**
@@ -54,16 +54,7 @@ fun CsvReader.readAll(
     options: CsvReadIoOptions = CsvReadIoOptions(),
 ): List<List<String>> = read(stream, charset, options) { it.toList() }
 
-private fun BufferedReader.toCharSequence(stripBom: Boolean): Sequence<Char> = sequence {
-    var first = true
-    while (true) {
-        val ch = read()
-        if (ch == -1) break
-        val c = ch.toChar()
-        if (first) {
-            first = false
-            if (stripBom && c == BOM_CHAR) continue
-        }
-        yield(c)
-    }
+private fun Reader.asChunkReader(): (CharArray) -> Int = { buffer ->
+    val charsRead = read(buffer)
+    if (charsRead == -1) 0 else charsRead
 }

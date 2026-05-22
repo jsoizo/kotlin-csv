@@ -158,4 +158,31 @@ class CsvReaderJvmIoTest {
         CsvReader().readAll(counting) shouldBe sampleRows
         counting.closeCount shouldBe 0
     }
+
+    @Test
+    fun readAll_stream_skipEmptyLine_dropsBlankRows() {
+        // Exercise applyPipeline's skipEmptyLine = true branch from the I/O
+        // path; the String-input tests already cover the same branch.
+        val raw = "a,b\n\nc,d\n".toByteArray(Charsets.UTF_8)
+        val reader = CsvReader(CsvReaderConfig(skipEmptyLine = true))
+        reader.readAll(ByteArrayInputStream(raw)) shouldBe listOf(listOf("a", "b"), listOf("c", "d"))
+    }
+
+    @Test
+    fun readAll_stream_inputLargerThanBufferSize_forcesChunkBoundarySwap() {
+        // 8 KB is the default chunk size in parseRowsFromChunks. Pump well past
+        // that so the double-buffer swap and cross-chunk lookahead paths run.
+        val cellsPerRow = 4
+        val rowCount = 3_000
+        val csv = buildString {
+            repeat(rowCount) { row ->
+                (0 until cellsPerRow).joinTo(this, separator = ",") { col -> "r${row}c${col}" }
+                append('\n')
+            }
+        }
+        val rows = CsvReader().readAll(ByteArrayInputStream(csv.toByteArray(Charsets.UTF_8)))
+        rows.size shouldBe rowCount
+        rows.first() shouldBe listOf("r0c0", "r0c1", "r0c2", "r0c3")
+        rows.last() shouldBe listOf("r${rowCount - 1}c0", "r${rowCount - 1}c1", "r${rowCount - 1}c2", "r${rowCount - 1}c3")
+    }
 }

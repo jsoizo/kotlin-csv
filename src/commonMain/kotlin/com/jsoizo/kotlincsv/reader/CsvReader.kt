@@ -19,8 +19,18 @@ class CsvReader(val config: CsvReaderConfig = CsvReaderConfig()) {
      * @throws CsvFieldNumDifferentException on terminal operation when a row
      *   violates the configured field-count policy.
      */
-    fun read(chars: Sequence<Char>): Sequence<List<String>> {
-        val parsed = parseRows(chars, config.dialect)
+    fun read(chars: Sequence<Char>): Sequence<List<String>> =
+        applyPipeline(parseRows(chars, config.dialect))
+
+    /** Eagerly parse [text] into a list of rows. */
+    fun readAll(text: String): List<List<String>> = read(text.asSequence()).toList()
+
+    /**
+     * Apply skipEmptyLine filter and field-count policy to a parsed row
+     * sequence. Used by I/O wrappers that obtain rows from chunked parsers
+     * without routing chars through a `Sequence<Char>`.
+     */
+    internal fun applyPipeline(parsed: Sequence<List<String>>): Sequence<List<String>> {
         val filtered = if (config.skipEmptyLine) {
             parsed.filter { row -> !isEmptyRow(row) }
         } else {
@@ -28,9 +38,6 @@ class CsvReader(val config: CsvReaderConfig = CsvReaderConfig()) {
         }
         return applyFieldCountPolicy(filtered)
     }
-
-    /** Eagerly parse [text] into a list of rows. */
-    fun readAll(text: String): List<List<String>> = read(text.asSequence()).toList()
 
     private fun isEmptyRow(row: List<String>): Boolean =
         row.isEmpty() || (row.size == 1 && row.single().isBlank())
