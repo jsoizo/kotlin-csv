@@ -59,4 +59,25 @@ class CsvReaderPathSmokeTest {
             tmp.deleteIfExists()
         }
     }
+
+    @Test
+    fun readFromFile_supplementaryCodePoint_atChunkBoundary_keepsSurrogatePairTogether() {
+        // Source.asChunkReader reserves the last slot of the 8 KB buffer so a
+        // supplementary code point's UTF-16 surrogate pair never spans two
+        // chunks. Lay out the input so 😀's high surrogate lands at the
+        // last reservable index (buffer.size - 2): 8189 pad chars + ',' fills
+        // indices 0..8189, the high surrogate goes to 8190, the low surrogate
+        // to 8191 (the reserved slot). If the limit regressed to
+        // buffer.size, writing the low surrogate at 8192 would overflow.
+        val tmp = Files.createTempFile("kotlin-csv-reader-smoke-supplementary", ".csv")
+        try {
+            val pad = "x".repeat(8189)
+            val csv = "$pad,😀\n"
+            Files.writeString(tmp, csv)
+            val rows = CsvReader().readFromFile(tmp.toString()) { it.toList() }
+            rows shouldBe listOf(listOf(pad, "😀"))
+        } finally {
+            tmp.deleteIfExists()
+        }
+    }
 }
