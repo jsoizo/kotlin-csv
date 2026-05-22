@@ -188,6 +188,13 @@ internal class ParseStateMachine(
         }
     }
 
+    fun getFinalResult(rowNum: Long): List<String>? {
+        if (state == ParseState.QUOTE_START || state == ParseState.QUOTED_FIELD) {
+            throw CsvParseFormatException(rowNum, pos, quoteChar, "end of quote doesn't exist")
+        }
+        return getResult()
+    }
+
     private fun flushField() {
         fields.add(field.toString())
         field.clear()

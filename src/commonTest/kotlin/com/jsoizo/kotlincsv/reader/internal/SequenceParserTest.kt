@@ -200,10 +200,17 @@ class SequenceParserTest {
     }
 
     @Test
-    fun unterminatedQuote_atEof_yieldsNoFinalRow() {
-        // The state machine ends in QUOTED_FIELD, so getResult() returns null
-        // and the in-flight row is dropped rather than emitted partial.
-        parse("\"abc") shouldBe emptyList()
+    fun unterminatedQuote_atEof_throws() {
+        shouldThrow<CsvParseFormatException> {
+            parse("\"abc")
+        }
+    }
+
+    @Test
+    fun quoteStart_atEof_throws() {
+        shouldThrow<CsvParseFormatException> {
+            parse("\"")
+        }
     }
 
     private fun chunkedReader(text: String): (CharArray) -> Int {
@@ -277,10 +284,17 @@ class SequenceParserTest {
     }
 
     @Test
-    fun chunked_unterminatedQuote_atChunkBoundary_yieldsNoFinalRow() {
-        // QUOTED_FIELD at EOF means the row was never terminated; tail-flush
-        // must drop it rather than emit a half-parsed row.
-        parseChunked("\"abc", bufferSize = 2) shouldBe emptyList()
+    fun chunked_unterminatedQuote_atChunkBoundary_throws() {
+        shouldThrow<CsvParseFormatException> {
+            parseChunked("\"abc", bufferSize = 2)
+        }
+    }
+
+    @Test
+    fun chunked_quoteStart_atEof_throws() {
+        shouldThrow<CsvParseFormatException> {
+            parseChunked("\"", bufferSize = 2)
+        }
     }
 
     @Test

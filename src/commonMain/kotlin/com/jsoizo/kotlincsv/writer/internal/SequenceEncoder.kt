@@ -93,7 +93,7 @@ private fun encodeField(
         WriteQuoteMode.ALL -> true
         WriteQuoteMode.CANONICAL ->
             needsCanonicalQuote(field, quoteChar, escapeChar, dialect.delimiter, dialect.lineTerminator)
-        WriteQuoteMode.NON_NUMERIC -> !isDecimalNumber(field)
+        WriteQuoteMode.NON_NUMERIC -> !isDecimalLikeToken(field)
     }
 
     if (shouldQuote) yield(quoteChar)
@@ -126,7 +126,7 @@ private fun appendField(
         WriteQuoteMode.ALL -> true
         WriteQuoteMode.CANONICAL ->
             needsCanonicalQuote(field, quoteChar, escapeChar, dialect.delimiter, dialect.lineTerminator)
-        WriteQuoteMode.NON_NUMERIC -> !isDecimalNumber(field)
+        WriteQuoteMode.NON_NUMERIC -> !isDecimalLikeToken(field)
     }
 
     if (shouldQuote) out.append(quoteChar)
@@ -167,7 +167,7 @@ private fun needsCanonicalQuote(
     return false
 }
 
-private fun isDecimalNumber(field: String): Boolean {
+private fun isDecimalLikeToken(field: String): Boolean {
     if (field.isEmpty()) return false
     var foundDot = false
     for (ch in field) {

@@ -88,6 +88,9 @@ share them across calls.
 ```kotlin
 import com.jsoizo.kotlincsv.csvReader
 import com.jsoizo.kotlincsv.csvWriter
+import com.jsoizo.kotlincsv.reader.readFromFile
+import com.jsoizo.kotlincsv.reader.withHeader
+import com.jsoizo.kotlincsv.writer.writeToFile
 
 val reader = csvReader()
 val writer = csvWriter()

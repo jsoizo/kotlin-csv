@@ -351,7 +351,7 @@ reader.readFromFile(file, options = CsvReadIoOptions(stripBom = false)) { ... }
   declared on the dialect.
 
 - **JS file I/O loads the whole file into memory.** At the time of
-  writing (kotlinx-io 0.7.0), `SystemFileSystem.source(path)` on Node.js
+  writing (kotlinx-io 0.9.0), `SystemFileSystem.source(path)` on Node.js
   reads the entire file via `fs.readFileSync` on its first read.
   Streaming with `take(n)` is effectively JVM-only despite the
   `Sequence` shape; the JS `Sequence` yields from an in-memory buffer.

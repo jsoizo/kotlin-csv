@@ -44,7 +44,7 @@ internal fun parseRows(
     }
 
     if (stateMachineHasInput) {
-        stateMachine.getResult()?.let { yield(it) }
+        stateMachine.getFinalResult(rowNum)?.let { yield(it) }
     }
 }
 
@@ -134,6 +134,6 @@ internal fun parseRowsFromChunks(
     }
 
     if (machineHasInput) {
-        machine.getResult()?.let { yield(it) }
+        machine.getFinalResult(rowNum)?.let { yield(it) }
     }
 }

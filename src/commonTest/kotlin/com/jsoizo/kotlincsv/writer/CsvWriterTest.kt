@@ -117,6 +117,24 @@ class CsvWriterTest {
     }
 
     @Test
+    fun quote_nonNumeric_doesNotQuoteDotOnlyToken() {
+        val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.NON_NUMERIC))
+        writer.writeAll(listOf(listOf("."))) shouldBe ".\r\n"
+    }
+
+    @Test
+    fun quote_nonNumeric_doesNotQuoteLeadingOrTrailingDotToken() {
+        val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.NON_NUMERIC))
+        writer.writeAll(listOf(listOf(".5", "1."))) shouldBe ".5,1.\r\n"
+    }
+
+    @Test
+    fun quote_nonNumeric_quotesSignedOrExponentToken() {
+        val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.NON_NUMERIC))
+        writer.writeAll(listOf(listOf("-1", "+1", "1e3"))) shouldBe "\"-1\",\"+1\",\"1e3\"\r\n"
+    }
+
+    @Test
     fun quote_nonNumeric_quotesNonNumeric() {
         val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.NON_NUMERIC))
         writer.writeAll(listOf(listOf("abc"))) shouldBe "\"abc\"\r\n"
