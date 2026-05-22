@@ -95,7 +95,9 @@ internal fun parseRowsFromChunks(
     while (true) {
         if (index >= currentLength) {
             if (nextLength <= 0) break
-            val swap = currentBuffer; currentBuffer = nextBuffer; nextBuffer = swap
+            val swap = currentBuffer
+            currentBuffer = nextBuffer
+            nextBuffer = swap
             currentLength = nextLength
             nextLength = readInto(nextBuffer)
             index = 0

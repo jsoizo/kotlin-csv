@@ -2,9 +2,6 @@ package com.jsoizo.kotlincsv.reader.internal
 
 import com.jsoizo.kotlincsv.exceptions.CsvParseFormatException
 
-/**
- * @author doyaaaaaaken
- */
 internal class ParseStateMachine(
     private val quoteChar: Char,
     private val delimiter: Char,
@@ -19,11 +16,7 @@ internal class ParseStateMachine(
 
     private var pos = 0L
 
-    /**
-     * Read character and change state
-     *
-     * @return read character count (1 or 2)
-     */
+    /** Returns the consumed char count so drivers can skip consumed lookahead. */
     fun read(ch: Char, nextCh: Char?, rowNum: Long): Long {
         val prevPos = pos
         when (state) {

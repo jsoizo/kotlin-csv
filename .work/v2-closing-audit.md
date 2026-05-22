@@ -114,17 +114,27 @@
 
 推奨対応: v2.0.0 前に大きく触る必要はない。別PRで `ParseStateMachine` のコメントだけ「why」中心に整理し、ついでに1行複数文と桁合わせを通常のKotlin styleへ寄せる。
 
+- 対応メモ: `ParseStateMachine` の説明的な旧式コメントを整理し、`SequenceParser.kt` の1行複数文と `SequenceEncoder.kt` の桁合わせを通常のKotlin styleへ寄せた。`CsvWriterTest` の見出しコメントはテスト構造の可読性目的として今回は維持する。
+
 ### P3-2: ブランチ名 / リンク名の古い `master` 表記
 
 - 根拠: CI は `main` を対象にしているが、README badge / POM license URL は `master` を指している。
 - 関連箇所: `.github/workflows/build_and_test.yml:6`, `README.md:5`, `README.md:9`, `build.gradle.kts:139`
 - 推奨対応: 実リポジトリのデフォルトブランチに合わせて `main` へ統一する。
+- 対応メモ: README badge / license link と POM license URL を `main` に統一した。
 
 ### P3-3: `.claude/scheduled_tasks.lock` と `.tool-versions` の扱いを決める
 
 - 根拠: `git status --short` で `.claude/scheduled_tasks.lock` と `.tool-versions` も追加状態。
 - 影響: `.tool-versions` は開発環境固定として有用な可能性がある。一方 lock file は個人環境由来ならコミット不要。
 - 推奨対応: `.tool-versions` は採用するなら意図を確認してコミット、lock file は ignore 対象にする。
+- 判断: 今回のコミット対象からは外す。JDK は Gradle toolchain / CI の設定を基準にし、`.tool-versions` の採否は別途扱う。
+
+### P3-4: 命名規則の一貫性チェック
+
+- 確認観点: `Csv` / `CSV` の使い分け、reader / writer API名、I/O API名、field-count 関連名、`Behaviour` / `Behavior` の表記ゆれ。
+- 判断: 実コードの公開APIは `Csv*`、DSLは `csvReader` / `csvWriter`、file I/Oは `readFromFile` / `readAllFromFile` / `writeToFile`、例外は `Csv...Exception` に揃っている。旧 `CSV...` 名は migration guide の互換説明だけに残っており、修正不要。
+- メモ: `Behaviour` は既存公開APIとして `InsufficientFieldsRowBehaviour` / `ExcessFieldsRowBehaviour` に統一されているため維持する。
 
 ## 良かった点
 
@@ -137,5 +147,4 @@
 ## 推奨の次アクション
 
 1. P0 / P1 / P2 対応を含む最終 `./gradlew check` を通してからコミットする。
-2. P3-1 は別PRでコメントと軽微なスタイルだけを整理する。
-3. P3-2 / P3-3 はリポジトリ運用判断を確認してから扱う。
+2. `.tool-versions` と `.claude/scheduled_tasks.lock` の扱いはリポジトリ運用判断として別途確認する。

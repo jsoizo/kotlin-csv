@@ -106,8 +106,11 @@ private fun encodeField(
     } else {
         // Explicit escape style (CSV extension).
         for (ch in field) when (ch) {
-            quoteChar, escapeChar -> { yield(escapeChar); yield(ch) }
-            else                  -> yield(ch)
+            quoteChar, escapeChar -> {
+                yield(escapeChar)
+                yield(ch)
+            }
+            else -> yield(ch)
         }
     }
     if (shouldQuote) yield(quoteChar)

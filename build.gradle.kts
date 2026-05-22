@@ -136,7 +136,7 @@ mavenPublishing {
         licenses {
             license {
                 name.set("Apache License 2.0")
-                url.set("${repoHttpUrl}/blob/master/LICENSE")
+                url.set("${repoHttpUrl}/blob/main/LICENSE")
             }
         }
         scm {

@@ -2,11 +2,11 @@
 
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-2.0.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/jsoizo/kotlin-csv/blob/master/LICENSE">
+  <a href="https://github.com/jsoizo/kotlin-csv/blob/main/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
   <a href="https://codecov.io/gh/jsoizo/kotlin-csv">
-    <img src="https://codecov.io/gh/jsoizo/kotlin-csv/branch/master/graph/badge.svg" alt="codecov" />
+    <img src="https://codecov.io/gh/jsoizo/kotlin-csv/branch/main/graph/badge.svg" alt="codecov" />
   </a>
   <a href="https://www.codefactor.io/repository/github/jsoizo/kotlin-csv">
     <img src="https://www.codefactor.io/repository/github/jsoizo/kotlin-csv/badge" alt="CodeFactor" />
