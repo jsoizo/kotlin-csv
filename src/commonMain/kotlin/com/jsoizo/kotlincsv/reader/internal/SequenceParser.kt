@@ -32,7 +32,7 @@ internal fun parseRows(
             stateMachineHasInput = true
 
             if (stateMachine.isLineComplete()) {
-                stateMachine.getResult()?.let { yield(it) }
+                stateMachine.finishRow()?.let { yield(it) }
                 rowNum++
                 stateMachine.reset()
                 stateMachineHasInput = false
@@ -44,7 +44,7 @@ internal fun parseRows(
     }
 
     if (stateMachineHasInput) {
-        stateMachine.getResult()?.let { yield(it) }
+        stateMachine.finishFinalRow(rowNum)?.let { yield(it) }
     }
 }
 
@@ -95,7 +95,9 @@ internal fun parseRowsFromChunks(
     while (true) {
         if (index >= currentLength) {
             if (nextLength <= 0) break
-            val swap = currentBuffer; currentBuffer = nextBuffer; nextBuffer = swap
+            val swap = currentBuffer
+            currentBuffer = nextBuffer
+            nextBuffer = swap
             currentLength = nextLength
             nextLength = readInto(nextBuffer)
             index = 0
@@ -123,7 +125,7 @@ internal fun parseRowsFromChunks(
             machineHasInput = true
 
             if (machine.isLineComplete()) {
-                machine.getResult()?.let { yield(it) }
+                machine.finishRow()?.let { yield(it) }
                 rowNum++
                 machine.reset()
                 machineHasInput = false
@@ -134,6 +136,6 @@ internal fun parseRowsFromChunks(
     }
 
     if (machineHasInput) {
-        machine.getResult()?.let { yield(it) }
+        machine.finishFinalRow(rowNum)?.let { yield(it) }
     }
 }

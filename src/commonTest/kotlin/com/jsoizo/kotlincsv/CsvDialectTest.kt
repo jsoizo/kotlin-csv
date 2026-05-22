@@ -34,6 +34,30 @@ class CsvDialectTest {
     }
 
     @Test
+    fun require_rejects_delimiterAsReaderLineTerminator() {
+        val ex = shouldThrow<IllegalArgumentException> {
+            CsvDialect(delimiter = '\n')
+        }
+        ex.message.shouldNotBeNull() shouldContain "delimiter"
+    }
+
+    @Test
+    fun require_rejects_quoteCharAsReaderLineTerminator() {
+        val ex = shouldThrow<IllegalArgumentException> {
+            CsvDialect(quoteChar = '\r')
+        }
+        ex.message.shouldNotBeNull() shouldContain "quoteChar"
+    }
+
+    @Test
+    fun require_rejects_escapeCharAsReaderLineTerminator() {
+        val ex = shouldThrow<IllegalArgumentException> {
+            CsvDialect(escapeChar = '\u2028')
+        }
+        ex.message.shouldNotBeNull() shouldContain "escapeChar"
+    }
+
+    @Test
     fun require_rejects_emptyLineTerminator() {
         val ex = shouldThrow<IllegalArgumentException> {
             CsvDialect(lineTerminator = "")

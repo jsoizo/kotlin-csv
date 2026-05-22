@@ -351,7 +351,7 @@ reader.readFromFile(file, options = CsvReadIoOptions(stripBom = false)) { ... }
   declared on the dialect.
 
 - **JS file I/O loads the whole file into memory.** At the time of
-  writing (kotlinx-io 0.7.0), `SystemFileSystem.source(path)` on Node.js
+  writing (kotlinx-io 0.9.0), `SystemFileSystem.source(path)` on Node.js
   reads the entire file via `fs.readFileSync` on its first read.
   Streaming with `take(n)` is effectively JVM-only despite the
   `Sequence` shape; the JS `Sequence` yields from an in-memory buffer.
@@ -364,7 +364,8 @@ reader.readFromFile(file, options = CsvReadIoOptions(stripBom = false)) { ... }
 - **Field-count exception field names changed.** On
   `CsvFieldNumDifferentException`, `fieldNum` -> `expectedFieldCount`,
   `fieldNumOnFailedRow` -> `actualFieldCount`, `csvRowNum` -> `rowNum`
-  (now `Long`).
+  (now `Long`). `rowNum` counts CSV rows after reader filters such as
+  `skipEmptyLine`; it is not a physical source line number.
 
 ## 10. Cookbook
 
@@ -626,8 +627,9 @@ val reader = csvReader {
 ```
 
 `CsvDialect` rejects inconsistent combinations
-(`delimiter == quoteChar`, empty `lineTerminator`, ...) at construction
-time with `IllegalArgumentException`.
+(`delimiter == quoteChar`, empty `lineTerminator`, reader line terminator
+characters as `delimiter` / `quoteChar` / `escapeChar`, ...) at
+construction time with `IllegalArgumentException`.
 
 #### 10.18 Read a CSV from Node.js
 

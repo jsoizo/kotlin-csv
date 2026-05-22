@@ -49,6 +49,15 @@ class CsvReaderTest {
     }
 
     @Test
+    fun skipEmptyLine_fieldCountErrorRowNum_countsFilteredCsvRows() {
+        val reader = CsvReader(CsvReaderConfig(skipEmptyLine = true))
+        val ex = shouldThrow<CsvFieldNumDifferentException> {
+            reader.readAll("a,b\n\nc")
+        }
+        ex.rowNum shouldBe 2L
+    }
+
+    @Test
     fun insufficient_ERROR_throws() {
         val reader = CsvReader(CsvReaderConfig())
         shouldThrow<CsvFieldNumDifferentException> {

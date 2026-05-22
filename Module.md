@@ -62,7 +62,7 @@ returns or throws — so `take(n)` short-circuits and abrupt exceptions both
 still close the resource. The pattern reads as:
 
 ```kotlin
-reader.read(file) { rows ->
+reader.readFromFile(file) { rows ->
     rows.take(100).forEach { println(it) }
 }  // file closed here
 ```
@@ -74,14 +74,15 @@ forbid this at the type level, so it is a contract callers are expected to
 honour.
 
 When you need a fully materialised `List<List<String>>`, prefer the eager
-`readAll` overloads instead of writing `read(file) { it.toList() }` by hand:
+`readAllFromFile` overloads instead of writing `readFromFile(file) { it.toList() }` by hand:
 
 ```kotlin
-val rows: List<List<String>> = reader.readAll(file)
+val rows: List<List<String>> = reader.readAllFromFile(file)
 ```
 
-`readAll` overloads exist for the same source shapes as `read` (common:
-`Source` / `Path` / `String`; JVM: `File` / `InputStream`).
+`readAll` / `readAllFromFile` overloads exist for the same source shapes as
+`read` / `readFromFile` (common: `Source` / `Path` / `String`; JVM:
+`File` / `InputStream`).
 
 # Package com.jsoizo.kotlincsv
 
@@ -127,7 +128,9 @@ count:
   `EMPTY_STRING` pads with empty strings to the expected count.
 
 `CsvReaderConfig.skipEmptyLine` filters out fully empty rows before the
-field-count check.
+field-count check. When `ERROR` raises `CsvFieldNumDifferentException`,
+`rowNum` counts the CSV rows that remain after this filter; it is not a
+physical source line number.
 
 ## Header processing
 
@@ -156,7 +159,7 @@ the BOM as U+FEFF in the decoded character stream (UTF-8, UTF-16, ...).
 
 ## JS / Node.js streaming caveat
 
-At the time of writing (kotlinx-io 0.7.0), the `FileSource` returned by
+At the time of writing (kotlinx-io 0.9.0), the `FileSource` returned by
 `SystemFileSystem.source(path)` on Node.js loads the entire file into memory
 via `fs.readFileSync` on its first read. The `Sequence<Char>` shape is
 preserved on JS for API uniformity, but on JS the in-memory footprint scales
@@ -195,7 +198,9 @@ fields in `quoteChar`:
 - `CANONICAL` (default): quote only when necessary — when the field contains
   the delimiter, the quote character, or a line terminator.
 - `ALL`: always quote every field.
-- `NON_NUMERIC`: quote every field that is not numeric.
+- `NON_NUMERIC`: quote fields that contain anything other than digits and at
+  most one dot. This is a simple lexical heuristic, not locale-aware number
+  parsing.
 
 ## Escape character output rules
 
@@ -256,10 +261,11 @@ context for the more specific failures.
 ## Field semantics
 
 - [CsvParseFormatException] carries `rowNum: Long`, `colIndex: Long`, and
-  `char: Char` — the row, column, and character that the parser refused.
+  `char: Char` — the CSV row, column, and character that the parser refused.
 - [CsvFieldNumDifferentException] carries `expectedFieldCount: Int`,
   `actualFieldCount: Int`, and `rowNum: Long`. The expected count is fixed
-  by the first row.
+  by the first row, and `rowNum` is counted after reader filters such as
+  `skipEmptyLine`.
 
 Row and column indices are `Long` so files with more than `Int.MAX_VALUE`
 rows can still report meaningful positions.

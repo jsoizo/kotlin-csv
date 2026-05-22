@@ -2,9 +2,6 @@ package com.jsoizo.kotlincsv.reader.internal
 
 import com.jsoizo.kotlincsv.exceptions.CsvParseFormatException
 
-/**
- * @author doyaaaaaaken
- */
 internal class ParseStateMachine(
     private val quoteChar: Char,
     private val delimiter: Char,
@@ -19,11 +16,7 @@ internal class ParseStateMachine(
 
     private var pos = 0L
 
-    /**
-     * Read character and change state
-     *
-     * @return read character count (1 or 2)
-     */
+    /** Returns the consumed char count so drivers can skip consumed lookahead. */
     fun read(ch: Char, nextCh: Char?, rowNum: Long): Long {
         val prevPos = pos
         when (state) {
@@ -157,7 +150,7 @@ internal class ParseStateMachine(
 
     /**
      * `true` after a row terminator has been consumed. Drivers must read the
-     * row via [getResult] and call [reset] before the next row.
+     * row via [finishRow] and call [reset] before the next row.
      */
     internal fun isLineComplete(): Boolean = state == ParseState.END
 
@@ -169,11 +162,7 @@ internal class ParseStateMachine(
         pos = 0L
     }
 
-    /**
-     * @return return parsed CSV Fields.
-     *         return null, if current position is on the way of csv row.
-     */
-    fun getResult(): List<String>? {
+    fun finishRow(): List<String>? {
         return when (state) {
             ParseState.DELIMITER -> {
                 fields.add("")
@@ -186,6 +175,13 @@ internal class ParseStateMachine(
             }
             else -> fields.toList()
         }
+    }
+
+    fun finishFinalRow(rowNum: Long): List<String>? {
+        if (state == ParseState.QUOTE_START || state == ParseState.QUOTED_FIELD) {
+            throw CsvParseFormatException(rowNum, pos, quoteChar, "end of quote doesn't exist")
+        }
+        return finishRow()
     }
 
     private fun flushField() {
