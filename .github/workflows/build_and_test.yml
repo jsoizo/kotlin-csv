@@ -7,39 +7,26 @@ on:
   pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  linux:
+    name: Linux, JVM, JS, and coverage
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 8
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '8'
+          java-version: '21'
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Verify dependencies
-        run: ./gradlew dependencies
-
-      - name: Run checks and generate report
+      - name: Run Linux, JVM, JS checks and generate coverage report
         run: |
-          ./gradlew clean check
-          ./gradlew jacocoTestReport
+          ./gradlew clean jvmTest jsNodeTest linuxX64Test compileKotlinLinuxArm64 compileTestKotlinLinuxArm64 compileKotlinWasmWasi checkKotlinAbi koverXmlReport
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v4
@@ -47,3 +34,44 @@ jobs:
           fail_ci_if_error: true
           token: ${{ secrets.CODECOV_TOKEN }}
           verbose: true
+
+  apple:
+    name: Apple Native
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Apple Native checks
+        run: |
+          ./gradlew macosArm64Test iosSimulatorArm64Test compileKotlinIosArm64 compileTestKotlinIosArm64
+
+  windows:
+    name: Windows Native
+    runs-on: windows-2025
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run Windows Native checks
+        run: ./gradlew.bat mingwX64Test

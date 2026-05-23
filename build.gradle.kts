@@ -1,159 +1,153 @@
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.KotlinMultiplatform
+import com.vanniktech.maven.publish.SourcesJar
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
-    java
-    kotlin("multiplatform") version "1.7.21"
-    id("org.jetbrains.dokka").version("1.7.20")
-    `maven-publish`
-    signing
-    jacoco
+    alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.kotlinJvm) apply false
+    alias(libs.plugins.dokka)
+    alias(libs.plugins.kover)
+    alias(libs.plugins.mavenPublish)
+    alias(libs.plugins.jmh) apply false
 }
 
 group = "com.jsoizo"
-version = "1.10.0"
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.jetbrains.dokka:dokka-gradle-plugin:1.7.20")
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
-val dokkaJar = task<Jar>("dokkaJar") {
-    group = JavaBasePlugin.DOCUMENTATION_GROUP
-    archiveClassifier.set("javadoc")
-}
+version = "2.0.0-SNAPSHOT"
+val projectName = "kotlin-csv"
 
 kotlin {
+    jvmToolchain(21)
+
     jvm {
-        compilations.forEach {
-            it.kotlinOptions.jvmTarget = "1.8"
-        }
-        //https://docs.gradle.org/current/userguide/publishing_maven.html
-        mavenPublication {
-            artifact(dokkaJar)
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_1_8)
         }
     }
-    js(BOTH) {
+    js {
         browser {
+            testTask {
+                enabled = false
+            }
         }
         nodejs {
         }
     }
+
+    macosArm64()
+    iosArm64()
+    iosSimulatorArm64()
+    linuxX64()
+    linuxArm64()
+    mingwX64()
+
+    @OptIn(ExperimentalWasmDsl::class)
+    wasmWasi {
+        nodejs()
+    }
+
     sourceSets {
-        commonMain {}
+        commonMain {
+            dependencies {
+                implementation(libs.kotlinx.io.core)
+            }
+        }
         commonTest {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                implementation(kotlin("test"))
+                implementation(libs.kotest.assertions.core)
+                implementation(libs.kotest.property)
+                implementation(libs.kotlinx.coroutines.test)
             }
         }
 
-        jvm().compilations["main"].defaultSourceSet {
+        jvmMain {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+                implementation(libs.kotlinx.coroutines.core)
             }
         }
-        jvm().compilations["test"].defaultSourceSet {
+        jvmTest {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-                implementation("io.kotest:kotest-runner-junit5:4.6.3")
-                implementation("io.kotest:kotest-assertions-core:4.6.3")
-            }
-        }
-        js().compilations["main"].defaultSourceSet {
-            dependencies {
-            }
-        }
-        js().compilations["test"].defaultSourceSet {
-            dependencies {
-                implementation(kotlin("test-js"))
+                implementation(libs.bundles.kotest)
+                implementation(libs.kotlin.test.junit5)
             }
         }
     }
 }
 
-tasks.withType<Test>() {
+tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
 
+// Kotest 6.x does not publish wasmWasi artifacts yet, so commonTest cannot be
+// compiled for this target. Validate main compilation only until upstream support lands.
+listOf("compileTestKotlinWasmWasi", "wasmWasiTest", "wasmWasiNodeTest").forEach { taskName ->
+    tasks.matching { it.name == taskName }.configureEach { enabled = false }
+}
 
-publishing {
-    publications.all {
-        (this as MavenPublication).pom {
-            name.set("kotlin-csv")
-            description.set("Kotlin CSV Reader/Writer")
-            url.set("https://github.com/jsoizo/kotlin-csv")
-
-            organization {
-                name.set("com.jsoizo")
-                url.set("https://github.com/jsoizo")
-            }
-            licenses {
-                license {
-                    name.set("Apache License 2.0")
-                    url.set("https://github.com/jsoizo/kotlin-csv/blob/master/LICENSE")
-                }
-            }
-            scm {
-                url.set("https://github.com/jsoizo/kotlin-csv")
-                connection.set("scm:git:git://github.com/jsoizo/kotlin-csv.git")
-                developerConnection.set("https://github.com/jsoizo/kotlin-csv")
-            }
-            developers {
-                developer {
-                    name.set("jsoizo")
-                }
-            }
-        }
-    }
-    repositories {
-        maven {
-            credentials {
-                val nexusUsername: String? by project
-                val nexusPassword: String? by project
-                username = nexusUsername
-                password = nexusPassword
-            }
-
-            val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
-            val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-        }
+// Kotest 6.x JVM artifacts are built with Java 11 bytecode, while the library
+// artifact itself still targets Java 8 for consumer compatibility.
+tasks.named<KotlinJvmCompile>("compileTestKotlinJvm") {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
-signing {
-    sign(publishing.publications)
+dokka {
+    moduleName.set(projectName)
+    dokkaSourceSets.named("commonMain") {
+        includes.from("Module.md")
+    }
 }
 
-/////////////////////////////////////////
-//         Jacoco setting              //
-/////////////////////////////////////////
-jacoco {
-    toolVersion = "0.8.8"
-}
-tasks.jacocoTestReport {
-    val coverageSourceDirs = arrayOf(
-        "commonMain/src",
-        "jvmMain/src"
+mavenPublishing {
+    publishToMavenCentral()
+
+    val isSnapshot = version.toString().endsWith("-SNAPSHOT")
+    val hasSigningKey = project.hasProperty("signing.keyId") || project.hasProperty("signingInMemoryKey")
+    if (!isSnapshot && hasSigningKey) {
+        signAllPublications()
+    }
+
+    coordinates(group.toString(), projectName, version.toString())
+
+    configure(
+        KotlinMultiplatform(
+            javadocJar = JavadocJar.Dokka("dokkaGeneratePublicationHtml"),
+            sourcesJar = SourcesJar.Sources(),
+        )
     )
-    val classFiles = File("${buildDir}/classes/kotlin/jvm/")
-        .walkBottomUp()
-        .toSet()
-    classDirectories.setFrom(classFiles)
-    sourceDirectories.setFrom(files(coverageSourceDirs))
-    additionalSourceDirs.setFrom(files(coverageSourceDirs))
 
-    executionData
-        .setFrom(files("${buildDir}/jacoco/jvmTest.exec"))
+    val repo = "github.com/jsoizo/${projectName}"
+    val repoHttpUrl = "https://${repo}"
+    val repoGitUrl = "git://${repo}.git"
 
-    reports {
-        xml.required.set(true)
-        html.required.set(false)
+    pom {
+        name = projectName
+        description = "Pure Kotlin CSV reader and writer"
+        inceptionYear = "2019"
+        url = repoHttpUrl
+        organization {
+            name.set("com.jsoizo")
+            url.set("https://github.com/jsoizo")
+        }
+        licenses {
+            license {
+                name.set("Apache License 2.0")
+                url.set("${repoHttpUrl}/blob/main/LICENSE")
+            }
+        }
+        scm {
+            url.set(repoHttpUrl)
+            connection.set("scm:git:${repoGitUrl}")
+            developerConnection.set(repoHttpUrl)
+        }
+        developers {
+            developer {
+                name.set("jsoizo")
+            }
+        }
     }
 }

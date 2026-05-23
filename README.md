@@ -1,298 +1,216 @@
-<h1 align="center">kotlin-csv</h1>
+# kotlin-csv
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.10.0-blue.svg?cacheSeconds=2592000" />
-  <a href="https://github.com/jsoizo/kotlin-csv/blob/master/LICENSE">
+  <img alt="Version" src="https://img.shields.io/badge/version-2.0.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://github.com/jsoizo/kotlin-csv/blob/main/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
   <a href="https://codecov.io/gh/jsoizo/kotlin-csv">
-    <img src="https://codecov.io/gh/jsoizo/kotlin-csv/branch/master/graph/badge.svg" alt="codecov" />
+    <img src="https://codecov.io/gh/jsoizo/kotlin-csv/branch/main/graph/badge.svg" alt="codecov" />
   </a>
   <a href="https://www.codefactor.io/repository/github/jsoizo/kotlin-csv">
     <img src="https://www.codefactor.io/repository/github/jsoizo/kotlin-csv/badge" alt="CodeFactor" />
   </a>
 </p>
 
-Pure Kotlin CSV Reader/Writer.
+Pure Kotlin Multiplatform CSV reader and writer.
 
-# Design goals
+## Setup
 
-### 1. Simple interface
-
-* easy to setup
-* use DSL so easy to read
-
-### 2. Automatic handling of I/O
-
-* in Java, we always need to close file. but it's boilerplate code and not friendly for non-JVM user.
-* provide interfaces which automatically close file without being aware.
-
-### 3. Multiplatform
-
-* Kotlin Multiplatform projects support.
-
-# Usage
-
-## Download
-
-### Gradle
-
-for Kotlin DSL
+### Gradle (Kotlin DSL)
 
 ```kotlin
-implementation("com.jsoizo:kotlin-csv-jvm:1.10.0") // for JVM platform
-implementation("com.jsoizo:kotlin-csv-js:1.10.0") // for Kotlin JS platform
+implementation("com.jsoizo:kotlin-csv:2.0.0")
 ```
 
-for Gradle DSL
+The multiplatform artifact resolves JVM, JS, and supported Kotlin/Native variants
+from Kotlin Multiplatform projects. Published Native targets are
+`macosArm64`, `iosArm64`, `iosSimulatorArm64`, `linuxX64`, `linuxArm64`, and `mingwX64`.
+
+Single-platform Gradle projects can also depend on the platform artifact
+directly, for example `kotlin-csv-jvm`, `kotlin-csv-js`,
+`kotlin-csv-macosarm64`, or `kotlin-csv-linuxx64`.
+
+### Gradle (Groovy DSL)
 
 ```groovy
-implementation 'com.jsoizo:kotlin-csv-jvm:1.10.0' // for JVM platform
-implementation 'com.jsoizo:kotlin-csv-js:1.10.0' // for Kotlin JS platform
+implementation 'com.jsoizo:kotlin-csv:2.0.0'
 ```
 
 ### Maven
 
-```maven
+```xml
 <dependency>
   <groupId>com.jsoizo</groupId>
   <artifactId>kotlin-csv-jvm</artifactId>
-  <version>1.10.0</version>
+  <version>2.0.0</version>
 </dependency>
 <dependency>
   <groupId>com.jsoizo</groupId>
   <artifactId>kotlin-csv-js</artifactId>
-  <version>1.10.0</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
-### [kscript](https://github.com/holgerbrandl/kscript)
+### SNAPSHOT builds
+
+Snapshots of the next development version are published to
+[Sonatype Central Portal Snapshots](https://central.sonatype.com/repository/maven-snapshots/) from the active development branch.
+SNAPSHOTs are unstable and may change at any time, but they let you try in-progress changes early.
+
+Add the snapshots repository to your build, then declare the dependency with the corresponding `-SNAPSHOT` version
+(see the active development branch's `build.gradle.kts` for the current value, for example `2.0.0-SNAPSHOT`).
+
+#### Gradle (Kotlin DSL)
 
 ```kotlin
-@file:DependsOn("com.jsoizo:kotlin-csv-jvm:1.10.0") // for JVM platform
-@file:DependsOn("com.jsoizo:kotlin-csv-js:1.10.0") // for Kotlin JS platform
-```
-
-## Examples
-
-### CSV Read examples
-
-#### Simple case
-
-You can read csv file from `String`, `java.io.File` or `java.io.InputStream` object.  
-No need to do any I/O handling. (No need to call `use`, `close` and `flush` method.)
-
-```kotlin
-// read from `String`
-val csvData: String = "a,b,c\nd,e,f"
-val rows: List<List<String>> = csvReader().readAll(csvData)
-
-// read from `java.io.File`
-val file: File = File("test.csv")
-val rows: List<List<String>> = csvReader().readAll(file)
-```
-
-#### Read with header
-
-```kotlin
-val csvData: String = "a,b,c\nd,e,f"
-val rows: List<Map<String, String>> = csvReader().readAllWithHeader(csvData)
-println(rows) //[{a=d, b=e, c=f}]
-```
-
-#### Read as `Sequence`
-
-`Sequence` type allows to execute lazily.<br />
-It starts to process each rows before reading all row data.
-
-Learn more about the `Sequence` type on [Kotlin's official documentation](https://kotlinlang.org/docs/reference/sequences.html).
-
-```kotlin
-csvReader().open("test1.csv") {
-    readAllAsSequence().forEach { row: List<String> ->
-        //Do something
-        println(row) //[a, b, c]
-    }
-}
-
-csvReader().open("test2.csv") {
-    readAllWithHeaderAsSequence().forEach { row: Map<String, String> ->
-        //Do something
-        println(row) //{id=1, name=jsoizo}
+// settings.gradle.kts
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven("https://central.sonatype.com/repository/maven-snapshots/") {
+            mavenContent { snapshotsOnly() }
+        }
     }
 }
 ```
 
-NOTE: `readAllAsSequence` and `readAllWithHeaderAsSequence` methods can only be called within the `open` lambda block.
-The input stream is closed after the `open` lambda block.
+```kotlin
+// build.gradle.kts
+implementation("com.jsoizo:kotlin-csv:<VERSION>-SNAPSHOT")
+```
 
-#### Read line by line
+## Quick start
 
-If you want to handle line-by-line, you can do it by using `open` method. Use `open` method and then use `readNext`
-method inside nested block to read row.
+The DSL builders return reusable, stateless instances; create them once and
+share them across calls.
 
 ```kotlin
-csvReader().open("test.csv") {
-    readNext()
+import com.jsoizo.kotlincsv.csvReader
+import com.jsoizo.kotlincsv.csvWriter
+import com.jsoizo.kotlincsv.reader.readFromFile
+import com.jsoizo.kotlincsv.reader.withHeader
+import com.jsoizo.kotlincsv.writer.writeToFile
+
+val reader = csvReader()
+val writer = csvWriter()
+```
+
+### Read
+
+```kotlin
+// From a String — eager
+val rows: List<List<String>> = reader.readAll("a,b,c\nd,e,f")
+
+// From a File — lambda owns the open resource and closes it on exit
+reader.readFromFile(File("data.csv")) { rows ->
+    rows.forEach { println(it) }
+}
+
+// With a header row (returns LinkedHashMap to preserve column order)
+reader.readFromFile(File("data.csv")) { rows ->
+    val records = rows.withHeader().toList()
+    println(records.first()["id"])
 }
 ```
 
-#### Read in a `Suspending Function`
+`reader.readFromFile(...)` accepts `String` paths, `kotlinx.io.files.Path`,
+and (on JVM) `java.io.File`. The block receives a cold
+`Sequence<List<String>>`; `take(n)` and friends short-circuit cleanly
+without parsing the rest of the file. For in-memory streams use
+`reader.read(source)` (commonMain `kotlinx.io.Source`) or
+`reader.read(stream)` (JVM `java.io.InputStream`).
+
+### Write
 
 ```kotlin
-csvReader().openAsync("test.csv") {
-    val container = mutalbeListOf<List<String>>()
-    delay(100) //other suspending task
-    readAllAsSequence().asFlow().collect { row ->
-        delay(100) // other suspending task
-        container.add(row)
-    }
-}
+val rows = listOf(
+    listOf("a", "b", "c"),
+    listOf("d", "e", "f"),
+)
+
+// To a String — eager
+val csv: String = writer.writeAll(rows)
+
+// To a File
+writer.writeToFile(rows, File("out.csv"))
 ```
 
-Note: `openAsync` can be and only be accessed through a `coroutine` or another `suspending` function
+`writer.writeToFile(...)` accepts `String` paths, `kotlinx.io.files.Path`,
+and (on JVM) `java.io.File`. For in-memory streams use
+`writer.write(rows, sink)` (commonMain `kotlinx.io.Sink`) or
+`writer.write(rows, stream)` (JVM `java.io.OutputStream`). Both
+`Sequence<List<String>>` and `List<List<String>>` are accepted as the row
+source.
 
-#### Customize
+## Configuration
 
-When you create CsvReader, you can choose read options:
+Reader and writer share a `CsvDialect` value object that holds the four
+characters defining the CSV format itself: `delimiter`, `quoteChar`,
+`escapeChar`, `lineTerminator`. Format-independent policies stay on the
+respective `Config`.
 
 ```kotlin
-// this is tsv reader's option
 val tsvReader = csvReader {
-    charset = "ISO_8859_1"
-    quoteChar = '"'
-    delimiter = '\t'
-    escapeChar = '\\'
+    dialect = CsvDialect.TSV
+    skipEmptyLine = true
+}
+
+val customWriter = csvWriter {
+    dialect = CsvDialect(delimiter = ';', escapeChar = '\\')
+    quoteMode = WriteQuoteMode.ALL
 }
 ```
 
-| Option                         | default value | description                                                                                                                                                                                                                                                                            |
-|--------------------------------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| logger                         | _no-op_       | Logger instance for logging debug information at runtime.                                                                                                                                                                                                                              |
-| charset                        | `UTF-8`       | Charset encoding. The value must be supported by [java.nio.charset.Charset](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html).                                                                                                                                  |
-| quoteChar                      | `"`           | Character used to quote fields.                                                                                                                                                                                                                                                        |
-| delimiter                      | `,`           | Character used as delimiter between each field.<br />Use `"\t"` if reading TSV file.                                                                                                                                                                                                   |
-| escapeChar                     | `"`           | Character to escape quote inside field string.<br />Normally, you don't have to change this option.<br />See detail comment on [ICsvReaderContext](src/commonMain/kotlin/com/github/doyaaaaaken/kotlincsv/dsl/context/CsvReaderContext.kt).                                            |
-| skipEmptyLine                  | `false`       | Whether to skip or error out on empty lines.                                                                                                                                                                                                                                           |
-| autoRenameDuplicateHeaders     | `false`       | Whether to auto rename duplicate headers or throw an exception.                                                                                                                                                                                                                        |
-| ~~skipMissMatchedRow~~         | `false`       | Deprecated. Replace with appropriate values in `excessFieldsRowBehaviour` and `insufficientFieldsRowBehaviour`, e.g. both set to `IGNORE`. ~~Whether to skip an invalid row. If `ignoreExcessCols` is true, only rows with less than the expected number of columns will be skipped.~~ |
-| excessFieldsRowBehaviour       | `ERROR`       | Behaviour to use when a row has more fields (columns) than expected. `ERROR` (default), `IGNORE` (skip the row) or `TRIM` (remove the excess fields at the end of the row to match the expected number of fields).                                                                     |
-| insufficientFieldsRowBehaviour | `ERROR`       | Behaviour to use when a row has fewer fields (columns) than expected. `ERROR` (default), `IGNORE` (skip the row) or `EMPTY_STRING` (replace missing fields with an empty string).                                                                                                      |
+| Reader option | Default | Description |
+| --- | --- | --- |
+| `dialect` | `CsvDialect.RFC4180` | Shared CSV format (delimiter / quote / escape / line terminator). |
+| `skipEmptyLine` | `false` | Drop rows that are entirely empty before the field-count check. |
+| `excessFieldsRowBehaviour` | `ERROR` | What to do when a row has more fields than the first row: `ERROR` / `IGNORE` / `TRIM`. |
+| `insufficientFieldsRowBehaviour` | `ERROR` | What to do when a row has fewer fields: `ERROR` / `IGNORE` / `EMPTY_STRING`. |
 
-### CSV Write examples
+`CsvFieldNumDifferentException.rowNum` counts CSV rows after reader filters
+such as `skipEmptyLine`; it is not a physical source line number.
 
-#### Simple case
+| Writer option | Default | Description |
+| --- | --- | --- |
+| `dialect` | `CsvDialect.RFC4180` | Shared CSV format (delimiter / quote / escape / line terminator). |
+| `outputLastLineTerminator` | `true` | Emit a trailing line terminator after the final row. |
+| `quoteMode` | `CANONICAL` | When to wrap fields in `quoteChar`: `CANONICAL` (only when needed), `ALL`, or `NON_NUMERIC`. |
 
-You can start writing csv in one line, no need to do any I/O handling (No need to call `use`, `close` and `flush`
-method.):
+Charset is JVM-only and is passed as an argument on the I/O call:
 
 ```kotlin
-val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
-csvWriter().writeAll(rows, "test.csv")
-
-// if you'd append data on the tail of the file, assign `append = true`.
-csvWriter().writeAll(rows, "test.csv", append = true)
-
-// You can also write into OutpusStream.
-csvWriter().writeAll(rows, File("test.csv").outputStream())
+reader.readFromFile(File("data.csv"), charset = "Shift_JIS") { it.toList() }
+writer.writeToFile(rows, File("out.csv"), charset = "UTF-16LE")
 ```
 
-You can also write a csv file line by line by `open` method:
+`commonMain` and JS overloads are UTF-8 only.
+
+BOM stripping on read defaults to ON (matches Excel-produced files):
 
 ```kotlin
-val row1 = listOf("a", "b", "c")
-val row2 = listOf("d", "e", "f")
+reader.readFromFile(File("data.csv"), options = CsvReadIoOptions(stripBom = false))
 
-csvWriter().open("test.csv") {
-    writeRow(row1)
-    writeRow(row2)
-    writeRow("g", "h", "i")
-    writeRows(listOf(row1, row2))
-}
+writer.writeToFile(rows, File("out.csv"), options = CsvWriteIoOptions(prependBom = true))
 ```
 
-#### Write in a `Suspending Function`
+## More
 
-```kotlin
-val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f")).asSequence()
-csvWriter().openAsync(testFileName) {
-    delay(100) //other suspending task
-    rows.asFlow().collect {
-        delay(100) // other suspending task
-        writeRow(it)
-    }
-}
-```
+- **Migration from kotlin-csv 1.x**:
+  see [V2_MIGRATION_GUIDE.md](./V2_MIGRATION_GUIDE.md).
+- **API documentation**: generated by Dokka — `./gradlew dokkaHtml` outputs
+  HTML to `build/dokka/html/`.
+- **Change Logs**: see [GitHub releases](https://github.com/jsoizo/kotlin-csv/releases).
 
-#### Write as String
+## Miscellaneous
 
-```kotlin
-val rows = listOf(listOf("a", "b", "c"), listOf("d", "e", "f"))
-val csvString: String = csvWriter().writeAllAsString(rows) //a,b,c\r\nd,e,f\r\n
-```
-
-#### long-running write (manual control for file close)
-
-If you want to close a file writer manually for performance reasons (e.g. streaming scenario), you can
-use `openAndGetRawWriter` and get a raw `CsvFileWriter`.  
-**DO NOT forget to `close` the writer!**
-
-```kotlin
-val row1 = listOf("a", "b", "c")
-
-@OptIn(KotlinCsvExperimental::class)
-val writer = csvWriter().openAndGetRawWriter("test.csv")
-writer.writeRow(row1)
-writer.close()
-```
-
-#### Customize
-
-When you create a CsvWriter, you can choose write options.
-
-```kotlin
-val writer = csvWriter {
-    charset = "ISO_8859_1"
-    delimiter = '\t'
-    nullCode = "NULL"
-    lineTerminator = "\n"
-    outputLastLineTerminator = true
-    quote {
-        mode = WriteQuoteMode.ALL
-        char = '\''
-    }
-}
-```
-
-| Option | default value | description                         |
-|------------|---------------|-------------------------------------|
-| charset |`UTF-8`| Charset encoding. The value must be supported by [java.nio.charset.Charset](https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html). |
-| delimiter | `,` | Character used as delimiter between each fields.<br />Use `"\t"` if reading TSV file. |
-| nullCode | `(empty string)` | Character used when a written field is null value. |
-| lineTerminator | `\r\n` | Character used as line terminator. |
-| outputLastLineTerminator | `true` | Output line break at the end of file or not. |
-| prependBOM | `false` | Output BOM (Byte Order Mark) at the beginning of file or not. |
-| quote.char  | `"` | Character to quote each fields. |
-| quote.mode  | `CANONICAL` | Quote mode. <br />- `CANONICAL`: Not quote normally, but quote special characters (quoteChar, delimiter, line feed). This is [the specification of CSV](https://tools.ietf.org/html/rfc4180#section-2).<br />- `ALL`: Quote all fields.<br />- `NON_NUMERIC`: Quote non-numeric fields. (ex. 1,"a",2.3) |
-
-# Links
-
-**Documents**
-
-* [Change Logs](https://github.com/jsoizo/kotlin-csv/releases)
-
-**Libraries which use kotlin-csv**
-
-* [kotlin-grass](https://github.com/blackmo18/kotlin-grass): Csv File to Kotlin Data Class Parser.
-
-# Miscellaneous
-
-## 🤝 Contributing
+### 🤝 Contributing
 
 Contributions, [issues](https://github.com/jsoizo/kotlin-csv/issues) and feature requests are welcome!
 If you have questions, ask away in [Kotlin Slack's](https://kotlinlang.slack.com) `kotlin-csv` room.
 
-## 💻 Development
+### 💻 Development
 
 ```sh
 git clone git@github.com:jsoizo/kotlin-csv.git
@@ -300,20 +218,11 @@ cd kotlin-csv
 ./gradlew check
 ```
 
-## Show your support
-
-Give a ⭐️ if this project helped you!
-
-## 📝 License
+### 📝 License
 
 Copyright © 2024 [jsoizo](https://github.com/jsoizo).
 This project is licensed under [Apache 2.0](LICENSE).
 
-***
-_This project is inspired ❤️ by [scala-csv](https://github.com/tototoshi/scala-csv)_
-
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
-
-## Acknowledgments
+### Acknowledgments
 
 This project was originally created by [@doyaaaaaken](https://github.com/doyaaaaaken). The initial work and contributions are greatly appreciated.

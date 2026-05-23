@@ -13,5 +13,12 @@ test.csv
 *.iml
 .idea/*
 
+# Local secrets
+.env
+.env.*
+
 # Ignore yarn.lcok
 kotlin-js-store/yarn.lock
+
+# Kotlin 2.0
+.kotlin/
