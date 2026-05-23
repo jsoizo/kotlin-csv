@@ -42,6 +42,6 @@ internal fun parseRows(
     }
 
     if (stateMachineHasInput) {
-        stateMachine.getResult()?.let { yield(it) }
+        stateMachine.finishFinalRow(rowNum)?.let { yield(it) }
     }
 }

@@ -15,3 +15,6 @@ test.csv
 
 # Ignore yarn.lcok
 kotlin-js-store/yarn.lock
+
+.env
+.env.*

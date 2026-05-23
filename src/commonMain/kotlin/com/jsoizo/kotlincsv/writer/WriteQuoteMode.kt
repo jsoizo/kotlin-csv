@@ -12,8 +12,8 @@ enum class WriteQuoteMode {
     ALL,
 
     /**
-     * Quote any field that is not a decimal number (digits with at most one
-     * `.`). Empty strings are non-numeric and therefore quoted.
+     * Quote any field that contains a character other than digits or a single
+     * `.`. Empty strings are quoted.
      */
     NON_NUMERIC,
 }

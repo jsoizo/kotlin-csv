@@ -1,7 +1,7 @@
 <h1 align="center">kotlin-csv</h1>
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.10.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-1.11.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/jsoizo/kotlin-csv/blob/master/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
@@ -14,6 +14,8 @@
 </p>
 
 Pure Kotlin CSV Reader/Writer.
+
+Version 1.11.0 is a v1-compatible bridge release that keeps the legacy API available while aligning the core reader and writer behavior with the 2.0.0 line. New projects should prefer 2.0.0. See [the v2 migration guide](V2_MIGRATION_GUIDE.md) when moving from 1.x to 2.0.
 
 # Design goals
 
@@ -40,15 +42,15 @@ Pure Kotlin CSV Reader/Writer.
 for Kotlin DSL
 
 ```kotlin
-implementation("com.jsoizo:kotlin-csv-jvm:1.10.0") // for JVM platform
-implementation("com.jsoizo:kotlin-csv-js:1.10.0") // for Kotlin JS platform
+implementation("com.jsoizo:kotlin-csv-jvm:1.11.0") // for JVM platform
+implementation("com.jsoizo:kotlin-csv-js:1.11.0") // for Kotlin JS platform
 ```
 
 for Gradle DSL
 
 ```groovy
-implementation 'com.jsoizo:kotlin-csv-jvm:1.10.0' // for JVM platform
-implementation 'com.jsoizo:kotlin-csv-js:1.10.0' // for Kotlin JS platform
+implementation 'com.jsoizo:kotlin-csv-jvm:1.11.0' // for JVM platform
+implementation 'com.jsoizo:kotlin-csv-js:1.11.0' // for Kotlin JS platform
 ```
 
 ### Maven
@@ -57,20 +59,20 @@ implementation 'com.jsoizo:kotlin-csv-js:1.10.0' // for Kotlin JS platform
 <dependency>
   <groupId>com.jsoizo</groupId>
   <artifactId>kotlin-csv-jvm</artifactId>
-  <version>1.10.0</version>
+  <version>1.11.0</version>
 </dependency>
 <dependency>
   <groupId>com.jsoizo</groupId>
   <artifactId>kotlin-csv-js</artifactId>
-  <version>1.10.0</version>
+  <version>1.11.0</version>
 </dependency>
 ```
 
 ### [kscript](https://github.com/holgerbrandl/kscript)
 
 ```kotlin
-@file:DependsOn("com.jsoizo:kotlin-csv-jvm:1.10.0") // for JVM platform
-@file:DependsOn("com.jsoizo:kotlin-csv-js:1.10.0") // for Kotlin JS platform
+@file:DependsOn("com.jsoizo:kotlin-csv-jvm:1.11.0") // for JVM platform
+@file:DependsOn("com.jsoizo:kotlin-csv-js:1.11.0") // for Kotlin JS platform
 ```
 
 ## Examples

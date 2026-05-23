@@ -30,6 +30,7 @@ internal class ParseStateMachine(
             ParseState.START -> {
                 when (ch) {
                     quoteChar -> state = ParseState.QUOTE_START
+                    escapeChar -> state = handleUnquotedEscape(nextCh, rowNum)
                     delimiter -> {
                         flushField()
                         state = ParseState.DELIMITER
@@ -52,17 +53,7 @@ internal class ParseStateMachine(
             }
             ParseState.FIELD -> {
                 when (ch) {
-                    escapeChar -> {
-                        if (nextCh != escapeChar) throw CsvParseFormatException(
-                            rowNum,
-                            pos,
-                            ch,
-                            "must appear escapeChar($escapeChar) after escapeChar($escapeChar)"
-                        )
-                        field.append(nextCh)
-                        state = ParseState.FIELD
-                        pos += 1
-                    }
+                    escapeChar -> state = handleUnquotedEscape(nextCh, rowNum)
                     delimiter -> {
                         flushField()
                         state = ParseState.DELIMITER
@@ -86,6 +77,7 @@ internal class ParseStateMachine(
             ParseState.DELIMITER -> {
                 when (ch) {
                     quoteChar -> state = ParseState.QUOTE_START
+                    escapeChar -> state = handleUnquotedEscape(nextCh, rowNum)
                     delimiter -> {
                         flushField()
                         state = ParseState.DELIMITER
@@ -186,9 +178,30 @@ internal class ParseStateMachine(
         }
     }
 
+    fun finishFinalRow(rowNum: Long): List<String>? {
+        if (state == ParseState.QUOTE_START || state == ParseState.QUOTED_FIELD) {
+            throw CsvParseFormatException(rowNum, pos, quoteChar, "end of quote doesn't exist")
+        }
+        return getResult()
+    }
+
     private fun flushField() {
         fields.add(field.toString())
         field.clear()
+    }
+
+    private fun handleUnquotedEscape(nextCh: Char?, rowNum: Long): ParseState {
+        if (nextCh != escapeChar && nextCh != quoteChar) {
+            throw CsvParseFormatException(
+                rowNum,
+                pos,
+                escapeChar,
+                "escape character must be followed by escapeChar($escapeChar) or quoteChar($quoteChar)"
+            )
+        }
+        field.append(nextCh)
+        pos += 1
+        return ParseState.FIELD
     }
 }
 

@@ -75,6 +75,24 @@ class SequenceParserTest {
     }
 
     @Test
+    fun explicitEscape_unquotedField_escapeQuote() {
+        val dialect = CsvDialect(escapeChar = '\\')
+        parse("a\\\"b", dialect) shouldBe listOf(listOf("a\"b"))
+    }
+
+    @Test
+    fun explicitEscape_unquotedField_escapeEscape() {
+        val dialect = CsvDialect(escapeChar = '\\')
+        parse("a\\\\b", dialect) shouldBe listOf(listOf("a\\b"))
+    }
+
+    @Test
+    fun explicitEscape_unquotedField_invalidEscape_throws() {
+        val dialect = CsvDialect(escapeChar = '\\')
+        shouldThrow<CsvParseFormatException> { parse("a\\xb", dialect) }
+    }
+
+    @Test
     fun trailingNewline_doesNotProduceExtraEmptyRow() {
         parse("a\n") shouldBe listOf(listOf("a"))
     }
@@ -200,9 +218,7 @@ class SequenceParserTest {
     }
 
     @Test
-    fun unterminatedQuote_atEof_yieldsNoFinalRow() {
-        // The state machine ends in QUOTED_FIELD, so getResult() returns null
-        // and the in-flight row is dropped rather than emitted partial.
-        parse("\"abc") shouldBe emptyList()
+    fun unterminatedQuote_atEof_throws() {
+        shouldThrow<CsvParseFormatException> { parse("\"abc") }
     }
 }

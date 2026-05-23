@@ -49,6 +49,17 @@ class CsvParserTest : WordSpec({
         "parse escape character after field" {
             parser.parseRow("a\"\"") shouldBe listOf("a\"")
         }
+        "parse explicit escape character in unquoted field" {
+            val explicitEscapeParser = CsvParser('"', ',', '\\')
+            explicitEscapeParser.parseRow("a\\\"b") shouldBe listOf("a\"b")
+            explicitEscapeParser.parseRow("a\\\\b") shouldBe listOf("a\\b")
+        }
+        "throw exception for invalid explicit escape in unquoted field" {
+            val explicitEscapeParser = CsvParser('"', ',', '\\')
+            shouldThrow<CSVParseFormatException> {
+                explicitEscapeParser.parseRow("a\\xb")
+            }
+        }
         "throw exception when parsing 2 rows" {
             lineTerminators.forEach { lt ->
                 shouldThrow<CSVParseFormatException> {

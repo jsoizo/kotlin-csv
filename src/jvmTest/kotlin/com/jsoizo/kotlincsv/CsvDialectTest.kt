@@ -40,4 +40,34 @@ class CsvDialectTest {
         }
         ex.message.shouldNotBeNull() shouldContain "lineTerminator"
     }
+
+    @Test
+    fun require_rejects_readerLineTerminatorDelimiter() {
+        listOf('\n', '\r', '\u2028', '\u2029', '\u0085').forEach { ch ->
+            val ex = shouldThrow<IllegalArgumentException> {
+                CsvDialect(delimiter = ch)
+            }
+            ex.message.shouldNotBeNull() shouldContain "delimiter"
+        }
+    }
+
+    @Test
+    fun require_rejects_readerLineTerminatorQuoteChar() {
+        listOf('\n', '\r', '\u2028', '\u2029', '\u0085').forEach { ch ->
+            val ex = shouldThrow<IllegalArgumentException> {
+                CsvDialect(quoteChar = ch)
+            }
+            ex.message.shouldNotBeNull() shouldContain "quoteChar"
+        }
+    }
+
+    @Test
+    fun require_rejects_readerLineTerminatorEscapeChar() {
+        listOf('\n', '\r', '\u2028', '\u2029', '\u0085').forEach { ch ->
+            val ex = shouldThrow<IllegalArgumentException> {
+                CsvDialect(escapeChar = ch)
+            }
+            ex.message.shouldNotBeNull() shouldContain "escapeChar"
+        }
+    }
 }

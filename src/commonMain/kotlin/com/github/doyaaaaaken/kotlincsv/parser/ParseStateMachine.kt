@@ -33,6 +33,7 @@ internal class ParseStateMachine(
                 when (ch) {
                     Const.BOM -> Unit
                     quoteChar -> state = ParseState.QUOTE_START
+                    escapeChar -> state = handleUnquotedEscape(nextCh, rowNum)
                     delimiter -> {
                         flushField()
                         state = ParseState.DELIMITER
@@ -55,17 +56,7 @@ internal class ParseStateMachine(
             }
             ParseState.FIELD -> {
                 when (ch) {
-                    escapeChar -> {
-                        if (nextCh != escapeChar) throw CSVParseFormatException(
-                            rowNum,
-                            pos,
-                            ch,
-                            "must appear escapeChar($escapeChar) after escapeChar($escapeChar)"
-                        )
-                        field.append(nextCh)
-                        state = ParseState.FIELD
-                        pos += 1
-                    }
+                    escapeChar -> state = handleUnquotedEscape(nextCh, rowNum)
                     delimiter -> {
                         flushField()
                         state = ParseState.DELIMITER
@@ -89,6 +80,7 @@ internal class ParseStateMachine(
             ParseState.DELIMITER -> {
                 when (ch) {
                     quoteChar -> state = ParseState.QUOTE_START
+                    escapeChar -> state = handleUnquotedEscape(nextCh, rowNum)
                     delimiter -> {
                         flushField()
                         state = ParseState.DELIMITER
@@ -186,6 +178,20 @@ internal class ParseStateMachine(
     private fun flushField() {
         fields.add(field.toString())
         field.clear()
+    }
+
+    private fun handleUnquotedEscape(nextCh: Char?, rowNum: Long): ParseState {
+        if (nextCh != escapeChar && nextCh != quoteChar) {
+            throw CSVParseFormatException(
+                rowNum,
+                pos,
+                escapeChar,
+                "escape character must be followed by escapeChar($escapeChar) or quoteChar($quoteChar)"
+            )
+        }
+        field.append(nextCh)
+        pos += 1
+        return ParseState.FIELD
     }
 }
 
