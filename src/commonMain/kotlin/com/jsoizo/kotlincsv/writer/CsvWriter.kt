@@ -1,5 +1,6 @@
 package com.jsoizo.kotlincsv.writer
 
+import com.jsoizo.kotlincsv.writer.internal.appendRows
 import com.jsoizo.kotlincsv.writer.internal.encodeRows
 
 /**
@@ -12,6 +13,7 @@ class CsvWriter(val config: CsvWriterConfig = CsvWriterConfig()) {
     fun write(rows: Sequence<List<String>>): Sequence<Char> = encodeRows(rows, config)
 
     /** Eagerly encode [rows] into a single CSV string. */
-    fun writeAll(rows: List<List<String>>): String =
-        write(rows.asSequence()).joinToString("")
+    fun writeAll(rows: List<List<String>>): String = buildString {
+        appendRows(rows.asSequence(), config, this)
+    }
 }

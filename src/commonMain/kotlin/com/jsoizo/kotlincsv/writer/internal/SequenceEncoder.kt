@@ -27,6 +27,26 @@ internal fun encodeRows(
     }
 }
 
+internal fun appendRows(
+    rows: Sequence<List<String>>,
+    config: CsvWriterConfig,
+    out: Appendable,
+) {
+    val dialect = config.dialect
+    val lineTerminator = dialect.lineTerminator
+    val iter = rows.iterator()
+    if (!iter.hasNext()) return
+
+    appendRow(iter.next(), dialect, config.quoteMode, out)
+    while (iter.hasNext()) {
+        out.append(lineTerminator)
+        appendRow(iter.next(), dialect, config.quoteMode, out)
+    }
+    if (config.outputLastLineTerminator) {
+        out.append(lineTerminator)
+    }
+}
+
 private fun encodeRow(
     row: List<String>,
     dialect: CsvDialect,
@@ -37,6 +57,21 @@ private fun encodeRow(
     for (field in row) {
         if (!first) yield(delimiter)
         yieldAll(encodeField(field, dialect, quoteMode))
+        first = false
+    }
+}
+
+private fun appendRow(
+    row: List<String>,
+    dialect: CsvDialect,
+    quoteMode: WriteQuoteMode,
+    out: Appendable,
+) {
+    val delimiter = dialect.delimiter
+    var first = true
+    for (field in row) {
+        if (!first) out.append(delimiter)
+        appendField(field, dialect, quoteMode, out)
         first = false
     }
 }
@@ -71,6 +106,40 @@ private fun encodeField(
         }
     }
     if (shouldQuote) yield(quoteChar)
+}
+
+private fun appendField(
+    field: String,
+    dialect: CsvDialect,
+    quoteMode: WriteQuoteMode,
+    out: Appendable,
+) {
+    val quoteChar = dialect.quoteChar
+    val escapeChar = dialect.escapeChar
+
+    val shouldQuote = when (quoteMode) {
+        WriteQuoteMode.ALL -> true
+        WriteQuoteMode.CANONICAL ->
+            needsCanonicalQuote(field, quoteChar, escapeChar, dialect.delimiter, dialect.lineTerminator)
+        WriteQuoteMode.NON_NUMERIC -> !isDecimalNumber(field)
+    }
+
+    if (shouldQuote) out.append(quoteChar)
+    if (escapeChar == quoteChar) {
+        for (ch in field) {
+            if (ch == quoteChar) out.append(quoteChar)
+            out.append(ch)
+        }
+    } else {
+        for (ch in field) when (ch) {
+            quoteChar, escapeChar -> {
+                out.append(escapeChar)
+                out.append(ch)
+            }
+            else -> out.append(ch)
+        }
+    }
+    if (shouldQuote) out.append(quoteChar)
 }
 
 private fun needsCanonicalQuote(

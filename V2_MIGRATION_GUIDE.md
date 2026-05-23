@@ -35,6 +35,26 @@ A reference for upgrading from kotlin-csv 1.x to 2.0.
   `readFromFile` / `writeToFile` (or `read` / `write` for in-memory streams)
   in `withContext(Dispatchers.IO) { ... }` if needed.
 
+## 1.1. Availability on the 1.11.0 migration branch
+
+Version `1.11.0` includes a subset of the v2 public API under
+`com.jsoizo.kotlincsv` so 1.x users can start migrating imports and call
+sites before upgrading to 2.0.
+
+| v2 public API in this guide | Available on 1.11.0? | Notes |
+| --- | --- | --- |
+| Root DSLs: `com.jsoizo.kotlincsv.csvReader` / `csvWriter` | Yes | Uses the v2-style config builders. |
+| `CsvDialect`, `CsvReaderConfig`, `CsvWriterConfig`, row-count policies, `WriteQuoteMode` | Yes | Same package and property names as v2. |
+| `CsvReader.read(Sequence<Char>)`, `readAll(String)` | Yes | Common API. |
+| `CsvWriter.write(Sequence<List<String>>)`, `writeAll(List<List<String>>)` | Yes | Common API. |
+| `Sequence<List<String>>.withHeader(...)` | Yes | Replaces `readAllWithHeader*` pipelines. |
+| JVM `File` / `String` path reader and writer overloads | Yes | `String` path overloads are JVM-only on 1.11.0. |
+| JVM `InputStream` / `OutputStream` overloads | Yes | Streams are caller-owned and are not closed by these overloads. |
+| `CsvWriteIoOptions(prependBom = true)` | Yes | Migration target for v1 `prependBOM`. |
+| `kotlinx.io.files.Path`, `Source`, `Sink` overloads | No | v2-only common I/O API. |
+| JS / Native file I/O | No | v2-only, provided through `kotlinx-io`. |
+| `CsvReadIoOptions(stripBom = ...)` | No | v2-only; 1.11.0 keeps v1 read-BOM behaviour. |
+
 ## 2. Updating dependencies
 
 `groupId` and `artifactId` are unchanged. Only the version moves:
@@ -79,6 +99,10 @@ implementation 'com.jsoizo:kotlin-csv:2.0.0'
 `kotlinx-io-core` is pulled in transitively. You should not need to add it
 explicitly unless you want to construct `Source` / `Sink` / `Path` values
 yourself.
+
+On the `1.11.0` migration branch, `kotlinx-io-core` is not added; only the
+JVM `File` / `String` / `InputStream` / `OutputStream` migration overloads
+are available.
 
 ## 3. Package moves
 
@@ -253,6 +277,14 @@ reader.readFromFile(Path("data.csv")) { ... }   // kotlinx-io Path
 reader.readFromFile("data.csv") { ... }         // String convenience overload
 ```
 
+On `1.11.0`, `Path` is not available. Use the JVM-only `File` or `String`
+overloads:
+
+```kotlin
+reader.readFromFile(File("data.csv")) { ... }
+reader.readFromFile("data.csv") { ... }         // JVM-only on 1.11.0
+```
+
 ### Charset
 
 Charset is no longer a config field. Pass it as an argument on the JVM
@@ -289,6 +321,10 @@ writer.writeToFile(rows, file, options = CsvWriteIoOptions(prependBom = true))
 reader.readFromFile(file, options = CsvReadIoOptions(stripBom = false)) { ... }
 ```
 
+On `1.11.0`, only the writer-side `CsvWriteIoOptions(prependBom = true)` is
+available. `CsvReadIoOptions` and read-side BOM stripping are v2-only; reads
+keep the v1 behaviour.
+
 ## 7. Removed features and replacements
 
 | Removed in 2.0 | Replacement |
@@ -299,7 +335,7 @@ reader.readFromFile(file, options = CsvReadIoOptions(stripBom = false)) { ... }
 | `csvWriter { nullCode = "NULL" }` | Map nulls explicitly: `rows.map { row -> row.map { it ?: "NULL" } }`. See §10.11. |
 | `csvReader().openAsync { ... }` / `csvWriter().openAsync { ... }` | Wrap the synchronous call in `withContext(Dispatchers.IO) { reader.readFromFile(file) { ... } }`. See §10.6. |
 | `csvReader().open { readNext() }` (line-by-line) | `reader.readFromFile(file) { it.first() }` or `it.iterator()`. See §10.5. |
-| `csvWriter().openAndGetRawWriter(file)` (manual close) | Hold a `kotlinx.io.Sink` yourself and call `writer.write(rows, sink)`. See §10.15. |
+| `csvWriter().openAndGetRawWriter(file)` (manual close) | In v2, hold a `kotlinx.io.Sink` yourself and call `writer.write(rows, sink)`. On 1.11.0, use a JVM `OutputStream` and `writer.write(rows, stream)`. See §10.15. |
 | `csvWriter().writeAll(rows, file, append = true)` | Open a JVM `FileOutputStream(file, append = true)` and pass it to `writer.write(rows, stream)`. See §10.16. JVM only. |
 | `@KotlinCsvExperimental` | Removed; the APIs it guarded are either stable or removed. |
 | `@CsvDslMarker` | Removed; v2 has no nested DSL blocks for `@DslMarker` to disambiguate. |
@@ -326,6 +362,10 @@ reader.readFromFile(file, options = CsvReadIoOptions(stripBom = false)) { ... }
   character differs from the quote character, the writer emits an
   explicit-escape style (a CSV extension already accepted by the v1
   reader). The default `escapeChar == quoteChar` keeps RFC 4180 doubling.
+
+The JS / Native file I/O and `kotlinx.io` overloads in this section are
+v2-only. The `1.11.0` migration branch supports the JVM `File`, `String`,
+`InputStream`, and `OutputStream` overloads only.
 
 ## 9. Behavioural changes
 
@@ -398,7 +438,7 @@ val rows = csvReader().readAll(File("data.csv"))
 
 // 2.0
 val rows = reader.readFromFile(File("data.csv")) { it.toList() }
-// or: reader.readFromFile("data.csv") { it.toList() }
+// or on JVM: reader.readFromFile("data.csv") { it.toList() }
 // or eager: reader.readAllFromFile(File("data.csv"))
 ```
 
@@ -563,6 +603,9 @@ csvWriter { prependBOM = true }.writeAll(rows, "out.csv")
 writer.writeToFile(rows, "out.csv", options = CsvWriteIoOptions(prependBom = true))
 ```
 
+This writer-side BOM migration API is also available on the `1.11.0`
+migration branch for JVM file and stream writes.
+
 #### 10.14 Always quote every field
 
 ```kotlin
@@ -590,6 +633,12 @@ sink.use {
     writer.write(sequenceOf(listOf("a", "b")), it)
     writer.write(sequenceOf(listOf("c", "d")), it)
 }
+
+// 1.11.0 migration branch — JVM only
+FileOutputStream(File("out.csv")).use { stream ->
+    writer.write(sequenceOf(listOf("a", "b")), stream)
+    writer.write(sequenceOf(listOf("c", "d")), stream)
+}
 ```
 
 #### 10.16 Append to an existing file (JVM only)
@@ -605,6 +654,9 @@ FileOutputStream(File("out.csv"), /* append = */ true).use { stream ->
 ```
 
 ### Cross-platform / Custom
+
+The cross-platform file I/O examples below require v2. On `1.11.0`, use the
+JVM overloads shown above.
 
 #### 10.17 Custom dialect
 
