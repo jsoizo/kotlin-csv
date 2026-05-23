@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
+
 plugins {
     java
     kotlin("multiplatform") version "1.7.21"
@@ -21,6 +24,12 @@ buildscript {
 
 repositories {
     mavenCentral()
+}
+
+rootProject.plugins.withType<NodeJsRootPlugin> {
+    rootProject.extensions.configure<NodeJsRootExtension> {
+        nodeVersion = "22.11.0"
+    }
 }
 
 val dokkaJar = task<Jar>("dokkaJar") {

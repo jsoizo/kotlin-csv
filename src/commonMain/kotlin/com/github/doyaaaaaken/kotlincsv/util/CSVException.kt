@@ -4,7 +4,8 @@ package com.github.doyaaaaaken.kotlincsv.util
  * General purpose Exception
  */
 @Deprecated(
-    message = "Replaced by com.jsoizo.kotlincsv.exceptions.MalformedCsvException in v2.0.",
+    message = "Replaced by com.jsoizo.kotlincsv.exceptions.MalformedCsvException in v2.0. " +
+            "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 open class MalformedCSVException(message: String) : RuntimeException(message)
@@ -13,7 +14,8 @@ open class MalformedCSVException(message: String) : RuntimeException(message)
  * Exception when parsing each csv row
  */
 @Deprecated(
-    message = "Replaced by com.jsoizo.kotlincsv.exceptions.CsvParseFormatException in v2.0.",
+    message = "Replaced by com.jsoizo.kotlincsv.exceptions.CsvParseFormatException in v2.0. " +
+            "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 @Suppress("DEPRECATION")
@@ -38,7 +40,9 @@ class CSVParseFormatException(
  * </pre>
  */
 @Deprecated(
-    message = "Replaced by com.jsoizo.kotlincsv.exceptions.CsvFieldNumDifferentException in v2.0.",
+    message = "Replaced by com.jsoizo.kotlincsv.exceptions.CsvFieldNumDifferentException in v2.0. " +
+            "The constructor and property names change, so rewrite usages manually. " +
+            "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 @Suppress("DEPRECATION")
@@ -49,7 +53,8 @@ class CSVFieldNumDifferentException(
 ) : MalformedCSVException("Fields num seems to be $fieldNum on each row, but on ${csvRowNum}th csv row, fields num is $fieldNumOnFailedRow.")
 
 @Deprecated(
-    message = "v2.0 removes header auto-rename; this exception type no longer has a counterpart.",
+    message = "v2.0 removes this failure type; header auto-rename is always deterministic and has no " +
+            "counterpart exception. See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 @Suppress("DEPRECATION")

@@ -1,12 +1,15 @@
 package com.github.doyaaaaaken.kotlincsv.util.logger
 
+import com.github.doyaaaaaken.kotlincsv.util.V2_MIGRATION_GUIDE_URL
+
 /**
  * Logger interface for logging debug statements at runtime.
  * Library consumers may provide implementations suiting their needs.
  * @see [com.github.doyaaaaaken.kotlincsv.dsl.context.ICsvReaderContext.logger]
  */
 @Deprecated(
-    message = "v1 logger hook; v2.0 does not expose a built-in logger interface.",
+    message = "v1 logger hook; v2.0 does not expose a built-in logger interface. " +
+            "Wrap logging around call sites instead. See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 interface Logger {

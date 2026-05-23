@@ -3,6 +3,7 @@ package com.github.doyaaaaaken.kotlincsv.dsl.context
 
 import com.github.doyaaaaaken.kotlincsv.util.Const
 import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
+import com.github.doyaaaaaken.kotlincsv.util.V2_MIGRATION_GUIDE_URL
 
 /**
  * Interface for CSV Writer settings
@@ -10,7 +11,9 @@ import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
  * @author doyaaaaaken
  */
 @Deprecated(
-    message = "Replaced by com.jsoizo.kotlincsv.writer.CsvWriterConfig in v2.0.",
+    message = "Replaced by com.jsoizo.kotlincsv.writer.CsvWriterConfig in v2.0. " +
+            "Writer options move to immutable config, CsvDialect, and per-call I/O options. " +
+            "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 @CsvDslMarker
@@ -80,7 +83,9 @@ interface ICsvWriterContext {
  * @author doyaaaaaken
  */
 @Deprecated(
-    message = "Replaced by com.jsoizo.kotlincsv.writer.CsvWriterConfigBuilder in v2.0.",
+    message = "Replaced by com.jsoizo.kotlincsv.writer.CsvWriterConfigBuilder in v2.0. " +
+            "Format characters move to CsvDialect; rewrite the DSL block manually. " +
+            "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 @Suppress("DEPRECATION")

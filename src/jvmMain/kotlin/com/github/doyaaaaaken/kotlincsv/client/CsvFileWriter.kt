@@ -4,6 +4,7 @@ package com.github.doyaaaaaken.kotlincsv.client
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
 import com.github.doyaaaaaken.kotlincsv.dsl.context.WriteQuoteMode
 import com.github.doyaaaaaken.kotlincsv.util.Const
+import com.github.doyaaaaaken.kotlincsv.util.V2_MIGRATION_GUIDE_URL
 import java.io.Closeable
 import java.io.Flushable
 import java.io.IOException
@@ -15,7 +16,8 @@ import java.io.PrintWriter
  * @author doyaaaaaken
  */
 @Deprecated(
-    message = "v1 internal type; replaced in v2.0 by com.jsoizo.kotlincsv.writer.CsvWriter operating on Sequence<Char>.",
+    message = "v1 internal type; replaced in v2.0 by com.jsoizo.kotlincsv.writer.CsvWriter " +
+            "operating on Sequence<Char>. See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 class CsvFileWriter internal constructor(

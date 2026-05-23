@@ -3,6 +3,7 @@ package com.github.doyaaaaaken.kotlincsv.dsl.context
 
 import com.github.doyaaaaaken.kotlincsv.util.Const
 import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
+import com.github.doyaaaaaken.kotlincsv.util.V2_MIGRATION_GUIDE_URL
 import com.github.doyaaaaaken.kotlincsv.util.logger.Logger
 import com.github.doyaaaaaken.kotlincsv.util.logger.LoggerNop
 
@@ -12,7 +13,9 @@ import com.github.doyaaaaaken.kotlincsv.util.logger.LoggerNop
  * @author doyaaaaaken
  */
 @Deprecated(
-    message = "Replaced by com.jsoizo.kotlincsv.reader.CsvReaderConfig in v2.0.",
+    message = "Replaced by com.jsoizo.kotlincsv.reader.CsvReaderConfig in v2.0. " +
+            "Reader options move to immutable config and CsvDialect. " +
+            "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 @CsvDslMarker
@@ -72,7 +75,11 @@ interface ICsvReaderContext {
     /**
      * If a invalid row which has different number of fields from other rows is found, skip it or not (=throw an exception).
      */
-    @Deprecated("Use insufficientFieldsRowBehaviour and excessRowsBehaviour to specify 'ignore'")
+    @Deprecated(
+        message = "Use insufficientFieldsRowBehaviour and excessFieldsRowBehaviour instead. " +
+                "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
+        level = DeprecationLevel.WARNING
+    )
     val skipMissMatchedRow: Boolean
 
     /**
@@ -96,7 +103,8 @@ interface ICsvReaderContext {
 }
 
 @Deprecated(
-    message = "Replaced by com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour in v2.0.",
+    message = "Replaced by com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour in v2.0. " +
+            "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 enum class InsufficientFieldsRowBehaviour {
@@ -117,7 +125,8 @@ enum class InsufficientFieldsRowBehaviour {
 }
 
 @Deprecated(
-    message = "Replaced by com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour in v2.0.",
+    message = "Replaced by com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour in v2.0. " +
+            "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 enum class ExcessFieldsRowBehaviour {
@@ -144,7 +153,9 @@ enum class ExcessFieldsRowBehaviour {
  * @author doyaaaaaken
  */
 @Deprecated(
-    message = "Replaced by com.jsoizo.kotlincsv.reader.CsvReaderConfigBuilder in v2.0.",
+    message = "Replaced by com.jsoizo.kotlincsv.reader.CsvReaderConfigBuilder in v2.0. " +
+            "Format characters move to CsvDialect; rewrite the DSL block manually. " +
+            "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 @Suppress("DEPRECATION")

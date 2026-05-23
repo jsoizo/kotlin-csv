@@ -2,6 +2,7 @@
 package com.github.doyaaaaaken.kotlincsv.dsl.context
 
 import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
+import com.github.doyaaaaaken.kotlincsv.util.V2_MIGRATION_GUIDE_URL
 
 /**
  * DSL method for Quote settings on writing csv.
@@ -10,7 +11,8 @@ import com.github.doyaaaaaken.kotlincsv.util.CsvDslMarker
  */
 @Deprecated(
     message = "Replaced in v2.0: quote character moves to com.jsoizo.kotlincsv.CsvDialect.quoteChar, " +
-            "and mode moves to com.jsoizo.kotlincsv.writer.CsvWriterConfig.quoteMode.",
+            "and mode moves to com.jsoizo.kotlincsv.writer.CsvWriterConfig.quoteMode. " +
+            "Rewrite the writer DSL block manually. See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 @CsvDslMarker
@@ -46,7 +48,8 @@ class CsvWriteQuoteContext {
  *      Quote all fields.
  */
 @Deprecated(
-    message = "Replaced by com.jsoizo.kotlincsv.writer.WriteQuoteMode in v2.0.",
+    message = "Replaced by com.jsoizo.kotlincsv.writer.WriteQuoteMode in v2.0. " +
+            "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 enum class WriteQuoteMode {

@@ -7,8 +7,9 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.InsufficientFieldsRowBehavio
 import com.github.doyaaaaaken.kotlincsv.parser.CsvParser
 import com.github.doyaaaaaken.kotlincsv.util.CSVAutoRenameFailedException
 import com.github.doyaaaaaken.kotlincsv.util.CSVFieldNumDifferentException
-import com.github.doyaaaaaken.kotlincsv.util.logger.Logger
 import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
+import com.github.doyaaaaaken.kotlincsv.util.V2_MIGRATION_GUIDE_URL
+import com.github.doyaaaaaken.kotlincsv.util.logger.Logger
 
 /**
  * CSV Reader class, which controls file I/O flow.
@@ -16,7 +17,8 @@ import com.github.doyaaaaaken.kotlincsv.util.MalformedCSVException
  * @author doyaaaaaken
  */
 @Deprecated(
-    message = "v1 internal type; replaced in v2.0 by com.jsoizo.kotlincsv.reader.CsvReader operating on Sequence<Char>.",
+    message = "v1 internal type; replaced in v2.0 by com.jsoizo.kotlincsv.reader.CsvReader " +
+            "operating on Sequence<Char>. See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 class CsvFileReader internal constructor(
@@ -37,7 +39,11 @@ class CsvFileReader internal constructor(
      * @return return fields in row as List<String>.
      *         or return null, if all line are already read.
      */
-    @Deprecated("We are considering making it a private method. If you have feedback, please comment on Issue #100.")
+    @Deprecated(
+        message = "v2.0 removes readNext; use a Sequence iterator or firstOrNull inside readFromFile. " +
+                "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
+        level = DeprecationLevel.WARNING
+    )
     fun readNext(): List<String>? {
         return readUntilNextCsvRow("")
     }

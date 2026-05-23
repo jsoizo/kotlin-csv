@@ -3,6 +3,7 @@ package com.github.doyaaaaaken.kotlincsv.dsl
 
 import com.github.doyaaaaaken.kotlincsv.client.CsvWriter
 import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
+import com.github.doyaaaaaken.kotlincsv.util.V2_MIGRATION_GUIDE_URL
 
 /**
  * DSL Method which provides `CsvWriter`
@@ -34,7 +35,8 @@ import com.github.doyaaaaaken.kotlincsv.dsl.context.CsvWriterContext
             "The DSL block receiver changes from CsvWriterContext to CsvWriterConfigBuilder, " +
             "and properties such as `delimiter` and `quoteChar` move under `dialect = CsvDialect(...)`; " +
             "`quote { mode = ... }` moves to top-level `quoteMode = WriteQuoteMode.X`. " +
-            "Rewrite the block body manually — IDE Quick Fix cannot translate it.",
+            "Rewrite the block body manually; IDE Quick Fix cannot translate it. " +
+            "See the migration guide: " + V2_MIGRATION_GUIDE_URL,
     level = DeprecationLevel.WARNING
 )
 @Suppress("DEPRECATION")
