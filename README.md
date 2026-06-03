@@ -23,13 +23,15 @@ Pure Kotlin Multiplatform CSV reader and writer.
 implementation("com.jsoizo:kotlin-csv:2.0.0")
 ```
 
-The multiplatform artifact resolves JVM, JS, and supported Kotlin/Native variants
-from Kotlin Multiplatform projects. Published Native targets are
-`macosArm64`, `iosArm64`, `iosSimulatorArm64`, `linuxX64`, `linuxArm64`, and `mingwX64`.
+The multiplatform artifact resolves JVM, JS, Kotlin/Wasm, and supported
+Kotlin/Native variants from Kotlin Multiplatform projects. Published
+Native targets are `macosArm64`, `iosArm64`, `iosSimulatorArm64`,
+`linuxX64`, `linuxArm64`, and `mingwX64`. Published Wasm targets are
+`wasmJs` and `wasmWasi`.
 
 Single-platform Gradle projects can also depend on the platform artifact
 directly, for example `kotlin-csv-jvm`, `kotlin-csv-js`,
-`kotlin-csv-macosarm64`, or `kotlin-csv-linuxx64`.
+`kotlin-csv-wasm-js`, `kotlin-csv-macosarm64`, or `kotlin-csv-linuxx64`.
 
 ### Gradle (Groovy DSL)
 
