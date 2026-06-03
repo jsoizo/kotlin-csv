@@ -44,6 +44,16 @@ kotlin {
     mingwX64()
 
     @OptIn(ExperimentalWasmDsl::class)
+    wasmJs {
+        browser {
+            testTask {
+                enabled = false
+            }
+        }
+        nodejs()
+    }
+
+    @OptIn(ExperimentalWasmDsl::class)
     wasmWasi {
         nodejs()
     }
@@ -81,8 +91,9 @@ tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
 
-// Kotest 6.x does not publish wasmWasi artifacts yet, so commonTest cannot be
-// compiled for this target. Validate main compilation only until upstream support lands.
+// kotest-property does not publish a wasm-wasi artifact yet (kotest-assertions-core
+// and the other commonTest deps do), so commonTest cannot be compiled for wasmWasi.
+// Validate main compilation only until kotest-property ships wasm-wasi.
 listOf("compileTestKotlinWasmWasi", "wasmWasiTest", "wasmWasiNodeTest").forEach { taskName ->
     tasks.matching { it.name == taskName }.configureEach { enabled = false }
 }
