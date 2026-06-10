@@ -69,6 +69,11 @@ class CsvWriterTest {
     }
 
     @Test
+    fun writeAllNullable_emptyRows() {
+        CsvWriter().writeAllNullable(emptyList()) shouldBe ""
+    }
+
+    @Test
     fun writeAll_emptyRow() {
         CsvWriter().writeAll(listOf(emptyList())) shouldBe "\r\n"
     }
@@ -114,6 +119,17 @@ class CsvWriterTest {
     fun writeAllNullable_quoteAllKeepsNullUnquotedAndQuotesEmptyString() {
         val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
         writer.writeAllNullable(listOf(listOf(null, "x", ""))) shouldBe ",\"x\",\"\"\r\n"
+    }
+
+    @Test
+    fun writeAllNullable_multiRow_outputLast_false() {
+        val writer = CsvWriter(
+            CsvWriterConfig(
+                outputLastLineTerminator = false,
+                quoteMode = WriteQuoteMode.ALL,
+            )
+        )
+        writer.writeAllNullable(listOf(listOf(null, ""), listOf("x", null))) shouldBe ",\"\"\r\n\"x\","
     }
 
     // -------- NON_NUMERIC quote --------

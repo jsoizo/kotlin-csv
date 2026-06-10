@@ -44,6 +44,34 @@ class WriterIoTest {
     }
 
     @Test
+    fun writeNullable_sink_listInputMatchesSequenceOutput() {
+        val rows = listOf(listOf<String?>(null, "b"), listOf("", null))
+        val rawList = FakeRawSink()
+        rawList.buffered().use { sink ->
+            CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL)).writeNullable(rows, sink)
+        }
+
+        val rawSeq = FakeRawSink()
+        rawSeq.buffered().use { sink ->
+            CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL)).writeNullable(rows.asSequence(), sink)
+        }
+
+        rawList.snapshot().toList() shouldBe rawSeq.snapshot().toList()
+    }
+
+    @Test
+    fun writeNullable_sink_prependBomEmitsBomThenBody() {
+        val rows = listOf(listOf<String?>(null, "b"))
+        val raw = FakeRawSink()
+        raw.buffered().use { sink ->
+            CsvWriter().writeNullable(rows, sink, CsvWriteIoOptions(prependBom = true))
+        }
+        val out = raw.snapshot()
+        out.copyOfRange(0, 3).toList() shouldBe bom.toList()
+        out.copyOfRange(3, out.size).decodeToString() shouldBe ",b\r\n"
+    }
+
+    @Test
     fun write_sink_prependBomEmitsBomThenBody() {
         val rows = listOf(listOf("a", "b"))
         val raw = FakeRawSink()
@@ -74,6 +102,15 @@ class WriterIoTest {
         val raw = FakeRawSink()
         raw.buffered().use { sink ->
             CsvWriter().write(emptySequence(), sink)
+        }
+        raw.snapshot().size shouldBe 0
+    }
+
+    @Test
+    fun writeNullable_sink_emptyRowsProducesEmptyOutput() {
+        val raw = FakeRawSink()
+        raw.buffered().use { sink ->
+            CsvWriter().writeNullable(emptySequence(), sink)
         }
         raw.snapshot().size shouldBe 0
     }

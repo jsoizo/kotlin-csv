@@ -109,6 +109,17 @@ class CsvWriterJvmIoTest {
     }
 
     @Test
+    fun writeNullable_stream_prependBomUtf8_emitsEfBbBfPrefix() {
+        val raw = ByteArrayOutputStream()
+        val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+        writer.writeNullable(nullableRows, raw, options = CsvWriteIoOptions(prependBom = true))
+        val out = raw.toByteArray()
+        out.copyOfRange(0, 3).toList() shouldBe
+            listOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte())
+        out.copyOfRange(3, out.size).toString(Charsets.UTF_8) shouldBe nullableRowsEncoded
+    }
+
+    @Test
     fun write_stream_prependBomShiftJis_emitsEncoderSubstitution() {
         // Shift_JIS has no BOM concept; Java's default unmappable-character
         // policy substitutes U+FEFF with `?` (0x3F). Pin this behaviour so a

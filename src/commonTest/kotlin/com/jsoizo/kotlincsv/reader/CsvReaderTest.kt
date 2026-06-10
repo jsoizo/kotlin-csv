@@ -211,6 +211,74 @@ class CsvReaderTest {
         )
     }
 
+    @Test
+    fun readAllNullable_skipEmptyLineTrue_dropsEmptyRows() {
+        val reader = CsvReader(CsvReaderConfig(skipEmptyLine = true))
+        reader.readAllNullable("a\n\nb") shouldBe listOf(listOf("a"), listOf("b"))
+    }
+
+    @Test
+    fun readAllNullable_insufficientErrorThrows() {
+        val reader = CsvReader(
+            CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS)
+        )
+        shouldThrow<CsvFieldNumDifferentException> {
+            reader.readAllNullable("a,b,c\nd,")
+        }
+    }
+
+    @Test
+    fun readAllNullable_insufficientIgnoreSkipsRow() {
+        val reader = CsvReader(
+            CsvReaderConfig(
+                insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE,
+                nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS,
+            )
+        )
+        reader.readAllNullable("a,b,c\nd,\nf,g,h") shouldBe listOf(
+            listOf("a", "b", "c"),
+            listOf("f", "g", "h"),
+        )
+    }
+
+    @Test
+    fun readAllNullable_excessErrorThrows() {
+        val reader = CsvReader(
+            CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS)
+        )
+        shouldThrow<CsvFieldNumDifferentException> {
+            reader.readAllNullable("a,b\nc,,d")
+        }
+    }
+
+    @Test
+    fun readAllNullable_excessIgnoreSkipsRow() {
+        val reader = CsvReader(
+            CsvReaderConfig(
+                excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE,
+                nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS,
+            )
+        )
+        reader.readAllNullable("a,b\nc,,d\ne,") shouldBe listOf(
+            listOf("a", "b"),
+            listOf("e", null),
+        )
+    }
+
+    @Test
+    fun readAllNullable_excessTrimTruncatesRow() {
+        val reader = CsvReader(
+            CsvReaderConfig(
+                excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM,
+                nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS,
+            )
+        )
+        reader.readAllNullable("a,b\nc,,d") shouldBe listOf(
+            listOf("a", "b"),
+            listOf("c", null),
+        )
+    }
+
     // --- Unquoted-field escape (issue #168) ---
 
     private val explicitEscapeReader =
