@@ -47,7 +47,7 @@ internal fun parseRowsFromChunks(
 internal fun parseRowsWithMetadataFromChunks(
     readInto: (CharArray) -> Int,
     dialect: CsvDialect,
-    stripBom: Boolean = false,
+    stripBom: Boolean,
     bufferSize: Int = 8192,
 ): Sequence<List<ParsedCsvField>> = sequence {
     require(bufferSize >= 2) { "bufferSize must be >= 2 to hold a UTF-16 surrogate pair" }

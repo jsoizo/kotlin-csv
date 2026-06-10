@@ -26,6 +26,16 @@ class CsvReaderTest {
     }
 
     @Test
+    fun read_acceptsNonStringBackedCharSequence() {
+        // sequence {} exposes a boxed Iterator<Char>, unlike String.asSequence()'s CharIterator.
+        val chars = sequence { "a,b\n\"c\",d".forEach { yield(it) } }
+        CsvReader().read(chars).toList() shouldBe listOf(
+            listOf("a", "b"),
+            listOf("c", "d"),
+        )
+    }
+
+    @Test
     fun readAll_emptyInput() {
         CsvReader().readAll("") shouldBe emptyList()
     }

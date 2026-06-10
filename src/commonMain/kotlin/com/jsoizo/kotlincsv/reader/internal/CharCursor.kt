@@ -44,8 +44,10 @@ internal class IteratorCharCursor(iterator: Iterator<Char>) : CharCursor() {
 
 /**
  * Cursor over a chunked char source. [readInto] fills the buffer and returns
- * the number of chars written; `<= 0` signals EOF and [readInto] is never
- * called again after that.
+ * the number of chars written; `<= 0` signals EOF. [readInto] may be invoked
+ * again after signalling EOF and must then keep returning `<= 0` (both
+ * `java.io.Reader` and the kotlinx-io adapter satisfy this), which keeps
+ * [advance] idempotent at EOF without extra state.
  */
 internal class ChunkCharCursor(
     private val readInto: (CharArray) -> Int,
@@ -54,7 +56,6 @@ internal class ChunkCharCursor(
     private val buffer = CharArray(bufferSize)
     private var length = 0
     private var position = 0
-    private var exhausted = false
 
     init {
         advance()
@@ -66,13 +67,8 @@ internal class ChunkCharCursor(
     }
 
     private fun refill(): Boolean {
-        if (exhausted) return false
         length = readInto(buffer)
         position = 0
-        if (length <= 0) {
-            exhausted = true
-            return false
-        }
-        return true
+        return length > 0
     }
 }
