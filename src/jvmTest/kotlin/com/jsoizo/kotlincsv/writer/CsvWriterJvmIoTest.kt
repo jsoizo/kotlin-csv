@@ -84,6 +84,18 @@ class CsvWriterJvmIoTest {
     }
 
     @Test
+    fun writeNullableToFile_file_sequenceInputWithDefaultOptions_writesNullFields() {
+        val tmp = Files.createTempFile("kotlin-csv-jvm-writer-nullable-sequence-defaults", ".csv")
+        try {
+            val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+            writer.writeNullableToFile(nullableRows.asSequence(), tmp.toFile())
+            Files.readString(tmp, Charsets.UTF_8) shouldBe nullableRowsEncoded
+        } finally {
+            tmp.deleteIfExists()
+        }
+    }
+
+    @Test
     fun write_stream_callerOwnedStream_isNeitherClosedNorImplicitlyMutated() {
         val raw = ByteArrayOutputStream()
         val counting = CountingOutputStream(raw)
@@ -115,6 +127,16 @@ class CsvWriterJvmIoTest {
             charset = "UTF-8",
             options = CsvWriteIoOptions(prependBom = false),
         )
+        raw.toByteArray().toString(Charsets.UTF_8) shouldBe nullableRowsEncoded
+        counting.closeCount shouldBe 0
+    }
+
+    @Test
+    fun writeNullable_stream_sequenceInputWithDefaultOptions_encodesNullFieldsAndDoesNotClose() {
+        val raw = ByteArrayOutputStream()
+        val counting = CountingOutputStream(raw)
+        val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+        writer.writeNullable(nullableRows.asSequence(), counting)
         raw.toByteArray().toString(Charsets.UTF_8) shouldBe nullableRowsEncoded
         counting.closeCount shouldBe 0
     }

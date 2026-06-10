@@ -33,6 +33,8 @@ class CsvReaderPathSmokeTest {
             )
             reader.readAllNullableFromFile(tmp.toString()) shouldBe
                 listOf(listOf("empty", "null"), listOf("", null))
+            reader.readNullableFromFile(tmp.toString()) { rows -> rows.drop(1).first() } shouldBe
+                listOf("", null)
         } finally {
             tmp.deleteIfExists()
         }

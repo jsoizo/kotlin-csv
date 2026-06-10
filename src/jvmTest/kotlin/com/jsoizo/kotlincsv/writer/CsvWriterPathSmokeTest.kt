@@ -29,6 +29,9 @@ class CsvWriterPathSmokeTest {
             val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
             writer.writeNullableToFile(listOf(listOf<String?>(null, "", "x")), tmp.toString())
             Files.readString(tmp) shouldBe ",\"\",\"x\"\r\n"
+
+            writer.writeNullableToFile(sequenceOf(listOf<String?>(null, "y")), tmp.toString())
+            Files.readString(tmp) shouldBe ",\"y\"\r\n"
         } finally {
             tmp.deleteIfExists()
         }
