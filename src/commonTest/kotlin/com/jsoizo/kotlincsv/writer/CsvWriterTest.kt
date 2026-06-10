@@ -1,6 +1,9 @@
 package com.jsoizo.kotlincsv.writer
 
 import com.jsoizo.kotlincsv.CsvDialect
+import com.jsoizo.kotlincsv.reader.CsvNullFieldIndicator
+import com.jsoizo.kotlincsv.reader.CsvReader
+import com.jsoizo.kotlincsv.reader.CsvReaderConfig
 import io.kotest.matchers.shouldBe
 import kotlin.test.Test
 
@@ -61,6 +64,16 @@ class CsvWriterTest {
     }
 
     @Test
+    fun writeAllNullable_nullFieldsAreUnquotedEmptyFields() {
+        CsvWriter().writeAllNullable(listOf(listOf(null, "x", ""))) shouldBe ",x,\r\n"
+    }
+
+    @Test
+    fun writeAllNullable_emptyRows() {
+        CsvWriter().writeAllNullable(emptyList()) shouldBe ""
+    }
+
+    @Test
     fun writeAll_emptyRow() {
         CsvWriter().writeAll(listOf(emptyList())) shouldBe "\r\n"
     }
@@ -100,6 +113,23 @@ class CsvWriterTest {
     fun quote_all_quotesEverything() {
         val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
         writer.writeAll(listOf(listOf("a", "b"))) shouldBe "\"a\",\"b\"\r\n"
+    }
+
+    @Test
+    fun writeAllNullable_quoteAllKeepsNullUnquotedAndQuotesEmptyString() {
+        val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+        writer.writeAllNullable(listOf(listOf(null, "x", ""))) shouldBe ",\"x\",\"\"\r\n"
+    }
+
+    @Test
+    fun writeAllNullable_multiRow_outputLast_false() {
+        val writer = CsvWriter(
+            CsvWriterConfig(
+                outputLastLineTerminator = false,
+                quoteMode = WriteQuoteMode.ALL,
+            )
+        )
+        writer.writeAllNullable(listOf(listOf(null, ""), listOf("x", null))) shouldBe ",\"\"\r\n\"x\","
     }
 
     // -------- NON_NUMERIC quote --------
@@ -221,5 +251,34 @@ class CsvWriterTest {
         val rows = generateSequence(0) { it + 1 }.map { listOf(it.toString()) }
         val partial = CsvWriter().write(rows).take(3).joinToString("")
         partial shouldBe "0\r\n"
+    }
+
+    @Test
+    fun writeNullable_returnsLazySequence() {
+        val rows = generateSequence(0) { it + 1 }.map { listOf<String?>(null, it.toString()) }
+        val partial = CsvWriter().writeNullable(rows).take(4).joinToString("")
+        partial shouldBe ",0\r\n"
+    }
+
+    @Test
+    fun writeNullable_emptyRowsReturnsEmptySequence() {
+        CsvWriter().writeNullable(emptySequence()).toList() shouldBe emptyList()
+    }
+
+    @Test
+    fun writeNullable_multiRow_outputLast_true() {
+        val rows = sequenceOf(listOf<String?>(null), listOf("x"))
+        CsvWriter().writeNullable(rows).joinToString("") shouldBe "\r\nx\r\n"
+    }
+
+    @Test
+    fun nullableRoundTrip_quoteAllDistinguishesNullAndEmptyString() {
+        val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+        val reader = CsvReader(
+            CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS)
+        )
+        val rows = listOf(listOf(null, "", "x"))
+
+        reader.readAllNullable(writer.writeAllNullable(rows)) shouldBe rows
     }
 }

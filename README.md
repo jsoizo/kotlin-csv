@@ -90,8 +90,10 @@ share them across calls.
 ```kotlin
 import com.jsoizo.kotlincsv.csvReader
 import com.jsoizo.kotlincsv.csvWriter
+import com.jsoizo.kotlincsv.reader.CsvNullFieldIndicator
 import com.jsoizo.kotlincsv.reader.readFromFile
 import com.jsoizo.kotlincsv.reader.withHeader
+import com.jsoizo.kotlincsv.writer.WriteQuoteMode
 import com.jsoizo.kotlincsv.writer.writeToFile
 
 val reader = csvReader()
@@ -114,6 +116,11 @@ reader.readFromFile(File("data.csv")) { rows ->
     val records = rows.withHeader().toList()
     println(records.first()["id"])
 }
+
+// Nullable reads can distinguish "" from an unquoted empty field.
+val nullableRows = csvReader {
+    nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS
+}.readAllNullable("\"empty\",\"null\"\n\"\",")
 ```
 
 `reader.readFromFile(...)` accepts `String` paths, `kotlinx.io.files.Path`,
@@ -136,6 +143,11 @@ val csv: String = writer.writeAll(rows)
 
 // To a File
 writer.writeToFile(rows, File("out.csv"))
+
+// Nullable writes emit null as an unquoted empty field.
+val nullableCsv = csvWriter {
+    quoteMode = WriteQuoteMode.ALL
+}.writeAllNullable(listOf(listOf(null, "", "value")))
 ```
 
 `writer.writeToFile(...)` accepts `String` paths, `kotlinx.io.files.Path`,
@@ -170,9 +182,15 @@ val customWriter = csvWriter {
 | `skipEmptyLine` | `false` | Drop rows that are entirely empty before the field-count check. |
 | `excessFieldsRowBehaviour` | `ERROR` | What to do when a row has more fields than the first row: `ERROR` / `IGNORE` / `TRIM`. |
 | `insufficientFieldsRowBehaviour` | `ERROR` | What to do when a row has fewer fields: `ERROR` / `IGNORE` / `EMPTY_STRING`. |
+| `nullFieldIndicator` | `NEITHER` | Which empty fields nullable reader APIs expose as `null`: `NEITHER` / `EMPTY_SEPARATORS` / `EMPTY_QUOTES` / `BOTH`. |
 
 `CsvFieldNumDifferentException.rowNum` counts CSV rows after reader filters
 such as `skipEmptyLine`; it is not a physical source line number.
+
+Nullable reader APIs (`readNullable`, `readAllNullable`, and nullable I/O
+overloads) return `String?` values. `withNullableHeader()` keeps header keys
+as non-null `String`; a null-looking empty header is treated as the empty
+header name `""`, while data values remain nullable.
 
 | Writer option | Default | Description |
 | --- | --- | --- |

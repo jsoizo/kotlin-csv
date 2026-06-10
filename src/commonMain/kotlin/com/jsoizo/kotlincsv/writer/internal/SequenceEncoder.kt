@@ -27,6 +27,26 @@ internal fun encodeRows(
     }
 }
 
+/** Lazily encode nullable CSV rows. Null fields are emitted as unquoted empty fields. */
+internal fun encodeNullableRows(
+    rows: Sequence<List<String?>>,
+    config: CsvWriterConfig,
+): Sequence<Char> = sequence {
+    val dialect = config.dialect
+    val lineTerminator = dialect.lineTerminator
+    val iter = rows.iterator()
+    if (!iter.hasNext()) return@sequence
+
+    yieldAll(encodeNullableRow(iter.next(), dialect, config.quoteMode))
+    while (iter.hasNext()) {
+        yieldAll(lineTerminator.asSequence())
+        yieldAll(encodeNullableRow(iter.next(), dialect, config.quoteMode))
+    }
+    if (config.outputLastLineTerminator) {
+        yieldAll(lineTerminator.asSequence())
+    }
+}
+
 /**
  * Eagerly encode [rows] into [out] without routing every character through a
  * `Sequence<Char>`. Used by String and I/O writers; [encodeRows] remains the
@@ -52,6 +72,30 @@ internal fun appendRows(
     }
 }
 
+/**
+ * Eagerly encode nullable [rows] into [out]. Null fields are emitted as
+ * unquoted empty fields.
+ */
+internal fun appendNullableRows(
+    rows: Sequence<List<String?>>,
+    config: CsvWriterConfig,
+    out: Appendable,
+) {
+    val dialect = config.dialect
+    val lineTerminator = dialect.lineTerminator
+    val iter = rows.iterator()
+    if (!iter.hasNext()) return
+
+    appendNullableRow(iter.next(), dialect, config.quoteMode, out)
+    while (iter.hasNext()) {
+        out.append(lineTerminator)
+        appendNullableRow(iter.next(), dialect, config.quoteMode, out)
+    }
+    if (config.outputLastLineTerminator) {
+        out.append(lineTerminator)
+    }
+}
+
 private fun encodeRow(
     row: List<String>,
     dialect: CsvDialect,
@@ -62,6 +106,22 @@ private fun encodeRow(
     for (field in row) {
         if (!first) yield(delimiter)
         yieldAll(encodeField(field, dialect, quoteMode))
+        first = false
+    }
+}
+
+private fun encodeNullableRow(
+    row: List<String?>,
+    dialect: CsvDialect,
+    quoteMode: WriteQuoteMode,
+): Sequence<Char> = sequence {
+    val delimiter = dialect.delimiter
+    var first = true
+    for (field in row) {
+        if (!first) yield(delimiter)
+        if (field != null) {
+            yieldAll(encodeField(field, dialect, quoteMode))
+        }
         first = false
     }
 }
@@ -77,6 +137,23 @@ private fun appendRow(
     for (field in row) {
         if (!first) out.append(delimiter)
         appendField(field, dialect, quoteMode, out)
+        first = false
+    }
+}
+
+private fun appendNullableRow(
+    row: List<String?>,
+    dialect: CsvDialect,
+    quoteMode: WriteQuoteMode,
+    out: Appendable,
+) {
+    val delimiter = dialect.delimiter
+    var first = true
+    for (field in row) {
+        if (!first) out.append(delimiter)
+        if (field != null) {
+            appendField(field, dialect, quoteMode, out)
+        }
         first = false
     }
 }

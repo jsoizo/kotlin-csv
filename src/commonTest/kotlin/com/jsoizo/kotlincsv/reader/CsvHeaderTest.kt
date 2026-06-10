@@ -8,6 +8,7 @@ import kotlin.test.Test
 class CsvHeaderTest {
 
     private fun seq(vararg rows: List<String>): Sequence<List<String>> = rows.asSequence()
+    private fun nullableSeq(vararg rows: List<String?>): Sequence<List<String?>> = rows.asSequence()
 
     @Test
     fun basic_zipsHeaderWithRows() {
@@ -118,5 +119,47 @@ class CsvHeaderTest {
         ).withHeader().toList()
 
         result.single().keys.toList() shouldBe listOf("z", "y", "x")
+    }
+
+    @Test
+    fun nullableHeader_zipsHeaderWithNullableRows() {
+        val result = nullableSeq(
+            listOf("a", "b", "c"),
+            listOf("1", null, ""),
+        ).withNullableHeader().toList()
+
+        result.single() shouldBe linkedMapOf("a" to "1", "b" to null, "c" to "")
+    }
+
+    @Test
+    fun nullableHeader_nullHeaderIsEmptyHeaderForDuplicateCheck() {
+        val s = nullableSeq(
+            listOf(null, ""),
+            listOf("1", "2"),
+        )
+
+        shouldThrow<MalformedCsvException> {
+            s.withNullableHeader().toList()
+        }
+    }
+
+    @Test
+    fun nullableHeader_autoRenameEmptyHeaderDuplicates() {
+        val result = nullableSeq(
+            listOf(null, null, "x"),
+            listOf("1", null, "3"),
+        ).withNullableHeader(autoRenameDuplicateHeaders = true).toList()
+
+        result.single() shouldBe linkedMapOf("" to "1", "_2" to null, "x" to "3")
+    }
+
+    @Test
+    fun nullableHeader_readNullableNullHeadersBecomeEmptyHeaders() {
+        val rows = CsvReader(
+            CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS)
+        ).readNullable(",\n1,".asSequence())
+
+        rows.withNullableHeader(autoRenameDuplicateHeaders = true).single() shouldBe
+            linkedMapOf("" to "1", "_2" to null)
     }
 }

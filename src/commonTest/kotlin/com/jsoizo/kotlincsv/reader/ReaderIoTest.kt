@@ -158,9 +158,34 @@ class ReaderIoTest {
     }
 
     @Test
+    fun readAllNullable_source_usesNullFieldIndicator() {
+        val source = FakeRawSource(csvBytes("\"\",,\n")).buffered()
+        val reader = CsvReader(
+            CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS)
+        )
+        reader.readAllNullable(source) shouldBe listOf(listOf("", null, null))
+    }
+
+    @Test
+    fun readNullable_source_blockReturnValueIsPropagated() {
+        val source = FakeRawSource(csvBytes("\"\",,\n")).buffered()
+        val reader = CsvReader(
+            CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS)
+        )
+        reader.readNullable(source) { rows -> rows.single()[1] } shouldBe null
+    }
+
+    @Test
     fun readAllFromFile_stringPathOverloadIsCallable() {
         val reader = CsvReader()
         val callable: (String) -> List<List<String>> = { path -> reader.readAllFromFile(path) }
+        callable shouldNotBe null
+    }
+
+    @Test
+    fun readAllNullableFromFile_stringPathOverloadIsCallable() {
+        val reader = CsvReader()
+        val callable: (String) -> List<List<String?>> = { path -> reader.readAllNullableFromFile(path) }
         callable shouldNotBe null
     }
 }

@@ -16,6 +16,8 @@ class CsvWriterJvmIoTest {
         listOf("d", "e", "f"),
     )
     private val sampleRowsEncoded = "a,b,c\r\nd,e,f\r\n"
+    private val nullableRows = listOf(listOf<String?>(null, "", "x"))
+    private val nullableRowsEncoded = ",\"\",\"x\"\r\n"
 
     @Test
     fun writeToFile_file_utf8_basic_writesEncodedBytes() {
@@ -53,12 +55,89 @@ class CsvWriterJvmIoTest {
     }
 
     @Test
+    fun writeNullableToFile_file_utf8_writesNullFields() {
+        val tmp = Files.createTempFile("kotlin-csv-jvm-writer-nullable", ".csv")
+        try {
+            val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+            writer.writeNullableToFile(nullableRows, tmp.toFile())
+            Files.readString(tmp, Charsets.UTF_8) shouldBe nullableRowsEncoded
+        } finally {
+            tmp.deleteIfExists()
+        }
+    }
+
+    @Test
+    fun writeNullableToFile_file_sequenceInputWithExplicitOptions_writesNullFields() {
+        val tmp = Files.createTempFile("kotlin-csv-jvm-writer-nullable-sequence", ".csv")
+        try {
+            val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+            writer.writeNullableToFile(
+                nullableRows.asSequence(),
+                tmp.toFile(),
+                charset = "UTF-8",
+                options = CsvWriteIoOptions(prependBom = false),
+            )
+            Files.readString(tmp, Charsets.UTF_8) shouldBe nullableRowsEncoded
+        } finally {
+            tmp.deleteIfExists()
+        }
+    }
+
+    @Test
+    fun writeNullableToFile_file_sequenceInputWithDefaultOptions_writesNullFields() {
+        val tmp = Files.createTempFile("kotlin-csv-jvm-writer-nullable-sequence-defaults", ".csv")
+        try {
+            val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+            writer.writeNullableToFile(nullableRows.asSequence(), tmp.toFile())
+            Files.readString(tmp, Charsets.UTF_8) shouldBe nullableRowsEncoded
+        } finally {
+            tmp.deleteIfExists()
+        }
+    }
+
+    @Test
     fun write_stream_callerOwnedStream_isNeitherClosedNorImplicitlyMutated() {
         val raw = ByteArrayOutputStream()
         val counting = CountingOutputStream(raw)
         CsvWriter().write(sampleRows, counting)
         raw.toByteArray().toString(Charsets.UTF_8) shouldBe sampleRowsEncoded
         // Caller owns the stream — overload must not close it.
+        counting.closeCount shouldBe 0
+    }
+
+    @Test
+    fun writeNullable_stream_callerOwnedStream_encodesNullFieldsAndDoesNotClose() {
+        val raw = ByteArrayOutputStream()
+        val counting = CountingOutputStream(raw)
+        val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+        writer.writeNullable(nullableRows, counting)
+        raw.toByteArray().toString(Charsets.UTF_8) shouldBe nullableRowsEncoded
+        counting.closeCount shouldBe 0
+        counting.flushCount shouldBeGreaterThanOrEqual 1
+    }
+
+    @Test
+    fun writeNullable_stream_sequenceInputWithExplicitOptions_encodesNullFieldsAndDoesNotClose() {
+        val raw = ByteArrayOutputStream()
+        val counting = CountingOutputStream(raw)
+        val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+        writer.writeNullable(
+            nullableRows.asSequence(),
+            counting,
+            charset = "UTF-8",
+            options = CsvWriteIoOptions(prependBom = false),
+        )
+        raw.toByteArray().toString(Charsets.UTF_8) shouldBe nullableRowsEncoded
+        counting.closeCount shouldBe 0
+    }
+
+    @Test
+    fun writeNullable_stream_sequenceInputWithDefaultOptions_encodesNullFieldsAndDoesNotClose() {
+        val raw = ByteArrayOutputStream()
+        val counting = CountingOutputStream(raw)
+        val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+        writer.writeNullable(nullableRows.asSequence(), counting)
+        raw.toByteArray().toString(Charsets.UTF_8) shouldBe nullableRowsEncoded
         counting.closeCount shouldBe 0
     }
 
@@ -81,6 +160,17 @@ class CsvWriterJvmIoTest {
         out.copyOfRange(0, 3).toList() shouldBe
             listOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte())
         out.copyOfRange(3, out.size).toString(Charsets.UTF_8) shouldBe sampleRowsEncoded
+    }
+
+    @Test
+    fun writeNullable_stream_prependBomUtf8_emitsEfBbBfPrefix() {
+        val raw = ByteArrayOutputStream()
+        val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+        writer.writeNullable(nullableRows, raw, options = CsvWriteIoOptions(prependBom = true))
+        val out = raw.toByteArray()
+        out.copyOfRange(0, 3).toList() shouldBe
+            listOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte())
+        out.copyOfRange(3, out.size).toString(Charsets.UTF_8) shouldBe nullableRowsEncoded
     }
 
     @Test

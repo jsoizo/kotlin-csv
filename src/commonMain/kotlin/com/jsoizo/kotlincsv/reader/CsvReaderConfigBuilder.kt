@@ -14,11 +14,13 @@ class CsvReaderConfigBuilder internal constructor() {
         InsufficientFieldsRowBehaviour.ERROR
     var excessFieldsRowBehaviour: ExcessFieldsRowBehaviour =
         ExcessFieldsRowBehaviour.ERROR
+    var nullFieldIndicator: CsvNullFieldIndicator = CsvNullFieldIndicator.NEITHER
 
     internal fun build(): CsvReaderConfig = CsvReaderConfig(
         dialect = dialect,
         skipEmptyLine = skipEmptyLine,
         insufficientFieldsRowBehaviour = insufficientFieldsRowBehaviour,
         excessFieldsRowBehaviour = excessFieldsRowBehaviour,
+        nullFieldIndicator = nullFieldIndicator,
     )
 }

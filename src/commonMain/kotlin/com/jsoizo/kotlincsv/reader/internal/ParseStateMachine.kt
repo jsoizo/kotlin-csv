@@ -2,6 +2,11 @@ package com.jsoizo.kotlincsv.reader.internal
 
 import com.jsoizo.kotlincsv.exceptions.CsvParseFormatException
 
+internal data class ParsedCsvField(
+    val value: String,
+    val quoted: Boolean
+)
+
 internal class ParseStateMachine(
     private val quoteChar: Char,
     private val delimiter: Char,
@@ -10,9 +15,11 @@ internal class ParseStateMachine(
 
     private var state = ParseState.START
 
-    private val fields = ArrayList<String>()
+    private val fields = ArrayList<ParsedCsvField>()
 
     private var field = StringBuilder()
+
+    private var currentFieldQuoted = false
 
     private var pos = 0L
 
@@ -22,7 +29,10 @@ internal class ParseStateMachine(
         when (state) {
             ParseState.START -> {
                 when (ch) {
-                    quoteChar -> state = ParseState.QUOTE_START
+                    quoteChar -> {
+                        currentFieldQuoted = true
+                        state = ParseState.QUOTE_START
+                    }
                     // When `escapeChar == quoteChar`, the quoteChar arm above wins; this arm is unreachable.
                     escapeChar -> state = handleUnquotedEscape(nextCh, rowNum)
                     delimiter -> {
@@ -70,7 +80,10 @@ internal class ParseStateMachine(
             }
             ParseState.DELIMITER -> {
                 when (ch) {
-                    quoteChar -> state = ParseState.QUOTE_START
+                    quoteChar -> {
+                        currentFieldQuoted = true
+                        state = ParseState.QUOTE_START
+                    }
                     // When `escapeChar == quoteChar`, the quoteChar arm above wins; this arm is unreachable.
                     escapeChar -> state = handleUnquotedEscape(nextCh, rowNum)
                     delimiter -> {
@@ -159,25 +172,26 @@ internal class ParseStateMachine(
         state = ParseState.START
         fields.clear()
         field.clear()
+        currentFieldQuoted = false
         pos = 0L
     }
 
-    fun finishRow(): List<String>? {
+    fun finishRow(): List<ParsedCsvField>? {
         return when (state) {
             ParseState.DELIMITER -> {
-                fields.add("")
+                fields.add(ParsedCsvField("", quoted = false))
                 fields.toList()
             }
             ParseState.QUOTED_FIELD -> null
             ParseState.FIELD, ParseState.QUOTE_END -> {
-                fields.add(field.toString())
+                fields.add(ParsedCsvField(field.toString(), currentFieldQuoted))
                 fields.toList()
             }
             else -> fields.toList()
         }
     }
 
-    fun finishFinalRow(rowNum: Long): List<String>? {
+    fun finishFinalRow(rowNum: Long): List<ParsedCsvField>? {
         if (state == ParseState.QUOTE_START || state == ParseState.QUOTED_FIELD) {
             throw CsvParseFormatException(rowNum, pos, quoteChar, "end of quote doesn't exist")
         }
@@ -185,8 +199,9 @@ internal class ParseStateMachine(
     }
 
     private fun flushField() {
-        fields.add(field.toString())
+        fields.add(ParsedCsvField(field.toString(), currentFieldQuoted))
         field.clear()
+        currentFieldQuoted = false
     }
 
     /**
