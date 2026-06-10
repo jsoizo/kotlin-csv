@@ -168,6 +168,24 @@ class CsvReaderJvmIoTest {
     }
 
     @Test
+    fun readNullableFromFile_file_explicitOptionsDecodesNullFields() {
+        val tmp = Files.createTempFile("kotlin-csv-jvm-reader-nullable-options", ".csv")
+        try {
+            Files.writeString(tmp, nullableCsv, Charsets.UTF_8)
+            val reader = CsvReader(
+                CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS)
+            )
+            reader.readNullableFromFile(
+                tmp.toFile(),
+                charset = "UTF-8",
+                options = CsvReadIoOptions(stripBom = true),
+            ) { rows -> rows.toList() } shouldBe nullableRows
+        } finally {
+            tmp.deleteIfExists()
+        }
+    }
+
+    @Test
     fun readAll_stream_utf8_basic_decodesRowsAndDoesNotCloseCallerStream() {
         val raw = sampleCsv.toByteArray(Charsets.UTF_8)
         val counting = CountingInputStream(ByteArrayInputStream(raw))
@@ -183,6 +201,21 @@ class CsvReaderJvmIoTest {
             CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS)
         )
         reader.readAllNullable(counting) shouldBe nullableRows
+        counting.closeCount shouldBe 0
+    }
+
+    @Test
+    fun readNullable_stream_explicitOptionsDecodesNullFieldsAndDoesNotCloseCallerStream() {
+        val raw = nullableCsv.toByteArray(Charsets.UTF_8)
+        val counting = CountingInputStream(ByteArrayInputStream(raw))
+        val reader = CsvReader(
+            CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS)
+        )
+        reader.readNullable(
+            counting,
+            charset = "UTF-8",
+            options = CsvReadIoOptions(stripBom = true),
+        ) { rows -> rows.toList() } shouldBe nullableRows
         counting.closeCount shouldBe 0
     }
 

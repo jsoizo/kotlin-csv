@@ -261,6 +261,17 @@ class CsvWriterTest {
     }
 
     @Test
+    fun writeNullable_emptyRowsReturnsEmptySequence() {
+        CsvWriter().writeNullable(emptySequence()).toList() shouldBe emptyList()
+    }
+
+    @Test
+    fun writeNullable_multiRow_outputLast_true() {
+        val rows = sequenceOf(listOf<String?>(null), listOf("x"))
+        CsvWriter().writeNullable(rows).joinToString("") shouldBe "\r\nx\r\n"
+    }
+
+    @Test
     fun nullableRoundTrip_quoteAllDistinguishesNullAndEmptyString() {
         val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
         val reader = CsvReader(
