@@ -12,10 +12,13 @@ import com.jsoizo.kotlincsv.CsvDialect
  *   fields than the first row. Defaults to [InsufficientFieldsRowBehaviour.ERROR].
  * @property excessFieldsRowBehaviour Strategy for rows with more fields than
  *   the first row. Defaults to [ExcessFieldsRowBehaviour.ERROR].
+ * @property nullFieldIndicator Which empty fields nullable reader APIs expose
+ *   as `null`. Defaults to [CsvNullFieldIndicator.NEITHER].
  */
 data class CsvReaderConfig(
     val dialect: CsvDialect = CsvDialect.RFC4180,
     val skipEmptyLine: Boolean = false,
     val insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.ERROR,
     val excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = ExcessFieldsRowBehaviour.ERROR,
+    val nullFieldIndicator: CsvNullFieldIndicator = CsvNullFieldIndicator.NEITHER,
 )

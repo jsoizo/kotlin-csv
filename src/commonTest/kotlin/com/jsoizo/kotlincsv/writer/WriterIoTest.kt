@@ -34,6 +34,16 @@ class WriterIoTest {
     }
 
     @Test
+    fun writeNullable_sink_sequenceInputProducesEncodedBytes() {
+        val rows = sequenceOf(listOf<String?>(null, "b"), listOf("", null))
+        val raw = FakeRawSink()
+        raw.buffered().use { sink ->
+            CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL)).writeNullable(rows, sink)
+        }
+        raw.snapshot().decodeToString() shouldBe ",\"b\"\r\n\"\",\r\n"
+    }
+
+    @Test
     fun write_sink_prependBomEmitsBomThenBody() {
         val rows = listOf(listOf("a", "b"))
         val raw = FakeRawSink()
@@ -105,6 +115,18 @@ class WriterIoTest {
         }
         val callableList: (String) -> Unit = { path ->
             writer.writeToFile(listOf(listOf("a")), path)
+        }
+        (callableSeq to callableList) shouldBe (callableSeq to callableList)
+    }
+
+    @Test
+    fun writeNullableToFile_stringPathOverloadIsCallable() {
+        val writer = CsvWriter()
+        val callableSeq: (String) -> Unit = { path ->
+            writer.writeNullableToFile(sequenceOf(listOf<String?>(null, "a")), path)
+        }
+        val callableList: (String) -> Unit = { path ->
+            writer.writeNullableToFile(listOf(listOf<String?>(null, "a")), path)
         }
         (callableSeq to callableList) shouldBe (callableSeq to callableList)
     }

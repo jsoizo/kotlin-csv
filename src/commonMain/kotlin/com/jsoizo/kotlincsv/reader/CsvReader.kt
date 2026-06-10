@@ -2,7 +2,9 @@ package com.jsoizo.kotlincsv.reader
 
 import com.jsoizo.kotlincsv.exceptions.CsvFieldNumDifferentException
 import com.jsoizo.kotlincsv.exceptions.CsvParseFormatException
+import com.jsoizo.kotlincsv.reader.internal.ParsedCsvField
 import com.jsoizo.kotlincsv.reader.internal.parseRows
+import com.jsoizo.kotlincsv.reader.internal.parseRowsWithMetadata
 
 /**
  * Stateless CSV reader. [read] is the lazy core API; [readAll] is the eager
@@ -27,6 +29,16 @@ class CsvReader(val config: CsvReaderConfig = CsvReaderConfig()) {
     fun readAll(text: String): List<List<String>> = read(text.asSequence()).toList()
 
     /**
+     * Parse [chars] into nullable rows. Empty-field null mapping is controlled
+     * by [CsvReaderConfig.nullFieldIndicator].
+     */
+    fun readNullable(chars: Sequence<Char>): Sequence<List<String?>> =
+        applyNullablePipeline(parseRowsWithMetadata(chars, config.dialect))
+
+    /** Eagerly parse [text] into a list of nullable rows. */
+    fun readAllNullable(text: String): List<List<String?>> = readNullable(text.asSequence()).toList()
+
+    /**
      * Apply skipEmptyLine filter and field-count policy to a parsed row
      * sequence. Used by I/O wrappers that obtain rows from chunked parsers
      * without routing chars through a `Sequence<Char>`.
@@ -40,8 +52,34 @@ class CsvReader(val config: CsvReaderConfig = CsvReaderConfig()) {
         return applyFieldCountPolicy(filtered)
     }
 
+    internal fun applyNullablePipeline(parsed: Sequence<List<ParsedCsvField>>): Sequence<List<String?>> {
+        val filtered = if (config.skipEmptyLine) {
+            parsed.filter { row -> !isEmptyParsedRow(row) }
+        } else {
+            parsed
+        }
+        return applyNullableFieldCountPolicy(
+            filtered.map { row ->
+                row.map { field -> field.toNullable(config.nullFieldIndicator) }
+            }
+        )
+    }
+
     private fun isEmptyRow(row: List<String>): Boolean =
         row.isEmpty() || (row.size == 1 && row.single().isBlank())
+
+    private fun isEmptyParsedRow(row: List<ParsedCsvField>): Boolean =
+        row.isEmpty() || (row.size == 1 && row.single().value.isBlank())
+
+    private fun ParsedCsvField.toNullable(indicator: CsvNullFieldIndicator): String? {
+        if (value.isNotEmpty()) return value
+        return when (indicator) {
+            CsvNullFieldIndicator.NEITHER -> value
+            CsvNullFieldIndicator.EMPTY_SEPARATORS -> if (quoted) value else null
+            CsvNullFieldIndicator.EMPTY_QUOTES -> if (quoted) null else value
+            CsvNullFieldIndicator.BOTH -> null
+        }
+    }
 
     private fun applyFieldCountPolicy(rows: Sequence<List<String>>): Sequence<List<String>> = sequence {
         var expected: Int? = null
@@ -76,6 +114,45 @@ class CsvReader(val config: CsvReaderConfig = CsvReaderConfig()) {
 
                     InsufficientFieldsRowBehaviour.EMPTY_STRING ->
                         yield(row + List(current - row.size) { "" })
+                }
+
+                else -> yield(row)
+            }
+        }
+    }
+
+    private fun applyNullableFieldCountPolicy(rows: Sequence<List<String?>>): Sequence<List<String?>> = sequence {
+        var expected: Int? = null
+        var rowNum = 0L
+        for (row in rows) {
+            rowNum++
+            val current = expected
+            if (current == null) {
+                expected = row.size
+                yield(row)
+                continue
+            }
+            when {
+                row.size > current -> when (config.excessFieldsRowBehaviour) {
+                    ExcessFieldsRowBehaviour.ERROR ->
+                        throw CsvFieldNumDifferentException(current, row.size, rowNum)
+
+                    ExcessFieldsRowBehaviour.IGNORE ->
+                        Unit
+
+                    ExcessFieldsRowBehaviour.TRIM ->
+                        yield(row.subList(0, current))
+                }
+
+                row.size < current -> when (config.insufficientFieldsRowBehaviour) {
+                    InsufficientFieldsRowBehaviour.ERROR ->
+                        throw CsvFieldNumDifferentException(current, row.size, rowNum)
+
+                    InsufficientFieldsRowBehaviour.IGNORE ->
+                        Unit
+
+                    InsufficientFieldsRowBehaviour.EMPTY_STRING ->
+                        yield(row + List<String?>(current - row.size) { "" })
                 }
 
                 else -> yield(row)

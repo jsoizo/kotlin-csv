@@ -38,6 +38,38 @@ fun Sequence<List<String>>.withHeader(
     }
 }
 
+/**
+ * Treat the first nullable row as a non-null header and zip subsequent rows
+ * into [LinkedHashMap]s keyed by the header values.
+ *
+ * Header values are column names, so `null` header fields are normalized to
+ * empty headers (`""`). Duplicate handling matches [withHeader].
+ */
+fun Sequence<List<String?>>.withNullableHeader(
+    autoRenameDuplicateHeaders: Boolean = false,
+): Sequence<LinkedHashMap<String, String?>> = sequence {
+    val iter = iterator()
+    if (!iter.hasNext()) return@sequence
+
+    val rawHeader = iter.next().map { it ?: "" }
+    val header = if (autoRenameDuplicateHeaders) {
+        renameDuplicates(rawHeader)
+    } else {
+        ensureUnique(rawHeader)
+        rawHeader
+    }
+
+    while (iter.hasNext()) {
+        val row = iter.next()
+        val map = LinkedHashMap<String, String?>(header.size)
+        val limit = minOf(header.size, row.size)
+        for (i in 0 until limit) {
+            map[header[i]] = row[i]
+        }
+        yield(map)
+    }
+}
+
 private fun ensureUnique(header: List<String>) {
     val seen = mutableSetOf<String>()
     for (h in header) {

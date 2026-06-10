@@ -39,7 +39,9 @@ same instance are independent and can proceed concurrently.
 The core APIs operate on `Sequence`:
 
 - Reader: `Sequence<Char>` to `Sequence<List<String>>`
+- Nullable reader: `Sequence<Char>` to `Sequence<List<String?>>`
 - Writer: `Sequence<List<String>>` to `Sequence<Char>`
+- Nullable writer: `Sequence<List<String?>>` to `Sequence<Char>`
 
 The returned sequences are **cold**. No work happens until a terminal
 operation (`forEach`, `toList`, `first`, `take(n).toList()`, ...) pulls the
@@ -113,6 +115,11 @@ sequence is built.
 The eager wrapper `CsvReader.readAll(text)` parses the whole input up-front
 and returns a `List<List<String>>`. Exceptions propagate from the call site.
 
+Nullable counterparts (`readNullable`, `readAllNullable`, and nullable I/O
+overloads) return `String?` fields. [CsvReaderConfig.nullFieldIndicator]
+controls whether quoted empty fields, unquoted empty fields, both, or neither
+are exposed as `null`.
+
 ## Field-count policies
 
 The first row sets the expected field count for the rest of the input. Two
@@ -132,6 +139,9 @@ field-count check. When `ERROR` raises `CsvFieldNumDifferentException`,
 `rowNum` counts the CSV rows that remain after this filter; it is not a
 physical source line number.
 
+For nullable reads, `EMPTY_STRING` padding from the insufficient-field policy
+is still an empty string, not `null`.
+
 ## Header processing
 
 Header support is not part of the reader core; it is provided as the
@@ -141,6 +151,11 @@ header order at the type level. Duplicate headers either throw
 [com.jsoizo.kotlincsv.exceptions.MalformedCsvException] (default) or are
 deterministically renamed with `_2`, `_3`, ... suffixes when
 `autoRenameDuplicateHeaders = true`.
+
+Nullable header support is provided by [Sequence.withNullableHeader]. Header
+keys remain non-null `String` values because they are column names. A `null`
+header field is normalized to the empty header name `""`; data values remain
+nullable.
 
 ## I/O-layer behaviour
 
@@ -189,6 +204,11 @@ ultimately consumes the characters.
 
 The eager wrapper `CsvWriter.writeAll(rows)` joins the encoded characters
 into a single `String`.
+
+Nullable counterparts (`writeNullable`, `writeAllNullable`, and nullable I/O
+overloads) emit `null` fields as unquoted empty fields. Non-null strings use
+the same quote and escape rules as the regular writer. Use `quoteMode = ALL`
+when you need the output to distinguish `null` from an empty string.
 
 ## Quote modes
 

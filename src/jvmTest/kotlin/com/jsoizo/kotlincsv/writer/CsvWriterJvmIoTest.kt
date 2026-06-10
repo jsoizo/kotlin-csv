@@ -16,6 +16,8 @@ class CsvWriterJvmIoTest {
         listOf("d", "e", "f"),
     )
     private val sampleRowsEncoded = "a,b,c\r\nd,e,f\r\n"
+    private val nullableRows = listOf(listOf<String?>(null, "", "x"))
+    private val nullableRowsEncoded = ",\"\",\"x\"\r\n"
 
     @Test
     fun writeToFile_file_utf8_basic_writesEncodedBytes() {
@@ -53,6 +55,18 @@ class CsvWriterJvmIoTest {
     }
 
     @Test
+    fun writeNullableToFile_file_utf8_writesNullFields() {
+        val tmp = Files.createTempFile("kotlin-csv-jvm-writer-nullable", ".csv")
+        try {
+            val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+            writer.writeNullableToFile(nullableRows, tmp.toFile())
+            Files.readString(tmp, Charsets.UTF_8) shouldBe nullableRowsEncoded
+        } finally {
+            tmp.deleteIfExists()
+        }
+    }
+
+    @Test
     fun write_stream_callerOwnedStream_isNeitherClosedNorImplicitlyMutated() {
         val raw = ByteArrayOutputStream()
         val counting = CountingOutputStream(raw)
@@ -60,6 +74,17 @@ class CsvWriterJvmIoTest {
         raw.toByteArray().toString(Charsets.UTF_8) shouldBe sampleRowsEncoded
         // Caller owns the stream — overload must not close it.
         counting.closeCount shouldBe 0
+    }
+
+    @Test
+    fun writeNullable_stream_callerOwnedStream_encodesNullFieldsAndDoesNotClose() {
+        val raw = ByteArrayOutputStream()
+        val counting = CountingOutputStream(raw)
+        val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+        writer.writeNullable(nullableRows, counting)
+        raw.toByteArray().toString(Charsets.UTF_8) shouldBe nullableRowsEncoded
+        counting.closeCount shouldBe 0
+        counting.flushCount shouldBeGreaterThanOrEqual 1
     }
 
     @Test

@@ -31,6 +31,11 @@ class CsvReaderTest {
     }
 
     @Test
+    fun readAllNullable_emptyInput() {
+        CsvReader().readAllNullable("") shouldBe emptyList()
+    }
+
+    @Test
     fun skipEmptyLine_false_keepsEmptyRows() {
         val reader = CsvReader(CsvReaderConfig(skipEmptyLine = false))
         reader.readAll("a\n\nb") shouldBe listOf(listOf("a"), listOf(""), listOf("b"))
@@ -143,6 +148,67 @@ class CsvReaderTest {
         val reader = CsvReader(CsvReaderConfig())
         val seq = reader.read("a,b,c\nd,e".asSequence())
         seq.take(1).toList() shouldBe listOf(listOf("a", "b", "c"))
+    }
+
+    @Test
+    fun readAllNullable_defaultKeepsEmptyStrings() {
+        val reader = CsvReader()
+        reader.readAllNullable("\"col1\",\"col2\"\n\"\",") shouldBe listOf(
+            listOf("col1", "col2"),
+            listOf("", ""),
+        )
+    }
+
+    @Test
+    fun readAllNullable_emptySeparators_issue81Sample() {
+        val reader = CsvReader(
+            CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS)
+        )
+        reader.readAllNullable("\"col1\",\"col2\"\n\"\",") shouldBe listOf(
+            listOf("col1", "col2"),
+            listOf("", null),
+        )
+    }
+
+    @Test
+    fun readAllNullable_emptyQuotes() {
+        val reader = CsvReader(
+            CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_QUOTES)
+        )
+        reader.readAllNullable("\"\",") shouldBe listOf(listOf(null, ""))
+    }
+
+    @Test
+    fun readAllNullable_bothEmptyKinds() {
+        val reader = CsvReader(
+            CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.BOTH)
+        )
+        reader.readAllNullable(",\"\"") shouldBe listOf(listOf(null, null))
+    }
+
+    @Test
+    fun readAllNullable_emptySeparators_leadingMiddleTrailingAndEof() {
+        val reader = CsvReader(
+            CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS)
+        )
+        reader.readAllNullable(",a,\nb,,") shouldBe listOf(
+            listOf(null, "a", null),
+            listOf("b", null, null),
+        )
+    }
+
+    @Test
+    fun readAllNullable_insufficientEmptyStringPaddingStaysEmptyString() {
+        val reader = CsvReader(
+            CsvReaderConfig(
+                insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.EMPTY_STRING,
+                nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS,
+            )
+        )
+        reader.readAllNullable("a,b,c\nd,e") shouldBe listOf(
+            listOf("a", "b", "c"),
+            listOf("d", "e", ""),
+        )
     }
 
     // --- Unquoted-field escape (issue #168) ---

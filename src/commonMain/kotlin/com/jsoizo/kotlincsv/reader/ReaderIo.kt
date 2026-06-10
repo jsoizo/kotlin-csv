@@ -1,6 +1,7 @@
 package com.jsoizo.kotlincsv.reader
 
 import com.jsoizo.kotlincsv.reader.internal.parseRowsFromChunks
+import com.jsoizo.kotlincsv.reader.internal.parseRowsWithMetadataFromChunks
 import kotlinx.io.Source
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
@@ -31,6 +32,25 @@ fun CsvReader.readAll(
     source: Source,
     options: CsvReadIoOptions = CsvReadIoOptions(),
 ): List<List<String>> = read(source, options) { it.toList() }
+
+/**
+ * Read nullable CSV rows from [source] (UTF-8) and pass them to [block].
+ * [source] is caller-owned and is not closed by this call.
+ */
+fun <T> CsvReader.readNullable(
+    source: Source,
+    options: CsvReadIoOptions = CsvReadIoOptions(),
+    block: (Sequence<List<String?>>) -> T,
+): T {
+    val parsed = parseRowsWithMetadataFromChunks(source.asChunkReader(), config.dialect, options.stripBom)
+    return block(applyNullablePipeline(parsed))
+}
+
+/** Eagerly read all nullable CSV rows from [source] (UTF-8). */
+fun CsvReader.readAllNullable(
+    source: Source,
+    options: CsvReadIoOptions = CsvReadIoOptions(),
+): List<List<String?>> = readNullable(source, options) { it.toList() }
 
 private fun Source.asChunkReader(): (CharArray) -> Int = { buffer ->
     var index = 0
@@ -72,6 +92,24 @@ fun CsvReader.readAllFromFile(
 ): List<List<String>> = readFromFile(path, options) { it.toList() }
 
 /**
+ * Read nullable CSV rows from the file at [path] (UTF-8) and pass them to
+ * [block]. The underlying source is closed when [block] returns or throws.
+ */
+fun <T> CsvReader.readNullableFromFile(
+    path: Path,
+    options: CsvReadIoOptions = CsvReadIoOptions(),
+    block: (Sequence<List<String?>>) -> T,
+): T = SystemFileSystem.source(path).buffered().use { bufferedSource ->
+    readNullable(bufferedSource, options, block)
+}
+
+/** Eagerly read all nullable CSV rows from the file at [path] (UTF-8). */
+fun CsvReader.readAllNullableFromFile(
+    path: Path,
+    options: CsvReadIoOptions = CsvReadIoOptions(),
+): List<List<String?>> = readNullableFromFile(path, options) { it.toList() }
+
+/**
  * String-path overload of [readFromFile]. The `Sequence` passed to [block]
  * must be consumed inside the block.
  */
@@ -86,3 +124,19 @@ fun CsvReader.readAllFromFile(
     filePath: String,
     options: CsvReadIoOptions = CsvReadIoOptions(),
 ): List<List<String>> = readFromFile(filePath, options) { it.toList() }
+
+/**
+ * String-path overload of [readNullableFromFile]. The `Sequence` passed to
+ * [block] must be consumed inside the block.
+ */
+fun <T> CsvReader.readNullableFromFile(
+    filePath: String,
+    options: CsvReadIoOptions = CsvReadIoOptions(),
+    block: (Sequence<List<String?>>) -> T,
+): T = readNullableFromFile(Path(filePath), options, block)
+
+/** String-path overload of [readAllNullableFromFile]. */
+fun CsvReader.readAllNullableFromFile(
+    filePath: String,
+    options: CsvReadIoOptions = CsvReadIoOptions(),
+): List<List<String?>> = readNullableFromFile(filePath, options) { it.toList() }

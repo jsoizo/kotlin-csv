@@ -20,4 +20,16 @@ class CsvWriterPathSmokeTest {
             tmp.deleteIfExists()
         }
     }
+
+    @Test
+    fun writeNullableToFile_stringPath_writesNullFieldsToRealTempFile() {
+        val tmp = Files.createTempFile("kotlin-csv-writer-smoke-nullable", ".csv")
+        try {
+            val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.ALL))
+            writer.writeNullableToFile(listOf(listOf<String?>(null, "", "x")), tmp.toString())
+            Files.readString(tmp) shouldBe ",\"\",\"x\"\r\n"
+        } finally {
+            tmp.deleteIfExists()
+        }
+    }
 }

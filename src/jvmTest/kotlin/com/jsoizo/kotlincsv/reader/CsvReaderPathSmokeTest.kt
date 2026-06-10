@@ -24,6 +24,21 @@ class CsvReaderPathSmokeTest {
     }
 
     @Test
+    fun readAllNullableFromFile_stringPath_readsNullFieldsFromRealTempFile() {
+        val tmp = Files.createTempFile("kotlin-csv-reader-smoke-nullable", ".csv")
+        try {
+            Files.writeString(tmp, "\"empty\",\"null\"\n\"\",\n")
+            val reader = CsvReader(
+                CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS)
+            )
+            reader.readAllNullableFromFile(tmp.toString()) shouldBe
+                listOf(listOf("empty", "null"), listOf("", null))
+        } finally {
+            tmp.deleteIfExists()
+        }
+    }
+
+    @Test
     fun readFromFile_kotlinxIoPath_defaultOptions_decodesRows() {
         // Direct call into the kotlinx-io Path overloads with options omitted,
         // covering the default-argument synthetic methods on readFromFile and
