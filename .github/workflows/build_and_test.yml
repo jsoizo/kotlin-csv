@@ -26,7 +26,7 @@ jobs:
 
       - name: Run Linux, JVM, JS checks and generate coverage report
         run: |
-          ./gradlew clean jvmTest jsNodeTest wasmJsNodeTest linuxX64Test compileKotlinLinuxArm64 compileTestKotlinLinuxArm64 compileKotlinWasmWasi checkKotlinAbi koverXmlReport
+          ./gradlew clean jvmTest jsNodeTest wasmJsNodeTest linuxX64Test compileKotlinLinuxArm64 compileTestKotlinLinuxArm64 compileKotlinWasmWasi checkKotlinAbi koverXmlReport dokkaGeneratePublicationHtml
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v4
