@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  check-version:
+    name: Check version matches release tag
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Verify release tag matches build.gradle.kts version
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+        run: |
+          version=$(sed -nE 's/^version = "(.+)"$/\1/p' build.gradle.kts)
+          if [ -z "$version" ]; then
+            echo "::error::Could not extract version from build.gradle.kts"
+            exit 1
+          fi
+          if [ "$version" != "$TAG_NAME" ]; then
+            echo "::error::Release tag '$TAG_NAME' does not match build.gradle.kts version '$version'"
+            exit 1
+          fi
+
+  publish-maven:
+    name: Publish to Maven Central
+    needs: check-version
+    # Apple targets require a macOS host, which can build every KMP target
+    runs-on: macos-15
+    timeout-minutes: 60
+    environment: maven-central
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+
+      # Uploads to the Central Portal only; releasing the deployment
+      # is done manually in the Portal UI as a final safety gate
+      - name: Publish to Maven Central
+        run: ./gradlew publishToMavenCentral
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_IN_MEMORY_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_IN_MEMORY_KEY_PASSWORD }}

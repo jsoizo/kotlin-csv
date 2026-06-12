@@ -1,0 +1,61 @@
+name: Publish Snapshot
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+# Avoid out-of-order snapshot uploads when pushes land in quick succession
+concurrency:
+  group: snapshot
+  cancel-in-progress: true
+
+jobs:
+  check-version:
+    name: Check version is a SNAPSHOT
+    runs-on: ubuntu-24.04
+    outputs:
+      is-snapshot: ${{ steps.version.outputs.is-snapshot }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check build.gradle.kts version
+        id: version
+        run: |
+          version=$(sed -nE 's/^version = "(.+)"$/\1/p' build.gradle.kts)
+          if [ -z "$version" ]; then
+            echo "::error::Could not extract version from build.gradle.kts"
+            exit 1
+          fi
+          case "$version" in
+            *-SNAPSHOT) echo "is-snapshot=true" >> "$GITHUB_OUTPUT" ;;
+            *) echo "is-snapshot=false" >> "$GITHUB_OUTPUT" ;;
+          esac
+          echo "version=$version"
+
+  publish-snapshot:
+    name: Publish snapshot to Maven Central
+    needs: check-version
+    if: needs.check-version.outputs.is-snapshot == 'true'
+    # Apple targets require a macOS host, which can build every KMP target
+    runs-on: macos-15
+    timeout-minutes: 60
+    environment: maven-central
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build
+
+      - name: Publish snapshot
+        run: ./gradlew publishToMavenCentral
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}

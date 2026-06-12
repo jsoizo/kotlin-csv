@@ -1,0 +1,14 @@
+name: Setup build environment
+description: Set up the JDK and Gradle shared by all build, test, and publish jobs
+
+runs:
+  using: composite
+  steps:
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4

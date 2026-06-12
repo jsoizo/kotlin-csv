@@ -111,6 +111,13 @@ dokka {
     dokkaSourceSets.named("commonMain") {
         includes.from("Module.md")
     }
+    dokkaSourceSets.configureEach {
+        sourceLink {
+            localDirectory.set(rootDir)
+            remoteUrl("https://github.com/jsoizo/kotlin-csv/tree/main")
+            remoteLineSuffix.set("#L")
+        }
+    }
 }
 
 mavenPublishing {
