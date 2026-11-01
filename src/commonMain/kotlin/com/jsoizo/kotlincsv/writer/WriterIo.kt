@@ -166,7 +166,15 @@ private class SinkAppendable(
 
     private fun flushIfFull() {
         if (buffer.length >= WRITE_CHUNK_SIZE) {
+            // Keep a trailing high surrogate for the next UTF-8 chunk.
+            val trailingHighSurrogate = buffer.last().takeIf { it.isHighSurrogate() }
+            if (trailingHighSurrogate != null) {
+                buffer.deleteAt(buffer.lastIndex)
+            }
             flush()
+            if (trailingHighSurrogate != null) {
+                buffer.append(trailingHighSurrogate)
+            }
         }
     }
 }
