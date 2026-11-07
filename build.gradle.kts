@@ -80,7 +80,6 @@ kotlin {
         }
         jvmTest {
             dependencies {
-                implementation(libs.bundles.kotest)
                 implementation(libs.kotlin.test.junit5)
             }
         }
