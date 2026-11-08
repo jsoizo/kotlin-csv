@@ -52,6 +52,14 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Cache Kotlin/Native dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.konan
+          key: konan-v1-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/*.gradle.kts', 'gradle.properties', 'gradle/libs.versions.toml', 'gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            konan-v1-${{ runner.os }}-${{ runner.arch }}-
+
       - name: Run Apple Native checks
         run: |
           ./gradlew macosArm64Test iosSimulatorArm64Test compileKotlinIosArm64 compileTestKotlinIosArm64
