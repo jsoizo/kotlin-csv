@@ -91,13 +91,6 @@ tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
 
-// kotest-property does not publish a wasm-wasi artifact yet (kotest-assertions-core
-// and the other commonTest deps do), so commonTest cannot be compiled for wasmWasi.
-// Validate main compilation only until kotest-property ships wasm-wasi.
-listOf("compileTestKotlinWasmWasi", "wasmWasiTest", "wasmWasiNodeTest").forEach { taskName ->
-    tasks.matching { it.name == taskName }.configureEach { enabled = false }
-}
-
 // Kotest 6.x JVM artifacts are built with Java 11 bytecode, while the library
 // artifact itself still targets Java 8 for consumer compatibility.
 tasks.named<KotlinJvmCompile>("compileTestKotlinJvm") {
