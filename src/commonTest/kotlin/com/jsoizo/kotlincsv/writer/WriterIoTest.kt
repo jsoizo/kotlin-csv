@@ -2,7 +2,9 @@ package com.jsoizo.kotlincsv.writer
 
 import com.jsoizo.kotlincsv.writer.internal.FakeRawSink
 import io.kotest.matchers.shouldBe
+import kotlinx.io.Buffer
 import kotlinx.io.buffered
+import kotlinx.io.readString
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
@@ -198,5 +200,25 @@ class WriterIoTest {
         }
         // Each row is 200 fields × 1 char + 199 commas = 399 chars + "\r\n"; 50 rows × 401 = 20050 bytes.
         raw.snapshot().size shouldBe 50 * (200 + 199 + 2)
+    }
+
+    @Test
+    fun write_sink_preservesSurrogatePairAtChunkBoundary() {
+        val field = "a".repeat(8191) + "\uD83D\uDE00" + "tail"
+        val sink = Buffer()
+
+        CsvWriter().write(listOf(listOf(field)), sink)
+
+        sink.readString() shouldBe "$field\r\n"
+    }
+
+    @Test
+    fun writeNullable_sink_preservesSurrogatePairAtChunkBoundary() {
+        val field = "a".repeat(8190) + "\uD83D\uDE00" + "tail"
+        val sink = Buffer()
+
+        CsvWriter().writeNullable(listOf(listOf(null, field)), sink)
+
+        sink.readString() shouldBe ",$field\r\n"
     }
 }
