@@ -52,8 +52,21 @@ internal val quoteModeArb: Arb<WriteQuoteMode> = Arb.of(
     WriteQuoteMode.NON_NUMERIC,
 )
 
+internal val supplementaryFieldToken: Arb<String> =
+    Arb.int(0x10000..0x10FFFF).map { codePoint ->
+        val offset = codePoint - 0x10000
+        "${(0xD800 + (offset shr 10)).toChar()}${(0xDC00 + (offset and 0x3FF)).toChar()}"
+    }
+
+private val fieldToken: Arb<String> = Arb.choice(
+    fieldChar.map { it.toString() },
+    fieldChar.map { it.toString() },
+    fieldChar.map { it.toString() },
+    supplementaryFieldToken,
+)
+
 internal val fieldArb: Arb<String> =
-    Arb.list(fieldChar, 0..16).map { it.joinToString("") }
+    Arb.list(fieldToken, 0..16).map { it.joinToString("") }
 
 internal val rowsArb: Arb<List<List<String>>> =
     Arb.int(1..5).flatMap { columns ->
