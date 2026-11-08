@@ -1,0 +1,3 @@
+Temporary branch to verify cache reuse from main after PR #194.
+Gradle configuration and Kotlin sources are unchanged.
+Close the verification PR after CI succeeds. Do not merge this file.
