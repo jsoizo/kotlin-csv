@@ -164,8 +164,8 @@ class CsvWriterTest {
         val writer = CsvWriter(
             CsvWriterConfig(dialect = dialect, quoteMode = WriteQuoteMode.NON_NUMERIC)
         )
-        val rows = listOf(listOf("1.5", "2"))
-        val expected = "\"1.5\".2\r\n"
+        val rows = listOf(listOf("1.5", "2", "x"))
+        val expected = "\"1.5\".2.\"x\"\r\n"
         writer.writeAll(rows) shouldBe expected
         writer.write(rows.asSequence()).joinToString("") shouldBe expected
     }
