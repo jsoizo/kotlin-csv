@@ -17,7 +17,7 @@ class NonNumericDecimalRoundTripPropertyTest {
     fun nonNumeric_decimalField_roundTrip() = runTest {
         checkAll(
             PropTestConfig(seed = 0L, iterations = 500),
-            dialectArb,
+            anyDialectArb,
             Arb.boolean(),
             decimalRowsArb,
         ) { dialect, outputLastLineTerminator, rows ->
