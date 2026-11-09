@@ -201,11 +201,18 @@ header name `""`, while data values remain nullable.
 Charset is JVM-only and is passed as an argument on the I/O call:
 
 ```kotlin
-reader.readFromFile(File("data.csv"), charset = "Shift_JIS") { it.toList() }
+reader.readFromFile(File("data.csv"), charset = "windows-31j") { it.toList() }
 writer.writeToFile(rows, File("out.csv"), charset = "UTF-16LE")
 ```
 
 `commonMain` and JS overloads are UTF-8 only.
+
+For Japanese files from Windows or Excel, use `"windows-31j"` (alias
+`"MS932"`) instead of `"Shift_JIS"`. Java's `"Shift_JIS"` (alias `"SJIS"`)
+has no mapping for characters such as `①`, `髙`, `№`, and `～` (U+FF5E).
+kotlin-csv's JVM I/O replaces unmappable characters without an error. On
+write they become `?`. On read they decode to U+FFFD, stray characters, or
+look-alikes such as `〜` (U+301C) for `～`.
 
 BOM stripping on read defaults to ON (matches Excel-produced files):
 
@@ -213,6 +220,55 @@ BOM stripping on read defaults to ON (matches Excel-produced files):
 reader.readFromFile(File("data.csv"), options = CsvReadIoOptions(stripBom = false))
 
 writer.writeToFile(rows, File("out.csv"), options = CsvWriteIoOptions(prependBom = true))
+```
+
+## Recipes
+
+### Exchange files with Excel
+
+Keep the default dialect, `CsvDialect.RFC4180`. If the recipient's Excel
+uses `;` as the list separator, use `CsvDialect(delimiter = ';')`. The main
+choice is the encoding. Pick it by what the recipient can read:
+
+```kotlin
+// UTF-8 with a BOM keeps every character.
+writer.writeToFile(rows, "out.csv", options = CsvWriteIoOptions(prependBom = true))
+
+// Windows-31J (JVM only) is for recipients that read only the Japanese Windows code page.
+writer.writeToFile(rows, File("out.csv"), charset = "windows-31j")
+```
+
+Windows-31J has no mapping for characters such as `𠮷` and emoji. They are
+written as `?` without an error. Do not combine `charset = "windows-31j"`
+with `prependBom = true`. Windows-31J cannot encode the BOM, so the file
+starts with `?`.
+
+To read a CSV file saved by Excel, keep the default UTF-8 for a UTF-8 file
+and pass `charset = "windows-31j"` for a Windows-31J file. The reader drops a
+leading BOM by default.
+
+### Exchange files with PostgreSQL `COPY`
+
+With `FORMAT csv` and the default `NULL` option, PostgreSQL writes `NULL` as
+an unquoted empty field and an empty string as `""`. To keep that
+difference, set `nullFieldIndicator = EMPTY_SEPARATORS` and read with a
+nullable API such as `readAllNullable`. Write nullable rows with
+`WriteQuoteMode.ALL`. The default `CANONICAL` mode writes both `null` and
+`""` as an unquoted empty field, so `COPY FROM` loads the empty strings as
+`NULL`.
+
+```kotlin
+val pgReader = csvReader {
+    nullFieldIndicator = CsvNullFieldIndicator.EMPTY_SEPARATORS
+}
+val pgWriter = csvWriter {
+    dialect = CsvDialect(lineTerminator = "\n") // LF, as COPY TO STDOUT writes
+    quoteMode = WriteQuoteMode.ALL
+}
+
+val csv = pgWriter.writeAllNullable(listOf(listOf("1", null, "")))
+// "1",,""
+pgReader.readAllNullable(csv) // [[1, null, ]]
 ```
 
 ## More
