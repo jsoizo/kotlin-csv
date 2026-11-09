@@ -257,7 +257,9 @@ a JVM-only `File` / `OutputStream`:
 - JVM: `write(rows, file: File, charset, ...)`,
   `write(rows, stream: OutputStream, charset, ...)`. Characters the charset
   cannot encode become the encoder's substitution character (`?` for
-  `"windows-31j"`) without an error.
+  `"windows-31j"`) without an error. `"windows-31j"` cannot encode `〜`
+  (U+301C), `−` (U+2212), `—` (U+2014), or `‖` (U+2016), which
+  `"Shift_JIS"` can.
 
 [CsvWriteIoOptions.prependBom] (default `false`) prepends U+FEFF before the
 encoded body. With `"UTF-8"` it produces the standard `EF BB BF`.

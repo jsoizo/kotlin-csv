@@ -207,12 +207,22 @@ writer.writeToFile(rows, File("out.csv"), charset = "UTF-16LE")
 
 `commonMain` and JS overloads are UTF-8 only.
 
-For Japanese files from Windows or Excel, use `"windows-31j"` (alias
-`"MS932"`) instead of `"Shift_JIS"`. Java's `"Shift_JIS"` (alias `"SJIS"`)
-has no mapping for characters such as `①`, `髙`, `№`, and `～` (U+FF5E).
-kotlin-csv's JVM I/O replaces unmappable characters without an error. On
-write they become `?`. On read they decode to U+FFFD, stray characters, or
-look-alikes such as `〜` (U+301C) for `～`.
+kotlin-csv's JVM I/O does not throw when the charset cannot map a
+character. `"windows-31j"` and `"Shift_JIS"` write `?` in its place. On
+read, bytes the charset cannot decode become U+FFFD.
+
+For Japanese text, use `"windows-31j"` (alias `"MS932"`) rather than Java's
+`"Shift_JIS"` (alias `"SJIS"`):
+
+- To read, no extra step is needed. `"windows-31j"` decodes every byte
+  sequence that `"Shift_JIS"` decodes, plus Windows characters such as `①`,
+  `髙`, and `№`.
+- To write, first replace `〜` (U+301C), `−` (U+2212), `—` (U+2014), and
+  `‖` (U+2016) with `～` (U+FF5E), `－` (U+FF0D), `―` (U+2015), and `∥`
+  (U+2225). `"windows-31j"` writes the original four as `?`. The
+  replacements produce the bytes that `"Shift_JIS"` writes for the
+  originals. Text typed on macOS or read with `"Shift_JIS"` can contain the
+  originals.
 
 BOM stripping on read defaults to ON (matches Excel-produced files):
 
@@ -238,10 +248,11 @@ writer.writeToFile(rows, "out.csv", options = CsvWriteIoOptions(prependBom = tru
 writer.writeToFile(rows, File("out.csv"), charset = "windows-31j")
 ```
 
-Windows-31J has no mapping for characters such as `𠮷` and emoji. They are
-written as `?` without an error. Do not combine `charset = "windows-31j"`
-with `prependBom = true`. Windows-31J cannot encode the BOM, so the file
-starts with `?`.
+Windows-31J writes characters such as `𠮷` and emoji as `?` without an
+error. Replace `〜` (U+301C) and three similar characters first, as
+described in [Configuration](#configuration). Do not combine
+`charset = "windows-31j"` with `prependBom = true`. Windows-31J cannot
+encode the BOM, so the file starts with `?`.
 
 To read a CSV file saved by Excel, keep the default UTF-8 for a UTF-8 file
 and pass `charset = "windows-31j"` for a Windows-31J file. The reader drops a
