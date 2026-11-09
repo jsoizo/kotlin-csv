@@ -13,7 +13,9 @@ enum class WriteQuoteMode {
 
     /**
      * Quote any field that contains a character other than digits or a single
-     * `.`. Empty strings are quoted.
+     * `.`. Empty strings are quoted. A decimal-like field is also quoted when
+     * [CANONICAL] would quote it, e.g. when the dialect uses `.` or a digit as
+     * its delimiter or quote character.
      */
     NON_NUMERIC,
 }
