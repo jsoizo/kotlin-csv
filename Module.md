@@ -165,8 +165,12 @@ lambda so the caller never owns the open resource:
 - common: `read(source: Source, ...)`, `read(path: Path, ...)`,
   `read(filePath: String, ...)` — UTF-8 only.
 - JVM: `read(file: File, charset, ...)`, `read(stream: InputStream, charset, ...)`
-  — accept Java charset names (e.g. `"SJIS"`, `"Shift_JIS"`,
-  `"ISO-8859-1"`); resolved via `Charset.forName`.
+  — accept Java charset names (e.g. `"windows-31j"`, `"UTF-16LE"`,
+  `"ISO-8859-1"`); resolved via `Charset.forName`. Bytes the charset cannot
+  decode become U+FFFD without an error. For Japanese files from Windows or
+  Excel, use `"windows-31j"`. Java's `"Shift_JIS"` cannot decode the
+  Windows bytes for characters such as `①` and `髙`, and decodes `～` as
+  `〜` (U+301C).
 
 The default for [CsvReadIoOptions.stripBom] is `true`, so a leading U+FEFF
 is dropped after charset decoding. This works for any encoding that surfaces
@@ -251,7 +255,11 @@ a JVM-only `File` / `OutputStream`:
 - common: `write(rows, sink: Sink, ...)`, `write(rows, path: Path, ...)`,
   `write(rows, filePath: String, ...)` — UTF-8 only.
 - JVM: `write(rows, file: File, charset, ...)`,
-  `write(rows, stream: OutputStream, charset, ...)`.
+  `write(rows, stream: OutputStream, charset, ...)`. Characters the charset
+  cannot encode become the encoder's substitution character (`?` for
+  `"windows-31j"`) without an error. `"windows-31j"` cannot encode `〜`
+  (U+301C), `−` (U+2212), `—` (U+2014), or `‖` (U+2016), which
+  `"Shift_JIS"` can.
 
 [CsvWriteIoOptions.prependBom] (default `false`) prepends U+FEFF before the
 encoded body. With `"UTF-8"` it produces the standard `EF BB BF`.
