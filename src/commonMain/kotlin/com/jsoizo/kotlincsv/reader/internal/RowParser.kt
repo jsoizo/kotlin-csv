@@ -21,6 +21,7 @@ internal data class ParsedCsvField(
 internal class RowParser(
     dialect: CsvDialect,
     private val cursor: CharCursor,
+    private val ignoreLeadingWhitespace: Boolean = false,
 ) {
     private val quoteChar = dialect.quoteChar
     private val escapeChar = dialect.escapeChar
@@ -52,14 +53,26 @@ internal class RowParser(
     }
 
     /** Parse one field; returns true if the row continues after a delimiter. */
-    private fun parseField(): Boolean =
-        if (cursor.cur == quoteCode) {
+    private fun parseField(): Boolean {
+        if (ignoreLeadingWhitespace) {
+            // Retain the prefix until a quote establishes that this is a quoted
+            // field. Dialect characters retain their normal structural meaning.
+            while ((cursor.cur == ' '.code || cursor.cur == '\t'.code) &&
+                cursor.cur != delimiterCode && cursor.cur != quoteCode && cursor.cur != escapeCode
+            ) {
+                sb.append(cursor.cur.toChar())
+                next()
+            }
+        }
+        return if (cursor.cur == quoteCode) {
+            sb.clear()
             // When escapeChar == quoteChar, quote wins at field start (RFC 4180).
             next()
             parseQuotedField()
         } else {
             parseUnquotedField()
         }
+    }
 
     private fun parseUnquotedField(): Boolean {
         while (true) {

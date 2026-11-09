@@ -58,7 +58,7 @@ fun <T> CsvReader.read(
     block: (Sequence<List<String>>) -> T,
 ): T {
     val reader = InputStreamReader(stream, Charset.forName(charset)).buffered()
-    val parsed = parseRowsFromChunks(reader.asChunkReader(), config.dialect, options.stripBom)
+    val parsed = parseRowsFromChunks(reader.asChunkReader(), config.dialect, options.stripBom, ignoreLeadingWhitespace = config.ignoreLeadingWhitespace)
     return block(applyPipeline(parsed))
 }
 
@@ -83,7 +83,7 @@ fun <T> CsvReader.readNullable(
     block: (Sequence<List<String?>>) -> T,
 ): T {
     val reader = InputStreamReader(stream, Charset.forName(charset)).buffered()
-    val parsed = parseRowsWithMetadataFromChunks(reader.asChunkReader(), config.dialect, options.stripBom)
+    val parsed = parseRowsWithMetadataFromChunks(reader.asChunkReader(), config.dialect, options.stripBom, ignoreLeadingWhitespace = config.ignoreLeadingWhitespace)
     return block(applyNullablePipeline(parsed))
 }
 

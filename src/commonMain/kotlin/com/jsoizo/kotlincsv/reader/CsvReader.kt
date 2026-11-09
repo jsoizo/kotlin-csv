@@ -23,7 +23,7 @@ class CsvReader(val config: CsvReaderConfig = CsvReaderConfig()) {
      *   number after reader filters such as `skipEmptyLine`.
      */
     fun read(chars: Sequence<Char>): Sequence<List<String>> =
-        applyPipeline(parseRows(chars, config.dialect))
+        applyPipeline(parseRows(chars, config.dialect, config.ignoreLeadingWhitespace))
 
     /** Eagerly parse [text] into a list of rows. */
     fun readAll(text: String): List<List<String>> = read(text.asSequence()).toList()
@@ -33,7 +33,7 @@ class CsvReader(val config: CsvReaderConfig = CsvReaderConfig()) {
      * by [CsvReaderConfig.nullFieldIndicator].
      */
     fun readNullable(chars: Sequence<Char>): Sequence<List<String?>> =
-        applyNullablePipeline(parseRowsWithMetadata(chars, config.dialect))
+        applyNullablePipeline(parseRowsWithMetadata(chars, config.dialect, config.ignoreLeadingWhitespace))
 
     /** Eagerly parse [text] into a list of nullable rows. */
     fun readAllNullable(text: String): List<List<String?>> = readNullable(text.asSequence()).toList()

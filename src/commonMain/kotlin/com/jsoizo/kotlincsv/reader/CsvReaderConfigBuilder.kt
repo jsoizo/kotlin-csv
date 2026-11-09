@@ -10,6 +10,8 @@ import com.jsoizo.kotlincsv.CsvDialect
 class CsvReaderConfigBuilder internal constructor() {
     var dialect: CsvDialect = CsvDialect.RFC4180
     var skipEmptyLine: Boolean = false
+    /** Ignore ASCII spaces/tabs only before a quoted field; preserve unquoted contents. */
+    var ignoreLeadingWhitespace: Boolean = false
     var insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour =
         InsufficientFieldsRowBehaviour.ERROR
     var excessFieldsRowBehaviour: ExcessFieldsRowBehaviour =
@@ -22,5 +24,5 @@ class CsvReaderConfigBuilder internal constructor() {
         insufficientFieldsRowBehaviour = insufficientFieldsRowBehaviour,
         excessFieldsRowBehaviour = excessFieldsRowBehaviour,
         nullFieldIndicator = nullFieldIndicator,
-    )
+    ).withIgnoreLeadingWhitespace(ignoreLeadingWhitespace)
 }
