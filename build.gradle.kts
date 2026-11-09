@@ -33,6 +33,12 @@ kotlin {
             }
         }
         nodejs {
+            testTask {
+                useMocha {
+                    // Chunk-boundary tests in WriterIoPropertyTest take over 1 s on Node; the 2 s default flakes on CI.
+                    timeout = "10s"
+                }
+            }
         }
     }
 
