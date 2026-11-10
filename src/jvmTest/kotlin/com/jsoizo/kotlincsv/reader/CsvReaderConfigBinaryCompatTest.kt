@@ -59,6 +59,8 @@ class CsvReaderConfigBinaryCompatTest {
         val base = CsvReaderConfig(
             dialect = CsvDialect.TSV,
             skipEmptyLine = true,
+            insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.EMPTY_STRING,
+            excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM,
             nullFieldIndicator = CsvNullFieldIndicator.BOTH,
         )
         val copied = CsvReaderConfig::class.java
