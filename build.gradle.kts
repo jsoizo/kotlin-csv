@@ -17,6 +17,7 @@ plugins {
 group = "com.jsoizo"
 version = "2.0.0"
 val projectName = "kotlin-csv"
+val isSnapshot = version.toString().endsWith("-SNAPSHOT")
 
 kotlin {
     jvmToolchain(21)
@@ -112,7 +113,8 @@ dokka {
     dokkaSourceSets.configureEach {
         sourceLink {
             localDirectory.set(rootDir)
-            remoteUrl("https://github.com/jsoizo/kotlin-csv/tree/main")
+            // Pin released docs to their tag so line links survive later edits on main
+            remoteUrl("https://github.com/jsoizo/kotlin-csv/tree/${if (isSnapshot) "main" else version}")
             remoteLineSuffix.set("#L")
         }
     }
@@ -121,7 +123,6 @@ dokka {
 mavenPublishing {
     publishToMavenCentral()
 
-    val isSnapshot = version.toString().endsWith("-SNAPSHOT")
     val hasSigningKey = project.hasProperty("signing.keyId") || project.hasProperty("signingInMemoryKey")
     if (!isSnapshot && hasSigningKey) {
         signAllPublications()
