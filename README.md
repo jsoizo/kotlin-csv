@@ -288,8 +288,8 @@ pgReader.readAllNullable(csv) // [[1, null, ]]
   see [V2_MIGRATION_GUIDE.md](./V2_MIGRATION_GUIDE.md).
 - **API documentation**: hosted on javadoc.io —
   [latest (2.x)](https://javadoc.io/doc/com.jsoizo/kotlin-csv-jvm/latest/index.html) /
-  [1.x](https://javadoc.io/doc/com.github.doyaaaaaken/kotlin-csv-jvm/latest/index.html).
-  All published versions are available via the version dropdown.
+  [1.x (1.11.0)](https://javadoc.io/doc/com.jsoizo/kotlin-csv-jvm/1.11.0/index.html).
+  Other 2.x versions are available via the version dropdown.
   To build locally, run `./gradlew dokkaGeneratePublicationHtml` — outputs
   HTML to `build/dokka/html/`.
 - **Change Logs**: see [GitHub releases](https://github.com/jsoizo/kotlin-csv/releases).
