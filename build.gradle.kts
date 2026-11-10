@@ -3,6 +3,7 @@ import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.SourcesJar
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 plugins {
@@ -21,6 +22,9 @@ val isSnapshot = version.toString().endsWith("-SNAPSHOT")
 
 kotlin {
     jvmToolchain(21)
+
+    @OptIn(ExperimentalAbiValidation::class)
+    abiValidation { enabled.set(true) }
 
     jvm {
         compilerOptions {
