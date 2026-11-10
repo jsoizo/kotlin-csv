@@ -8,10 +8,10 @@ on:
 permissions:
   contents: read
 
-# Avoid out-of-order snapshot uploads when pushes land in quick succession
+# Serialize uploads so a newer push never interleaves with, or cancels, a half-finished one
 concurrency:
   group: snapshot
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   check-version:
