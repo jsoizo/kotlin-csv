@@ -21,4 +21,20 @@ data class CsvReaderConfig(
     val insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.ERROR,
     val excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = ExcessFieldsRowBehaviour.ERROR,
     val nullFieldIndicator: CsvNullFieldIndicator = CsvNullFieldIndicator.NEITHER,
-)
+) {
+    @Deprecated("Binary compatibility with 2.0.0", level = DeprecationLevel.HIDDEN)
+    constructor(
+        dialect: CsvDialect = CsvDialect.RFC4180,
+        skipEmptyLine: Boolean = false,
+        insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.ERROR,
+        excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = ExcessFieldsRowBehaviour.ERROR,
+    ) : this(dialect, skipEmptyLine, insufficientFieldsRowBehaviour, excessFieldsRowBehaviour, CsvNullFieldIndicator.NEITHER)
+
+    @Deprecated("Binary compatibility with 2.0.0", level = DeprecationLevel.HIDDEN)
+    fun copy(
+        dialect: CsvDialect = this.dialect,
+        skipEmptyLine: Boolean = this.skipEmptyLine,
+        insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour = this.insufficientFieldsRowBehaviour,
+        excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = this.excessFieldsRowBehaviour,
+    ): CsvReaderConfig = copy(dialect, skipEmptyLine, insufficientFieldsRowBehaviour, excessFieldsRowBehaviour, nullFieldIndicator)
+}

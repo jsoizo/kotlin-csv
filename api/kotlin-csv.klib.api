@@ -104,6 +104,7 @@ final class com.jsoizo.kotlincsv.reader/CsvReader { // com.jsoizo.kotlincsv.read
 }
 
 final class com.jsoizo.kotlincsv.reader/CsvReaderConfig { // com.jsoizo.kotlincsv.reader/CsvReaderConfig|null[0]
+    constructor <init>(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour = ...) // com.jsoizo.kotlincsv.reader/CsvReaderConfig.<init>|<init>(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour){}[0]
     constructor <init>(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator = ...) // com.jsoizo.kotlincsv.reader/CsvReaderConfig.<init>|<init>(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.CsvNullFieldIndicator){}[0]
 
     final val dialect // com.jsoizo.kotlincsv.reader/CsvReaderConfig.dialect|{}dialect[0]
@@ -122,6 +123,7 @@ final class com.jsoizo.kotlincsv.reader/CsvReaderConfig { // com.jsoizo.kotlincs
     final fun component3(): com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.component3|component3(){}[0]
     final fun component4(): com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.component4|component4(){}[0]
     final fun component5(): com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator // com.jsoizo.kotlincsv.reader/CsvReaderConfig.component5|component5(){}[0]
+    final fun copy(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour = ...): com.jsoizo.kotlincsv.reader/CsvReaderConfig // com.jsoizo.kotlincsv.reader/CsvReaderConfig.copy|copy(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour){}[0]
     final fun copy(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator = ...): com.jsoizo.kotlincsv.reader/CsvReaderConfig // com.jsoizo.kotlincsv.reader/CsvReaderConfig.copy|copy(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.CsvNullFieldIndicator){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // com.jsoizo.kotlincsv.reader/CsvReaderConfig.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.jsoizo.kotlincsv.reader/CsvReaderConfig.hashCode|hashCode(){}[0]
