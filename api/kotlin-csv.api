@@ -219,6 +219,8 @@ public final class com/jsoizo/kotlincsv/writer/CsvWriter {
 	public final fun writeAll (Ljava/util/List;)Ljava/lang/String;
 	public final fun writeAllNullable (Ljava/util/List;)Ljava/lang/String;
 	public final fun writeNullable (Lkotlin/sequences/Sequence;)Lkotlin/sequences/Sequence;
+	public final fun writeNullableRow (Ljava/util/List;)Ljava/lang/String;
+	public final fun writeRow (Ljava/util/List;)Ljava/lang/String;
 }
 
 public final class com/jsoizo/kotlincsv/writer/CsvWriterConfig {
