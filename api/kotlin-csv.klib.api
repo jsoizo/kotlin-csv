@@ -171,6 +171,8 @@ final class com.jsoizo.kotlincsv.writer/CsvWriter { // com.jsoizo.kotlincsv.writ
     final fun writeAll(kotlin.collections/List<kotlin.collections/List<kotlin/String>>): kotlin/String // com.jsoizo.kotlincsv.writer/CsvWriter.writeAll|writeAll(kotlin.collections.List<kotlin.collections.List<kotlin.String>>){}[0]
     final fun writeAllNullable(kotlin.collections/List<kotlin.collections/List<kotlin/String?>>): kotlin/String // com.jsoizo.kotlincsv.writer/CsvWriter.writeAllNullable|writeAllNullable(kotlin.collections.List<kotlin.collections.List<kotlin.String?>>){}[0]
     final fun writeNullable(kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String?>>): kotlin.sequences/Sequence<kotlin/Char> // com.jsoizo.kotlincsv.writer/CsvWriter.writeNullable|writeNullable(kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String?>>){}[0]
+    final fun writeNullableRow(kotlin.collections/List<kotlin/String?>): kotlin/String // com.jsoizo.kotlincsv.writer/CsvWriter.writeNullableRow|writeNullableRow(kotlin.collections.List<kotlin.String?>){}[0]
+    final fun writeRow(kotlin.collections/List<kotlin/String>): kotlin/String // com.jsoizo.kotlincsv.writer/CsvWriter.writeRow|writeRow(kotlin.collections.List<kotlin.String>){}[0]
 }
 
 final class com.jsoizo.kotlincsv.writer/CsvWriterConfig { // com.jsoizo.kotlincsv.writer/CsvWriterConfig|null[0]

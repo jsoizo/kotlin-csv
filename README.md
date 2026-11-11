@@ -141,6 +141,10 @@ val rows = listOf(
 // To a String — eager
 val csv: String = writer.writeAll(rows)
 
+// One CSV record, with the same quoting and terminator options
+val record: String = writer.writeRow(listOf("a", "b,c"))
+val nullableRecord: String = writer.writeNullableRow(listOf(null, "", "value"))
+
 // To a File
 writer.writeToFile(rows, File("out.csv"))
 
@@ -149,6 +153,21 @@ val nullableCsv = csvWriter {
     quoteMode = WriteQuoteMode.ALL
 }.writeAllNullable(listOf(listOf(null, "", "value")))
 ```
+
+For rows received one at a time, for example from an existing channel, append
+each record directly to your existing writer:
+
+```kotlin
+for (row in channel) {
+    bufferedWriter.append(writer.writeNullableRow(row))
+}
+```
+
+`writeRow` and `writeNullableRow` return strings and do not manage the channel
+or output resource. With the default `outputLastLineTerminator = true`, each
+record already ends in the configured terminator; do not append an extra newline.
+With that option disabled, callers are responsible for separating records.
+A quoted field may itself contain line breaks.
 
 `writer.writeToFile(...)` accepts `String` paths, `kotlinx.io.files.Path`,
 and (on JVM) `java.io.File`. For in-memory streams use
