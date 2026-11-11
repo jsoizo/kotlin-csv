@@ -159,6 +159,42 @@ class CsvWriterTest {
     }
 
     @Test
+    fun quote_nonNumeric_quotesDecimalContainingDelimiter() {
+        val dialect = CsvDialect(delimiter = '.')
+        val writer = CsvWriter(
+            CsvWriterConfig(dialect = dialect, quoteMode = WriteQuoteMode.NON_NUMERIC)
+        )
+        val rows = listOf(listOf("1.5", "2", "x"))
+        val expected = "\"1.5\".2.\"x\"\r\n"
+        writer.writeAll(rows) shouldBe expected
+        writer.write(rows.asSequence()).joinToString("") shouldBe expected
+    }
+
+    @Test
+    fun quote_nonNumeric_quotesDecimalContainingQuoteChar() {
+        val dialect = CsvDialect(quoteChar = '.', escapeChar = '.')
+        val writer = CsvWriter(
+            CsvWriterConfig(dialect = dialect, quoteMode = WriteQuoteMode.NON_NUMERIC)
+        )
+        val rows = listOf(listOf(".5", "2"))
+        val expected = "...5.,2\r\n"
+        writer.writeAll(rows) shouldBe expected
+        writer.write(rows.asSequence()).joinToString("") shouldBe expected
+    }
+
+    @Test
+    fun quote_nonNumeric_quotesDecimalContainingExplicitEscapeChar() {
+        val dialect = CsvDialect(escapeChar = '.')
+        val writer = CsvWriter(
+            CsvWriterConfig(dialect = dialect, quoteMode = WriteQuoteMode.NON_NUMERIC)
+        )
+        val rows = listOf(listOf("1.5", "2"))
+        val expected = "\"1..5\",2\r\n"
+        writer.writeAll(rows) shouldBe expected
+        writer.write(rows.asSequence()).joinToString("") shouldBe expected
+    }
+
+    @Test
     fun quote_nonNumeric_quotesSignedOrExponentToken() {
         val writer = CsvWriter(CsvWriterConfig(quoteMode = WriteQuoteMode.NON_NUMERIC))
         writer.writeAll(listOf(listOf("-1", "+1", "1e3"))) shouldBe "\"-1\",\"+1\",\"1e3\"\r\n"

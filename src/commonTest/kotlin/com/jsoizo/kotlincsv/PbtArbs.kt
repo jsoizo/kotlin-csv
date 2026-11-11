@@ -11,6 +11,7 @@ import io.kotest.property.arbitrary.int
 import io.kotest.property.arbitrary.list
 import io.kotest.property.arbitrary.map
 import io.kotest.property.arbitrary.of
+import io.kotest.property.arbitrary.orNull
 
 internal val targetedChar: Arb<Char> = Arb.of(
     ',', '\t', '"', '\\',
@@ -47,6 +48,24 @@ internal val dialectArb: Arb<CsvDialect> = Arb.of(
     CsvDialect.TSV,
     CsvDialect(escapeChar = '\\'),
 )
+
+private val dialectSymbolChar: Arb<Char> = Arb.of(
+    ',', ';', '\t', '|', ' ', '\'', '"', '\\', '#', 'a', '.', '0', '9',
+)
+
+// CsvDialect accepts any non-empty lineTerminator, but the reader only splits rows on these.
+private val readerLineTerminatorArb: Arb<String> =
+    Arb.of("\n", "\r", "\r\n", "\u2028", "\u2029", "\u0085")
+
+internal val anyDialectArb: Arb<CsvDialect> =
+    Arb.bind(
+        dialectSymbolChar,
+        dialectSymbolChar,
+        dialectSymbolChar.orNull(0.5),
+        readerLineTerminatorArb,
+    ) { delimiter, quoteChar, escapeChar, lineTerminator ->
+        runCatching { CsvDialect(delimiter, quoteChar, escapeChar ?: quoteChar, lineTerminator) }
+    }.filter { it.isSuccess }.map { it.getOrThrow() }
 
 internal val quoteModeArb: Arb<WriteQuoteMode> = Arb.of(
     WriteQuoteMode.CANONICAL,

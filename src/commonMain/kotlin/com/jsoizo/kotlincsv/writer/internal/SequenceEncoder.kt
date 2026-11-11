@@ -170,7 +170,9 @@ private fun encodeField(
         WriteQuoteMode.ALL -> true
         WriteQuoteMode.CANONICAL ->
             needsCanonicalQuote(field, quoteChar, escapeChar, dialect.delimiter, dialect.lineTerminator)
-        WriteQuoteMode.NON_NUMERIC -> !isDecimalLikeToken(field)
+        WriteQuoteMode.NON_NUMERIC ->
+            !isDecimalLikeToken(field) ||
+                needsCanonicalQuote(field, quoteChar, escapeChar, dialect.delimiter, dialect.lineTerminator)
     }
 
     if (shouldQuote) yield(quoteChar)
@@ -206,7 +208,9 @@ private fun appendField(
         WriteQuoteMode.ALL -> true
         WriteQuoteMode.CANONICAL ->
             needsCanonicalQuote(field, quoteChar, escapeChar, dialect.delimiter, dialect.lineTerminator)
-        WriteQuoteMode.NON_NUMERIC -> !isDecimalLikeToken(field)
+        WriteQuoteMode.NON_NUMERIC ->
+            !isDecimalLikeToken(field) ||
+                needsCanonicalQuote(field, quoteChar, escapeChar, dialect.delimiter, dialect.lineTerminator)
     }
 
     if (shouldQuote) out.append(quoteChar)

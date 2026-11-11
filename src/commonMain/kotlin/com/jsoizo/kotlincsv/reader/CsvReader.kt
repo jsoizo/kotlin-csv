@@ -87,7 +87,6 @@ class CsvReader(val config: CsvReaderConfig = CsvReaderConfig()) {
         for (row in rows) {
             rowNum++
             val current = expected
-            // First row establishes the expected field count for all later rows.
             if (current == null) {
                 expected = row.size
                 yield(row)

@@ -1,0 +1,311 @@
+public final class com/jsoizo/kotlincsv/CsvDialect {
+	public static final field Companion Lcom/jsoizo/kotlincsv/CsvDialect$Companion;
+	public fun <init> ()V
+	public fun <init> (CCCLjava/lang/String;)V
+	public synthetic fun <init> (CCCLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()C
+	public final fun component2 ()C
+	public final fun component3 ()C
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (CCCLjava/lang/String;)Lcom/jsoizo/kotlincsv/CsvDialect;
+	public static synthetic fun copy$default (Lcom/jsoizo/kotlincsv/CsvDialect;CCCLjava/lang/String;ILjava/lang/Object;)Lcom/jsoizo/kotlincsv/CsvDialect;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDelimiter ()C
+	public final fun getEscapeChar ()C
+	public final fun getLineTerminator ()Ljava/lang/String;
+	public final fun getQuoteChar ()C
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jsoizo/kotlincsv/CsvDialect$Companion {
+	public final fun getRFC4180 ()Lcom/jsoizo/kotlincsv/CsvDialect;
+	public final fun getTSV ()Lcom/jsoizo/kotlincsv/CsvDialect;
+}
+
+public final class com/jsoizo/kotlincsv/CsvReaderDslKt {
+	public static final fun csvReader (Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;)Lcom/jsoizo/kotlincsv/reader/CsvReader;
+	public static final fun csvReader (Lkotlin/jvm/functions/Function1;)Lcom/jsoizo/kotlincsv/reader/CsvReader;
+	public static synthetic fun csvReader$default (Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/jsoizo/kotlincsv/reader/CsvReader;
+}
+
+public final class com/jsoizo/kotlincsv/CsvWriterDslKt {
+	public static final fun csvWriter (Lcom/jsoizo/kotlincsv/writer/CsvWriterConfig;)Lcom/jsoizo/kotlincsv/writer/CsvWriter;
+	public static final fun csvWriter (Lkotlin/jvm/functions/Function1;)Lcom/jsoizo/kotlincsv/writer/CsvWriter;
+	public static synthetic fun csvWriter$default (Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lcom/jsoizo/kotlincsv/writer/CsvWriter;
+}
+
+public final class com/jsoizo/kotlincsv/exceptions/CsvFieldNumDifferentException : com/jsoizo/kotlincsv/exceptions/MalformedCsvException {
+	public fun <init> (IIJ)V
+	public final fun getActualFieldCount ()I
+	public final fun getExpectedFieldCount ()I
+	public final fun getRowNum ()J
+}
+
+public final class com/jsoizo/kotlincsv/exceptions/CsvParseFormatException : com/jsoizo/kotlincsv/exceptions/MalformedCsvException {
+	public fun <init> (JJCLjava/lang/String;)V
+	public synthetic fun <init> (JJCLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getChar ()C
+	public final fun getColIndex ()J
+	public final fun getRowNum ()J
+}
+
+public class com/jsoizo/kotlincsv/exceptions/MalformedCsvException : java/lang/RuntimeException {
+	public fun <init> (Ljava/lang/String;)V
+}
+
+public final class com/jsoizo/kotlincsv/reader/CsvHeaderKt {
+	public static final fun withHeader (Lkotlin/sequences/Sequence;Z)Lkotlin/sequences/Sequence;
+	public static synthetic fun withHeader$default (Lkotlin/sequences/Sequence;ZILjava/lang/Object;)Lkotlin/sequences/Sequence;
+	public static final fun withNullableHeader (Lkotlin/sequences/Sequence;Z)Lkotlin/sequences/Sequence;
+	public static synthetic fun withNullableHeader$default (Lkotlin/sequences/Sequence;ZILjava/lang/Object;)Lkotlin/sequences/Sequence;
+}
+
+public final class com/jsoizo/kotlincsv/reader/CsvNullFieldIndicator : java/lang/Enum {
+	public static final field BOTH Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;
+	public static final field EMPTY_QUOTES Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;
+	public static final field EMPTY_SEPARATORS Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;
+	public static final field NEITHER Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;
+	public static fun values ()[Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;
+}
+
+public final class com/jsoizo/kotlincsv/reader/CsvReadIoOptions {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;
+	public static synthetic fun copy$default (Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;ZILjava/lang/Object;)Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getStripBom ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jsoizo/kotlincsv/reader/CsvReader {
+	public fun <init> ()V
+	public fun <init> (Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;)V
+	public synthetic fun <init> (Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getConfig ()Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;
+	public final fun read (Lkotlin/sequences/Sequence;)Lkotlin/sequences/Sequence;
+	public final fun readAll (Ljava/lang/String;)Ljava/util/List;
+	public final fun readAllNullable (Ljava/lang/String;)Ljava/util/List;
+	public final fun readNullable (Lkotlin/sequences/Sequence;)Lkotlin/sequences/Sequence;
+}
+
+public final class com/jsoizo/kotlincsv/reader/CsvReaderConfig {
+	public synthetic fun <init> ()V
+	public synthetic fun <init> (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;)V
+	public synthetic fun <init> (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;)V
+	public synthetic fun <init> (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/jsoizo/kotlincsv/CsvDialect;
+	public final fun component2 ()Z
+	public final fun component3 ()Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;
+	public final fun component4 ()Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;
+	public final fun component5 ()Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;
+	public final fun component6 ()Z
+	public final synthetic fun copy (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;)Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;
+	public final fun copy (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;)Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;
+	public static synthetic fun copy$default (Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;ILjava/lang/Object;)Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;
+	public static synthetic fun copy$default (Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;ILjava/lang/Object;)Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDialect ()Lcom/jsoizo/kotlincsv/CsvDialect;
+	public final fun getExcessFieldsRowBehaviour ()Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;
+	public final fun getIgnoreLeadingWhitespace ()Z
+	public final fun getInsufficientFieldsRowBehaviour ()Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;
+	public final fun getNullFieldIndicator ()Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;
+	public final fun getSkipEmptyLine ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun withIgnoreLeadingWhitespace (Z)Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;
+}
+
+public final class com/jsoizo/kotlincsv/reader/CsvReaderConfigBuilder {
+	public final fun getDialect ()Lcom/jsoizo/kotlincsv/CsvDialect;
+	public final fun getExcessFieldsRowBehaviour ()Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;
+	public final fun getIgnoreLeadingWhitespace ()Z
+	public final fun getInsufficientFieldsRowBehaviour ()Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;
+	public final fun getNullFieldIndicator ()Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;
+	public final fun getSkipEmptyLine ()Z
+	public final fun setDialect (Lcom/jsoizo/kotlincsv/CsvDialect;)V
+	public final fun setExcessFieldsRowBehaviour (Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;)V
+	public final fun setIgnoreLeadingWhitespace (Z)V
+	public final fun setInsufficientFieldsRowBehaviour (Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;)V
+	public final fun setNullFieldIndicator (Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;)V
+	public final fun setSkipEmptyLine (Z)V
+}
+
+public final class com/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour : java/lang/Enum {
+	public static final field ERROR Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;
+	public static final field IGNORE Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;
+	public static final field TRIM Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;
+	public static fun values ()[Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;
+}
+
+public final class com/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour : java/lang/Enum {
+	public static final field EMPTY_STRING Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;
+	public static final field ERROR Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;
+	public static final field IGNORE Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;
+	public static fun values ()[Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;
+}
+
+public final class com/jsoizo/kotlincsv/reader/ReaderIoJvmKt {
+	public static final fun read (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/InputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun read$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/InputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun readAll (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/InputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;)Ljava/util/List;
+	public static synthetic fun readAll$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/InputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun readAllFromFile (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;)Ljava/util/List;
+	public static synthetic fun readAllFromFile$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun readAllNullable (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/InputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;)Ljava/util/List;
+	public static synthetic fun readAllNullable$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/InputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun readAllNullableFromFile (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;)Ljava/util/List;
+	public static synthetic fun readAllNullableFromFile$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun readFromFile (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun readFromFile$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun readNullable (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/InputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun readNullable$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/InputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun readNullableFromFile (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun readNullableFromFile$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class com/jsoizo/kotlincsv/reader/ReaderIoKt {
+	public static final fun read (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/Source;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun read$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/Source;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun readAll (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/Source;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;)Ljava/util/List;
+	public static synthetic fun readAll$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/Source;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun readAllFromFile (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;)Ljava/util/List;
+	public static final fun readAllFromFile (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;)Ljava/util/List;
+	public static synthetic fun readAllFromFile$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;ILjava/lang/Object;)Ljava/util/List;
+	public static synthetic fun readAllFromFile$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun readAllNullable (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/Source;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;)Ljava/util/List;
+	public static synthetic fun readAllNullable$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/Source;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun readAllNullableFromFile (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;)Ljava/util/List;
+	public static final fun readAllNullableFromFile (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;)Ljava/util/List;
+	public static synthetic fun readAllNullableFromFile$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;ILjava/lang/Object;)Ljava/util/List;
+	public static synthetic fun readAllNullableFromFile$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;ILjava/lang/Object;)Ljava/util/List;
+	public static final fun readFromFile (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static final fun readFromFile (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun readFromFile$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun readFromFile$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun readNullable (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/Source;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun readNullable$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/Source;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun readNullableFromFile (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static final fun readNullableFromFile (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+	public static synthetic fun readNullableFromFile$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Ljava/lang/String;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+	public static synthetic fun readNullableFromFile$default (Lcom/jsoizo/kotlincsv/reader/CsvReader;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/reader/CsvReadIoOptions;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class com/jsoizo/kotlincsv/writer/CsvWriteIoOptions {
+	public fun <init> ()V
+	public fun <init> (Z)V
+	public synthetic fun <init> (ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Z
+	public final fun copy (Z)Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;
+	public static synthetic fun copy$default (Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ZILjava/lang/Object;)Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getPrependBom ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jsoizo/kotlincsv/writer/CsvWriter {
+	public fun <init> ()V
+	public fun <init> (Lcom/jsoizo/kotlincsv/writer/CsvWriterConfig;)V
+	public synthetic fun <init> (Lcom/jsoizo/kotlincsv/writer/CsvWriterConfig;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun getConfig ()Lcom/jsoizo/kotlincsv/writer/CsvWriterConfig;
+	public final fun write (Lkotlin/sequences/Sequence;)Lkotlin/sequences/Sequence;
+	public final fun writeAll (Ljava/util/List;)Ljava/lang/String;
+	public final fun writeAllNullable (Ljava/util/List;)Ljava/lang/String;
+	public final fun writeNullable (Lkotlin/sequences/Sequence;)Lkotlin/sequences/Sequence;
+	public final fun writeNullableRow (Ljava/util/List;)Ljava/lang/String;
+	public final fun writeRow (Ljava/util/List;)Ljava/lang/String;
+}
+
+public final class com/jsoizo/kotlincsv/writer/CsvWriterConfig {
+	public fun <init> ()V
+	public fun <init> (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/writer/WriteQuoteMode;)V
+	public synthetic fun <init> (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/writer/WriteQuoteMode;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/jsoizo/kotlincsv/CsvDialect;
+	public final fun component2 ()Z
+	public final fun component3 ()Lcom/jsoizo/kotlincsv/writer/WriteQuoteMode;
+	public final fun copy (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/writer/WriteQuoteMode;)Lcom/jsoizo/kotlincsv/writer/CsvWriterConfig;
+	public static synthetic fun copy$default (Lcom/jsoizo/kotlincsv/writer/CsvWriterConfig;Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/writer/WriteQuoteMode;ILjava/lang/Object;)Lcom/jsoizo/kotlincsv/writer/CsvWriterConfig;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDialect ()Lcom/jsoizo/kotlincsv/CsvDialect;
+	public final fun getOutputLastLineTerminator ()Z
+	public final fun getQuoteMode ()Lcom/jsoizo/kotlincsv/writer/WriteQuoteMode;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/jsoizo/kotlincsv/writer/CsvWriterConfigBuilder {
+	public final fun getDialect ()Lcom/jsoizo/kotlincsv/CsvDialect;
+	public final fun getOutputLastLineTerminator ()Z
+	public final fun getQuoteMode ()Lcom/jsoizo/kotlincsv/writer/WriteQuoteMode;
+	public final fun setDialect (Lcom/jsoizo/kotlincsv/CsvDialect;)V
+	public final fun setOutputLastLineTerminator (Z)V
+	public final fun setQuoteMode (Lcom/jsoizo/kotlincsv/writer/WriteQuoteMode;)V
+}
+
+public final class com/jsoizo/kotlincsv/writer/WriteQuoteMode : java/lang/Enum {
+	public static final field ALL Lcom/jsoizo/kotlincsv/writer/WriteQuoteMode;
+	public static final field CANONICAL Lcom/jsoizo/kotlincsv/writer/WriteQuoteMode;
+	public static final field NON_NUMERIC Lcom/jsoizo/kotlincsv/writer/WriteQuoteMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/jsoizo/kotlincsv/writer/WriteQuoteMode;
+	public static fun values ()[Lcom/jsoizo/kotlincsv/writer/WriteQuoteMode;
+}
+
+public final class com/jsoizo/kotlincsv/writer/WriterIoJvmKt {
+	public static final fun write (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Ljava/io/OutputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static final fun write (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Ljava/io/OutputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static synthetic fun write$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Ljava/io/OutputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static synthetic fun write$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Ljava/io/OutputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static final fun writeNullable (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Ljava/io/OutputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static final fun writeNullable (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Ljava/io/OutputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static synthetic fun writeNullable$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Ljava/io/OutputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static synthetic fun writeNullable$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Ljava/io/OutputStream;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static final fun writeNullableToFile (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static final fun writeNullableToFile (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static synthetic fun writeNullableToFile$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static synthetic fun writeNullableToFile$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static final fun writeToFile (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static final fun writeToFile (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static synthetic fun writeToFile$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static synthetic fun writeToFile$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Ljava/io/File;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+}
+
+public final class com/jsoizo/kotlincsv/writer/WriterIoKt {
+	public static final fun write (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Lkotlinx/io/Sink;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static final fun write (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Lkotlinx/io/Sink;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static synthetic fun write$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Lkotlinx/io/Sink;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static synthetic fun write$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Lkotlinx/io/Sink;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static final fun writeNullable (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Lkotlinx/io/Sink;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static final fun writeNullable (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Lkotlinx/io/Sink;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static synthetic fun writeNullable$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Lkotlinx/io/Sink;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static synthetic fun writeNullable$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Lkotlinx/io/Sink;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static final fun writeNullableToFile (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static final fun writeNullableToFile (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static final fun writeNullableToFile (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static final fun writeNullableToFile (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static synthetic fun writeNullableToFile$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static synthetic fun writeNullableToFile$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static synthetic fun writeNullableToFile$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static synthetic fun writeNullableToFile$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static final fun writeToFile (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static final fun writeToFile (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static final fun writeToFile (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static final fun writeToFile (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;)V
+	public static synthetic fun writeToFile$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static synthetic fun writeToFile$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Ljava/util/List;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static synthetic fun writeToFile$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Ljava/lang/String;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+	public static synthetic fun writeToFile$default (Lcom/jsoizo/kotlincsv/writer/CsvWriter;Lkotlin/sequences/Sequence;Lkotlinx/io/files/Path;Lcom/jsoizo/kotlincsv/writer/CsvWriteIoOptions;ILjava/lang/Object;)V
+}
+

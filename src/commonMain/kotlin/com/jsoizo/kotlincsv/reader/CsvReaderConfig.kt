@@ -1,7 +1,6 @@
 package com.jsoizo.kotlincsv.reader
 
 import com.jsoizo.kotlincsv.CsvDialect
-import kotlin.jvm.JvmOverloads
 
 /**
  * Immutable configuration for [CsvReader].
@@ -29,7 +28,6 @@ data class CsvReaderConfig private constructor(
 ) {
     // A single public Kotlin constructor/copy keeps untyped callable references
     // unambiguous. The generated six-field copy follows the private constructor.
-    @JvmOverloads
     constructor(
         dialect: CsvDialect = CsvDialect.RFC4180,
         skipEmptyLine: Boolean = false,
@@ -37,6 +35,20 @@ data class CsvReaderConfig private constructor(
         excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = ExcessFieldsRowBehaviour.ERROR,
         nullFieldIndicator: CsvNullFieldIndicator = CsvNullFieldIndicator.NEITHER,
     ) : this(dialect, skipEmptyLine, insufficientFieldsRowBehaviour, excessFieldsRowBehaviour, nullFieldIndicator, false)
+
+    @Deprecated("Binary compatibility with 2.0.0", level = DeprecationLevel.HIDDEN)
+    constructor(
+        dialect: CsvDialect = CsvDialect.RFC4180,
+        skipEmptyLine: Boolean = false,
+        insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.ERROR,
+        excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = ExcessFieldsRowBehaviour.ERROR,
+    ) : this(dialect, skipEmptyLine, insufficientFieldsRowBehaviour, excessFieldsRowBehaviour, CsvNullFieldIndicator.NEITHER)
+
+    @Deprecated("Binary compatibility with the no-argument constructor", level = DeprecationLevel.HIDDEN)
+    constructor() : this(
+        CsvDialect.RFC4180, false, InsufficientFieldsRowBehaviour.ERROR,
+        ExcessFieldsRowBehaviour.ERROR, CsvNullFieldIndicator.NEITHER,
+    )
 
     fun copy(
         dialect: CsvDialect = this.dialect,
@@ -48,6 +60,14 @@ data class CsvReaderConfig private constructor(
         dialect, skipEmptyLine, insufficientFieldsRowBehaviour, excessFieldsRowBehaviour,
         nullFieldIndicator, ignoreLeadingWhitespace,
     )
+
+    @Deprecated("Binary compatibility with 2.0.0", level = DeprecationLevel.HIDDEN)
+    fun copy(
+        dialect: CsvDialect = this.dialect,
+        skipEmptyLine: Boolean = this.skipEmptyLine,
+        insufficientFieldsRowBehaviour: InsufficientFieldsRowBehaviour = this.insufficientFieldsRowBehaviour,
+        excessFieldsRowBehaviour: ExcessFieldsRowBehaviour = this.excessFieldsRowBehaviour,
+    ): CsvReaderConfig = copy(dialect, skipEmptyLine, insufficientFieldsRowBehaviour, excessFieldsRowBehaviour, nullFieldIndicator)
 
     /** Return a configuration with only the quoted-field whitespace option changed. */
     fun withIgnoreLeadingWhitespace(ignoreLeadingWhitespace: Boolean): CsvReaderConfig = CsvReaderConfig(

@@ -19,6 +19,14 @@ class CsvWriter(val config: CsvWriterConfig = CsvWriterConfig()) {
         appendRows(rows.asSequence(), config, this)
     }
 
+    /**
+     * Encode one CSV record with the same rules as `writeAll(listOf(row))`.
+     * Includes the configured line terminator only when
+     * [CsvWriterConfig.outputLastLineTerminator] is `true`. A record may
+     * contain quoted line breaks; no I/O resource is opened or closed.
+     */
+    fun writeRow(row: List<String>): String = writeAll(listOf(row))
+
     /** Encode nullable [rows]. Null fields are emitted as unquoted empty fields. */
     fun writeNullable(rows: Sequence<List<String?>>): Sequence<Char> = encodeNullableRows(rows, config)
 
@@ -26,4 +34,12 @@ class CsvWriter(val config: CsvWriterConfig = CsvWriterConfig()) {
     fun writeAllNullable(rows: List<List<String?>>): String = buildString {
         appendNullableRows(rows.asSequence(), config, this)
     }
+
+    /**
+     * Encode one nullable CSV record with the same rules as
+     * `writeAllNullable(listOf(row))`, including the final-terminator option.
+     * Null fields remain unquoted empty fields, even when all non-null
+     * fields are quoted.
+     */
+    fun writeNullableRow(row: List<String?>): String = writeAllNullable(listOf(row))
 }

@@ -224,7 +224,9 @@ fields in `quoteChar`:
 - `ALL`: always quote every field.
 - `NON_NUMERIC`: quote fields that contain anything other than digits and at
   most one dot. This is a simple lexical heuristic, not locale-aware number
-  parsing.
+  parsing. A numeric field is still quoted when `CANONICAL` would quote it,
+  e.g. when the dialect uses `.` or a digit as its delimiter or quote
+  character.
 
 ## Escape character output rules
 

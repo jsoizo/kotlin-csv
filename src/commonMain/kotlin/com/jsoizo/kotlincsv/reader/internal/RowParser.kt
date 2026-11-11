@@ -41,7 +41,6 @@ internal class RowParser(
         fields.clear()
         col = 0L
         while (parseField()) {
-            // delimiter consumed; next field follows
         }
         rowNum++
         return fields.toList()
@@ -82,8 +81,6 @@ internal class RowParser(
                     flushField(quoted = false)
                     return false
                 }
-                // When escapeChar == quoteChar this arm also enforces RFC 4180
-                // strict doubling for a quoteChar in the middle of a field.
                 c == escapeCode -> appendUnquotedEscape()
                 c == delimiterCode -> {
                     next()
