@@ -177,13 +177,11 @@ private fun encodeField(
 
     if (shouldQuote) yield(quoteChar)
     if (escapeChar == quoteChar) {
-        // RFC 4180 §2.7 doubling style.
         for (ch in field) {
             if (ch == quoteChar) yield(quoteChar)
             yield(ch)
         }
     } else {
-        // Explicit escape style (CSV extension).
         for (ch in field) when (ch) {
             quoteChar, escapeChar -> {
                 yield(escapeChar)
@@ -215,13 +213,11 @@ private fun appendField(
 
     if (shouldQuote) out.append(quoteChar)
     if (escapeChar == quoteChar) {
-        // RFC 4180 §2.7 doubling style.
         for (ch in field) {
             if (ch == quoteChar) out.append(quoteChar)
             out.append(ch)
         }
     } else {
-        // Explicit escape style (CSV extension).
         for (ch in field) when (ch) {
             quoteChar, escapeChar -> {
                 out.append(escapeChar)

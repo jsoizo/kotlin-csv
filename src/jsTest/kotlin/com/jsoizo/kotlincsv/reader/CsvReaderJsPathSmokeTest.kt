@@ -48,8 +48,6 @@ class CsvReaderJsPathSmokeTest {
     fun readFromFile_path_stripBomDefault_dropsLeadingBom() {
         val path = tempCsvPath("bom")
         try {
-            // U+FEFF written through writeString lands on disk as the EF BB BF
-            // UTF-8 BOM sequence; the default stripBom = true should drop it.
             writeFile(path, "\uFEFFa,b,c")
             val rows = CsvReader().readFromFile(path) { it.toList() }
             rows shouldBe listOf(listOf("a", "b", "c"))
@@ -60,11 +58,6 @@ class CsvReaderJsPathSmokeTest {
 
     @Test
     fun readFromFile_path_supplementaryPlaneEmoji_decodesAsSurrogatePair() {
-        // U+1F600 sits above U+FFFF, so the UTF-8 -> Char decode in
-        // ReaderIo.toCharSequence has to emit a high/low surrogate pair to
-        // round-trip the grapheme through Sequence<Char>. The Node.js fs
-        // path has to preserve the underlying 4-byte UTF-8 sequence
-        // end-to-end.
         val path = tempCsvPath("emoji")
         try {
             val emoji = "😀"

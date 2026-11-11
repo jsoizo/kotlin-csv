@@ -20,8 +20,6 @@ class WriterIoTest {
             CsvWriter().write(rows, sink)
         }
         raw.snapshot().decodeToString() shouldBe "a,b\r\nc,d\r\n"
-        // The writer flushes the buffered sink at the end of the call so
-        // downstream consumers see all bytes without waiting for close().
         raw.flushCount shouldBe 1
     }
 
@@ -81,9 +79,7 @@ class WriterIoTest {
             CsvWriter().write(rows, sink, CsvWriteIoOptions(prependBom = true))
         }
         val out = raw.snapshot()
-        // Leading 3 bytes are EF BB BF (UTF-8 BOM).
         out.copyOfRange(0, 3).toList() shouldBe bom.toList()
-        // The remaining bytes equal the BOM-less encoding.
         out.copyOfRange(3, out.size).decodeToString() shouldBe "a,b\r\n"
     }
 
@@ -129,8 +125,6 @@ class WriterIoTest {
     @Test
     fun write_sink_closesUnderlyingRawSinkWhenWriteThrows() {
         val raw = FakeRawSink()
-        // Force an exception during encoding by passing a sequence that throws
-        // partway through iteration.
         val explosive = sequence {
             yield(listOf("a"))
             error("boom")
@@ -198,7 +192,6 @@ class WriterIoTest {
         raw.buffered().use { sink ->
             CsvWriter().write(rows, sink)
         }
-        // Each row is 200 fields × 1 char + 199 commas = 399 chars + "\r\n"; 50 rows × 401 = 20050 bytes.
         raw.snapshot().size shouldBe 50 * (200 + 199 + 2)
     }
 

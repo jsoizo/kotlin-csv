@@ -27,7 +27,6 @@ internal val nonSurrogateChar: Arb<Char> =
 internal val surrogateChar: Arb<Char> =
     Arb.int(0xD800..0xDFFF).map { it.toChar() }
 
-// weighted ~7:3 targeted vs full unicode
 internal val fieldChar: Arb<Char> = Arb.choice(
     targetedChar, targetedChar, targetedChar, targetedChar,
     targetedChar, targetedChar, targetedChar,

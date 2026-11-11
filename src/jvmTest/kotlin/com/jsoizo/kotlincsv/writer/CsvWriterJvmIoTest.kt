@@ -101,7 +101,6 @@ class CsvWriterJvmIoTest {
         val counting = CountingOutputStream(raw)
         CsvWriter().write(sampleRows, counting)
         raw.toByteArray().toString(Charsets.UTF_8) shouldBe sampleRowsEncoded
-        // Caller owns the stream — overload must not close it.
         counting.closeCount shouldBe 0
     }
 
@@ -223,7 +222,6 @@ class CsvWriterJvmIoTest {
         val rows = List(50) { row }
         val raw = ByteArrayOutputStream()
         CsvWriter().write(rows, raw)
-        // Each row: 200 fields × 1 char + 199 commas = 399 chars + "\r\n"; 50 rows × 401 = 20050 bytes.
         raw.toByteArray().size shouldBe 50 * (200 + 199 + 2)
     }
 }

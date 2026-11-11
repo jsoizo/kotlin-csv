@@ -29,7 +29,7 @@ object CsvDataGen {
         for (r in 0 until spec.rows) {
             val row = ArrayList<String>(spec.cols)
             for (c in 0 until spec.cols) {
-                val len = 4 + random.nextInt(12) // 4..15
+                val len = 4 + random.nextInt(12)
                 val sb = StringBuilder(len)
                 var hasQuote = false
                 var hasComma = false

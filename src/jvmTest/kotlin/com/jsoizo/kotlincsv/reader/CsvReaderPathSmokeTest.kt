@@ -10,8 +10,6 @@ class CsvReaderPathSmokeTest {
 
     @Test
     fun readFromFile_stringPath_readsRealTempFile() {
-        // End-to-end smoke that exercises the String -> Path -> Source delegation
-        // chain against a real on-disk file.
         val tmp = Files.createTempFile("kotlin-csv-reader-smoke", ".csv")
         try {
             Files.writeString(tmp, "a,b,c\nd,e,f")
@@ -60,9 +58,6 @@ class CsvReaderPathSmokeTest {
 
     @Test
     fun readFromFile_kotlinxIoPath_defaultOptions_decodesRows() {
-        // Direct call into the kotlinx-io Path overloads with options omitted,
-        // covering the default-argument synthetic methods on readFromFile and
-        // readAllFromFile.
         val tmp = Files.createTempFile("kotlin-csv-reader-smoke-defaults", ".csv")
         try {
             Files.writeString(tmp, "a,b\nc,d")

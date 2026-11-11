@@ -9,7 +9,6 @@ import kotlin.test.Test
 
 class CsvWriterTest {
 
-    // -------- basics --------
 
     @Test
     fun writeAll_basic() {
@@ -85,7 +84,6 @@ class CsvWriterTest {
         ) shouldBe "a\r\n\r\n"
     }
 
-    // -------- CANONICAL quote --------
 
     @Test
     fun quote_canonical_quotesDelimiter() {
@@ -107,7 +105,6 @@ class CsvWriterTest {
         CsvWriter().writeAll(listOf(listOf("abc"))) shouldBe "abc\r\n"
     }
 
-    // -------- ALL quote --------
 
     @Test
     fun quote_all_quotesEverything() {
@@ -132,7 +129,6 @@ class CsvWriterTest {
         writer.writeAllNullable(listOf(listOf(null, ""), listOf("x", null))) shouldBe ",\"\"\r\n\"x\","
     }
 
-    // -------- NON_NUMERIC quote --------
 
     @Test
     fun quote_nonNumeric_doesNotQuoteIntegers() {
@@ -212,7 +208,6 @@ class CsvWriterTest {
         writer.writeAll(listOf(listOf(""))) shouldBe "\"\"\r\n"
     }
 
-    // -------- escape: doubling (default, escapeChar == quoteChar) --------
 
     @Test
     fun escape_doubling_default() {
@@ -225,7 +220,6 @@ class CsvWriterTest {
         writer.writeAll(listOf(listOf("a\"b"))) shouldBe "\"a\"\"b\"\r\n"
     }
 
-    // -------- escape: explicit (escapeChar != quoteChar) --------
 
     @Test
     fun escape_explicit_quoteEscaped() {
@@ -257,7 +251,6 @@ class CsvWriterTest {
         writer.writeAll(listOf(listOf("a\"b"))) shouldBe "\"a\\\"b\"\r\n"
     }
 
-    // -------- dialects --------
 
     @Test
     fun dialect_tsv_basic() {
@@ -267,7 +260,6 @@ class CsvWriterTest {
         ) shouldBe "a\tb\nc\td\n"
     }
 
-    // -------- embedded line breaks --------
 
     @Test
     fun embeddedNewline_inField_isQuoted() {
@@ -279,11 +271,9 @@ class CsvWriterTest {
         CsvWriter().writeAll(listOf(listOf("a\r\nb"))) shouldBe "\"a\r\nb\"\r\n"
     }
 
-    // -------- laziness --------
 
     @Test
     fun write_returnsLazySequence() {
-        // Infinite source — if write() were not lazy, take() would never terminate.
         val rows = generateSequence(0) { it + 1 }.map { listOf(it.toString()) }
         val partial = CsvWriter().write(rows).take(3).joinToString("")
         partial shouldBe "0\r\n"

@@ -39,7 +39,6 @@ class IoRoundTripTest {
         sinkRaw.buffered().use { sink ->
             CsvWriter().write(sampleRows, sink, CsvWriteIoOptions(prependBom = true))
         }
-        // Body should start with the UTF-8 BOM bytes.
         sinkRaw.snapshot().copyOfRange(0, 3).toList() shouldBe
             listOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte())
 

@@ -65,9 +65,7 @@ class CsvHeaderTest {
     @Test
     fun duplicateHeaders_lazy_doesNotThrowBeforeTerminal() {
         val s = seq(listOf("a", "a"), listOf("1", "2"))
-        // Building the pipeline does not throw.
         val result = s.withHeader()
-        // toList triggers terminal operation.
         shouldThrow<MalformedCsvException> { result.toList() }
     }
 

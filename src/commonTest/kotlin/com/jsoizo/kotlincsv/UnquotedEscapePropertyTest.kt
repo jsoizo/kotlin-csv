@@ -16,9 +16,6 @@ class UnquotedEscapePropertyTest {
 
     private val dialect = CsvDialect(escapeChar = '\\')
 
-    // Chars that can legally appear in an unquoted field. The minimal serializer
-    // below only escapes `\` and `"`, so delimiter and line terminators must be
-    // excluded from generation. `\` and `"` are kept so the escape path is exercised.
     private val unquotedSafeChar: Arb<Char> = fieldChar.filter { ch ->
         ch != ',' && ch != '"' &&
             ch != '\n' && ch != '\r' &&

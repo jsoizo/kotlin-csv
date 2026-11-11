@@ -59,7 +59,6 @@ class CsvReaderJvmIoTest {
         val counting = CountingInputStream(ByteArrayInputStream(raw))
         val rows = CsvReader().read(counting) { it.toList() }
         rows shouldBe sampleRows
-        // Caller still owns the stream — overload must not close it.
         counting.closeCount shouldBe 0
     }
 
@@ -112,16 +111,11 @@ class CsvReaderJvmIoTest {
             ByteArrayInputStream(raw),
             options = CsvReadIoOptions(stripBom = false),
         ) { it.toList() }
-        // BOM survives charset decode and ends up as the first char of the
-        // first field when stripBom = false.
         rows shouldBe listOf(listOf("\uFEFFa", "b", "c"))
     }
 
     @Test
     fun read_stream_utf16_bomStrippedAfterCharsetDecode() {
-        // UTF-16 encodes its own BOM as bytes; after charset decoding the
-        // resulting char stream starts with U+FEFF, which the post-decode
-        // strip removes.
         val raw = "a,b,c".toByteArray(Charset.forName("UTF-16"))
         val rows = CsvReader().read(
             ByteArrayInputStream(raw),
@@ -132,8 +126,6 @@ class CsvReaderJvmIoTest {
 
     @Test
     fun read_stream_invalidCharsetName_propagatesUnsupportedCharsetException() {
-        // Pin behaviour: Charset.forName failures are not wrapped or swallowed
-        // by the I/O overload — they surface to the caller as-is.
         assertFailsWith<UnsupportedCharsetException> {
             CsvReader().read(
                 ByteArrayInputStream(ByteArray(0)),
@@ -246,8 +238,6 @@ class CsvReaderJvmIoTest {
 
     @Test
     fun readAll_stream_skipEmptyLine_dropsBlankRows() {
-        // Exercise applyPipeline's skipEmptyLine = true branch from the I/O
-        // path; the String-input tests already cover the same branch.
         val raw = "a,b\n\nc,d\n".toByteArray(Charsets.UTF_8)
         val reader = CsvReader(CsvReaderConfig(skipEmptyLine = true))
         reader.readAll(ByteArrayInputStream(raw)) shouldBe listOf(listOf("a", "b"), listOf("c", "d"))
@@ -255,8 +245,6 @@ class CsvReaderJvmIoTest {
 
     @Test
     fun readAll_stream_inputLargerThanBufferSize_forcesChunkBoundarySwap() {
-        // 8 KB is the default chunk size in parseRowsFromChunks. Pump well past
-        // that so the double-buffer swap and cross-chunk lookahead paths run.
         val cellsPerRow = 4
         val rowCount = 3_000
         val csv = buildString {

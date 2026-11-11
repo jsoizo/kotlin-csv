@@ -91,9 +91,6 @@ class SequenceParserTest {
 
     @Test
     fun bomCharacter_passedThroughByParser() {
-        // Parser no longer treats U+FEFF specially; BOM handling is owned by
-        // the I/O layer (CsvReadIoOptions.stripBom). The parser sees BOM as
-        // an ordinary data character.
         parse("\uFEFFa,b") shouldBe listOf(listOf("\uFEFFa", "b"))
     }
 
@@ -120,16 +117,11 @@ class SequenceParserTest {
 
     @Test
     fun crlf_atRowStart_inStartState() {
-        // START state immediately receives CR with LF as next, exercising the
-        // CRLF skip-second-byte branch before any field characters arrive.
         parse("\r\nrow") shouldBe listOf(listOf(""), listOf("row"))
     }
 
     @Test
     fun escapeChar_inFieldState_invalidEscape_throws() {
-        // Default dialect: escapeChar == quoteChar == '"'. Once a field starts
-        // unquoted, encountering a lone '"' is not a valid double-quote escape
-        // and must be reported via CsvParseFormatException.
         shouldThrow<CsvParseFormatException> { parse("a\"b") }
     }
 
@@ -185,16 +177,12 @@ class SequenceParserTest {
 
     @Test
     fun escapeCharDifferent_invalidEscape_throws() {
-        // With escapeChar='\\' inside a quoted field, the escape must be
-        // followed by either another '\\' or the quote char. 'x' is neither.
         val dialect = CsvDialect(escapeChar = '\\')
         shouldThrow<CsvParseFormatException> { parse("\"a\\xb\"", dialect) }
     }
 
     @Test
     fun escapeCharDifferent_escapeAtEof_throws() {
-        // Same dialect: '\\' immediately before EOF leaves the parser unable
-        // to determine the escaped char. Must surface as a parse error.
         val dialect = CsvDialect(escapeChar = '\\')
         shouldThrow<CsvParseFormatException> { parse("\"a\\", dialect) }
     }
@@ -243,19 +231,12 @@ class SequenceParserTest {
 
     @Test
     fun chunked_smallBuffer_forcesChunkBoundaryAcrossRows() {
-        // Several row terminators land mid-chunk so a regression in the
-        // double-buffer swap or the cross-buffer next-char lookahead would
-        // either drop rows or merge them.
         val rows = parseChunked("a,bbb\nccc,d\nef,gh", bufferSize = 4)
         rows shouldBe listOf(listOf("a", "bbb"), listOf("ccc", "d"), listOf("ef", "gh"))
     }
 
     @Test
     fun chunked_bufferBoundaryLandsOnCrLf() {
-        // CR ends one chunk and LF starts the next. The CR branch only
-        // collapses CRLF into a single terminator if lookahead reaches into
-        // nextBuffer[0]; without that the LF would surface as an extra empty
-        // row.
         val rows = parseChunked("ab\r\ncd", bufferSize = 3)
         rows shouldBe listOf(listOf("ab"), listOf("cd"))
     }
@@ -277,8 +258,6 @@ class SequenceParserTest {
 
     @Test
     fun chunked_preservesBomWhenStripDisabled() {
-        // Default-parameter stripBom: BOM must reach the parser as a regular
-        // char so I/O layers can keep ownership of the strip policy.
         val rows = parseRowsFromChunks(chunkedReader("﻿a"), rfc4180).toList()
         rows shouldBe listOf(listOf("﻿a"))
     }
@@ -299,29 +278,17 @@ class SequenceParserTest {
 
     @Test
     fun chunked_doubleQuoteEscape_splitAcrossChunkBoundary() {
-        // The doubled `""` is consumed via skipCount=1 after a lookahead that
-        // crosses chunk boundaries. Buffer size 3 places the second quote of
-        // the doubled pair at the start of nextBuffer for the `a""b` case,
-        // so a regression in cross-chunk lookahead would mis-emit the field.
         parseChunked("\"a\"\"b\"", bufferSize = 3) shouldBe listOf(listOf("a\"b"))
     }
 
     @Test
     fun chunked_explicitEscape_splitAcrossChunkBoundary() {
-        // With escapeChar=`\\` inside a quoted field, escape and its target
-        // char are consumed in one machine.read() call (skipCount=1). Place
-        // them on either side of a chunk boundary to ensure the escaped
-        // target is fetched from nextBuffer[0].
         val dialect = CsvDialect(escapeChar = '\\')
         parseChunked("\"a\\\"b\"", bufferSize = 3, dialect = dialect) shouldBe listOf(listOf("a\"b"))
     }
 
     @Test
     fun chunked_loneCarriageReturn_atChunkBoundary_terminatesRowWithoutLookahead() {
-        // CR alone is a row terminator, so the parser must not require LF to
-        // appear next. With the CR at the end of one chunk and a non-LF char
-        // at the start of the next, the skipCount path must stay at 0 instead
-        // of consuming the following field char as part of CRLF.
         parseChunked("ab\rcd", bufferSize = 3) shouldBe listOf(listOf("ab"), listOf("cd"))
     }
 

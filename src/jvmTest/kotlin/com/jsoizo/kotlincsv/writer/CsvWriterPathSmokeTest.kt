@@ -10,8 +10,6 @@ class CsvWriterPathSmokeTest {
 
     @Test
     fun writeToFile_stringPath_writesRealTempFile() {
-        // End-to-end smoke that exercises the String -> Path -> Sink delegation
-        // chain against a real on-disk file. Mirrors CsvReaderPathSmokeTest.
         val tmp = Files.createTempFile("kotlin-csv-writer-smoke", ".csv")
         try {
             val writer = CsvWriter()

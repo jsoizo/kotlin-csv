@@ -145,9 +145,7 @@ class CsvReaderTest {
     fun sequenceLaziness_noThrowOnConstruction() {
         val reader = CsvReader(CsvReaderConfig())
         val badInput = "a,b,c\nd,e".asSequence()
-        // Just constructing the sequence pipeline must not throw.
         val seq = reader.read(badInput)
-        // Terminal operation triggers the exception.
         shouldThrow<CsvFieldNumDifferentException> {
             seq.toList()
         }
@@ -289,7 +287,6 @@ class CsvReaderTest {
         )
     }
 
-    // --- Unquoted-field escape (issue #168) ---
 
     private val explicitEscapeReader =
         CsvReader(CsvReaderConfig(dialect = CsvDialect(escapeChar = '\\')))

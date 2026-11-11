@@ -26,8 +26,6 @@ class ParseStateMachineCrashFreedomTest {
             try {
                 csvReader { this.dialect = dialect }.readAll(text)
             } catch (_: MalformedCsvException) {
-                // declared parse failure; any other Throwable bubbles up
-                // and lets kotest-property shrink to a minimal reproduction.
             }
         }
     }
