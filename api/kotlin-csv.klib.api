@@ -1,0 +1,279 @@
+// Klib ABI Dump
+// Targets: [iosArm64, iosSimulatorArm64, js, linuxArm64, linuxX64, macosArm64, mingwX64, wasmJs, wasmWasi]
+// Alias: native => [iosArm64, iosSimulatorArm64, linuxArm64, linuxX64, macosArm64, mingwX64]
+// Rendering settings:
+// - Signature version: 2
+// - Show manifest properties: true
+// - Show declarations: true
+
+// Library unique name: <com.jsoizo:kotlin-csv>
+final enum class com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator : kotlin/Enum<com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator> { // com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator|null[0]
+    enum entry BOTH // com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator.BOTH|null[0]
+    enum entry EMPTY_QUOTES // com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator.EMPTY_QUOTES|null[0]
+    enum entry EMPTY_SEPARATORS // com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator.EMPTY_SEPARATORS|null[0]
+    enum entry NEITHER // com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator.NEITHER|null[0]
+
+    final val entries // com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator> // com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator // com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator> // com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator.values|values#static(){}[0]
+}
+
+final enum class com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour : kotlin/Enum<com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour> { // com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour|null[0]
+    enum entry ERROR // com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour.ERROR|null[0]
+    enum entry IGNORE // com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour.IGNORE|null[0]
+    enum entry TRIM // com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour.TRIM|null[0]
+
+    final val entries // com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour> // com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour> // com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour.values|values#static(){}[0]
+}
+
+final enum class com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour : kotlin/Enum<com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour> { // com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour|null[0]
+    enum entry EMPTY_STRING // com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour.EMPTY_STRING|null[0]
+    enum entry ERROR // com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour.ERROR|null[0]
+    enum entry IGNORE // com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour.IGNORE|null[0]
+
+    final val entries // com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour> // com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour> // com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour.values|values#static(){}[0]
+}
+
+final enum class com.jsoizo.kotlincsv.writer/WriteQuoteMode : kotlin/Enum<com.jsoizo.kotlincsv.writer/WriteQuoteMode> { // com.jsoizo.kotlincsv.writer/WriteQuoteMode|null[0]
+    enum entry ALL // com.jsoizo.kotlincsv.writer/WriteQuoteMode.ALL|null[0]
+    enum entry CANONICAL // com.jsoizo.kotlincsv.writer/WriteQuoteMode.CANONICAL|null[0]
+    enum entry NON_NUMERIC // com.jsoizo.kotlincsv.writer/WriteQuoteMode.NON_NUMERIC|null[0]
+
+    final val entries // com.jsoizo.kotlincsv.writer/WriteQuoteMode.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<com.jsoizo.kotlincsv.writer/WriteQuoteMode> // com.jsoizo.kotlincsv.writer/WriteQuoteMode.entries.<get-entries>|<get-entries>#static(){}[0]
+
+    final fun valueOf(kotlin/String): com.jsoizo.kotlincsv.writer/WriteQuoteMode // com.jsoizo.kotlincsv.writer/WriteQuoteMode.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<com.jsoizo.kotlincsv.writer/WriteQuoteMode> // com.jsoizo.kotlincsv.writer/WriteQuoteMode.values|values#static(){}[0]
+}
+
+final class com.jsoizo.kotlincsv.exceptions/CsvFieldNumDifferentException : com.jsoizo.kotlincsv.exceptions/MalformedCsvException { // com.jsoizo.kotlincsv.exceptions/CsvFieldNumDifferentException|null[0]
+    constructor <init>(kotlin/Int, kotlin/Int, kotlin/Long) // com.jsoizo.kotlincsv.exceptions/CsvFieldNumDifferentException.<init>|<init>(kotlin.Int;kotlin.Int;kotlin.Long){}[0]
+
+    final val actualFieldCount // com.jsoizo.kotlincsv.exceptions/CsvFieldNumDifferentException.actualFieldCount|{}actualFieldCount[0]
+        final fun <get-actualFieldCount>(): kotlin/Int // com.jsoizo.kotlincsv.exceptions/CsvFieldNumDifferentException.actualFieldCount.<get-actualFieldCount>|<get-actualFieldCount>(){}[0]
+    final val expectedFieldCount // com.jsoizo.kotlincsv.exceptions/CsvFieldNumDifferentException.expectedFieldCount|{}expectedFieldCount[0]
+        final fun <get-expectedFieldCount>(): kotlin/Int // com.jsoizo.kotlincsv.exceptions/CsvFieldNumDifferentException.expectedFieldCount.<get-expectedFieldCount>|<get-expectedFieldCount>(){}[0]
+    final val rowNum // com.jsoizo.kotlincsv.exceptions/CsvFieldNumDifferentException.rowNum|{}rowNum[0]
+        final fun <get-rowNum>(): kotlin/Long // com.jsoizo.kotlincsv.exceptions/CsvFieldNumDifferentException.rowNum.<get-rowNum>|<get-rowNum>(){}[0]
+}
+
+final class com.jsoizo.kotlincsv.exceptions/CsvParseFormatException : com.jsoizo.kotlincsv.exceptions/MalformedCsvException { // com.jsoizo.kotlincsv.exceptions/CsvParseFormatException|null[0]
+    constructor <init>(kotlin/Long, kotlin/Long, kotlin/Char, kotlin/String = ...) // com.jsoizo.kotlincsv.exceptions/CsvParseFormatException.<init>|<init>(kotlin.Long;kotlin.Long;kotlin.Char;kotlin.String){}[0]
+
+    final val char // com.jsoizo.kotlincsv.exceptions/CsvParseFormatException.char|{}char[0]
+        final fun <get-char>(): kotlin/Char // com.jsoizo.kotlincsv.exceptions/CsvParseFormatException.char.<get-char>|<get-char>(){}[0]
+    final val colIndex // com.jsoizo.kotlincsv.exceptions/CsvParseFormatException.colIndex|{}colIndex[0]
+        final fun <get-colIndex>(): kotlin/Long // com.jsoizo.kotlincsv.exceptions/CsvParseFormatException.colIndex.<get-colIndex>|<get-colIndex>(){}[0]
+    final val rowNum // com.jsoizo.kotlincsv.exceptions/CsvParseFormatException.rowNum|{}rowNum[0]
+        final fun <get-rowNum>(): kotlin/Long // com.jsoizo.kotlincsv.exceptions/CsvParseFormatException.rowNum.<get-rowNum>|<get-rowNum>(){}[0]
+}
+
+final class com.jsoizo.kotlincsv.reader/CsvReadIoOptions { // com.jsoizo.kotlincsv.reader/CsvReadIoOptions|null[0]
+    constructor <init>(kotlin/Boolean = ...) // com.jsoizo.kotlincsv.reader/CsvReadIoOptions.<init>|<init>(kotlin.Boolean){}[0]
+
+    final val stripBom // com.jsoizo.kotlincsv.reader/CsvReadIoOptions.stripBom|{}stripBom[0]
+        final fun <get-stripBom>(): kotlin/Boolean // com.jsoizo.kotlincsv.reader/CsvReadIoOptions.stripBom.<get-stripBom>|<get-stripBom>(){}[0]
+
+    final fun component1(): kotlin/Boolean // com.jsoizo.kotlincsv.reader/CsvReadIoOptions.component1|component1(){}[0]
+    final fun copy(kotlin/Boolean = ...): com.jsoizo.kotlincsv.reader/CsvReadIoOptions // com.jsoizo.kotlincsv.reader/CsvReadIoOptions.copy|copy(kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jsoizo.kotlincsv.reader/CsvReadIoOptions.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jsoizo.kotlincsv.reader/CsvReadIoOptions.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jsoizo.kotlincsv.reader/CsvReadIoOptions.toString|toString(){}[0]
+}
+
+final class com.jsoizo.kotlincsv.reader/CsvReader { // com.jsoizo.kotlincsv.reader/CsvReader|null[0]
+    constructor <init>(com.jsoizo.kotlincsv.reader/CsvReaderConfig = ...) // com.jsoizo.kotlincsv.reader/CsvReader.<init>|<init>(com.jsoizo.kotlincsv.reader.CsvReaderConfig){}[0]
+
+    final val config // com.jsoizo.kotlincsv.reader/CsvReader.config|{}config[0]
+        final fun <get-config>(): com.jsoizo.kotlincsv.reader/CsvReaderConfig // com.jsoizo.kotlincsv.reader/CsvReader.config.<get-config>|<get-config>(){}[0]
+
+    final fun read(kotlin.sequences/Sequence<kotlin/Char>): kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String>> // com.jsoizo.kotlincsv.reader/CsvReader.read|read(kotlin.sequences.Sequence<kotlin.Char>){}[0]
+    final fun readAll(kotlin/String): kotlin.collections/List<kotlin.collections/List<kotlin/String>> // com.jsoizo.kotlincsv.reader/CsvReader.readAll|readAll(kotlin.String){}[0]
+    final fun readAllNullable(kotlin/String): kotlin.collections/List<kotlin.collections/List<kotlin/String?>> // com.jsoizo.kotlincsv.reader/CsvReader.readAllNullable|readAllNullable(kotlin.String){}[0]
+    final fun readNullable(kotlin.sequences/Sequence<kotlin/Char>): kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String?>> // com.jsoizo.kotlincsv.reader/CsvReader.readNullable|readNullable(kotlin.sequences.Sequence<kotlin.Char>){}[0]
+}
+
+final class com.jsoizo.kotlincsv.reader/CsvReaderConfig { // com.jsoizo.kotlincsv.reader/CsvReaderConfig|null[0]
+    constructor <init>(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour = ...) // com.jsoizo.kotlincsv.reader/CsvReaderConfig.<init>|<init>(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour){}[0]
+    constructor <init>(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator = ...) // com.jsoizo.kotlincsv.reader/CsvReaderConfig.<init>|<init>(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.CsvNullFieldIndicator){}[0]
+
+    final val dialect // com.jsoizo.kotlincsv.reader/CsvReaderConfig.dialect|{}dialect[0]
+        final fun <get-dialect>(): com.jsoizo.kotlincsv/CsvDialect // com.jsoizo.kotlincsv.reader/CsvReaderConfig.dialect.<get-dialect>|<get-dialect>(){}[0]
+    final val excessFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.excessFieldsRowBehaviour|{}excessFieldsRowBehaviour[0]
+        final fun <get-excessFieldsRowBehaviour>(): com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.excessFieldsRowBehaviour.<get-excessFieldsRowBehaviour>|<get-excessFieldsRowBehaviour>(){}[0]
+    final val insufficientFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.insufficientFieldsRowBehaviour|{}insufficientFieldsRowBehaviour[0]
+        final fun <get-insufficientFieldsRowBehaviour>(): com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.insufficientFieldsRowBehaviour.<get-insufficientFieldsRowBehaviour>|<get-insufficientFieldsRowBehaviour>(){}[0]
+    final val nullFieldIndicator // com.jsoizo.kotlincsv.reader/CsvReaderConfig.nullFieldIndicator|{}nullFieldIndicator[0]
+        final fun <get-nullFieldIndicator>(): com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator // com.jsoizo.kotlincsv.reader/CsvReaderConfig.nullFieldIndicator.<get-nullFieldIndicator>|<get-nullFieldIndicator>(){}[0]
+    final val skipEmptyLine // com.jsoizo.kotlincsv.reader/CsvReaderConfig.skipEmptyLine|{}skipEmptyLine[0]
+        final fun <get-skipEmptyLine>(): kotlin/Boolean // com.jsoizo.kotlincsv.reader/CsvReaderConfig.skipEmptyLine.<get-skipEmptyLine>|<get-skipEmptyLine>(){}[0]
+
+    final fun component1(): com.jsoizo.kotlincsv/CsvDialect // com.jsoizo.kotlincsv.reader/CsvReaderConfig.component1|component1(){}[0]
+    final fun component2(): kotlin/Boolean // com.jsoizo.kotlincsv.reader/CsvReaderConfig.component2|component2(){}[0]
+    final fun component3(): com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.component3|component3(){}[0]
+    final fun component4(): com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.component4|component4(){}[0]
+    final fun component5(): com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator // com.jsoizo.kotlincsv.reader/CsvReaderConfig.component5|component5(){}[0]
+    final fun copy(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour = ...): com.jsoizo.kotlincsv.reader/CsvReaderConfig // com.jsoizo.kotlincsv.reader/CsvReaderConfig.copy|copy(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour){}[0]
+    final fun copy(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator = ...): com.jsoizo.kotlincsv.reader/CsvReaderConfig // com.jsoizo.kotlincsv.reader/CsvReaderConfig.copy|copy(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.CsvNullFieldIndicator){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jsoizo.kotlincsv.reader/CsvReaderConfig.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jsoizo.kotlincsv.reader/CsvReaderConfig.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jsoizo.kotlincsv.reader/CsvReaderConfig.toString|toString(){}[0]
+}
+
+final class com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder { // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder|null[0]
+    final var dialect // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.dialect|{}dialect[0]
+        final fun <get-dialect>(): com.jsoizo.kotlincsv/CsvDialect // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.dialect.<get-dialect>|<get-dialect>(){}[0]
+        final fun <set-dialect>(com.jsoizo.kotlincsv/CsvDialect) // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.dialect.<set-dialect>|<set-dialect>(com.jsoizo.kotlincsv.CsvDialect){}[0]
+    final var excessFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.excessFieldsRowBehaviour|{}excessFieldsRowBehaviour[0]
+        final fun <get-excessFieldsRowBehaviour>(): com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.excessFieldsRowBehaviour.<get-excessFieldsRowBehaviour>|<get-excessFieldsRowBehaviour>(){}[0]
+        final fun <set-excessFieldsRowBehaviour>(com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour) // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.excessFieldsRowBehaviour.<set-excessFieldsRowBehaviour>|<set-excessFieldsRowBehaviour>(com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour){}[0]
+    final var insufficientFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.insufficientFieldsRowBehaviour|{}insufficientFieldsRowBehaviour[0]
+        final fun <get-insufficientFieldsRowBehaviour>(): com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.insufficientFieldsRowBehaviour.<get-insufficientFieldsRowBehaviour>|<get-insufficientFieldsRowBehaviour>(){}[0]
+        final fun <set-insufficientFieldsRowBehaviour>(com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour) // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.insufficientFieldsRowBehaviour.<set-insufficientFieldsRowBehaviour>|<set-insufficientFieldsRowBehaviour>(com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour){}[0]
+    final var nullFieldIndicator // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.nullFieldIndicator|{}nullFieldIndicator[0]
+        final fun <get-nullFieldIndicator>(): com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.nullFieldIndicator.<get-nullFieldIndicator>|<get-nullFieldIndicator>(){}[0]
+        final fun <set-nullFieldIndicator>(com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator) // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.nullFieldIndicator.<set-nullFieldIndicator>|<set-nullFieldIndicator>(com.jsoizo.kotlincsv.reader.CsvNullFieldIndicator){}[0]
+    final var skipEmptyLine // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.skipEmptyLine|{}skipEmptyLine[0]
+        final fun <get-skipEmptyLine>(): kotlin/Boolean // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.skipEmptyLine.<get-skipEmptyLine>|<get-skipEmptyLine>(){}[0]
+        final fun <set-skipEmptyLine>(kotlin/Boolean) // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.skipEmptyLine.<set-skipEmptyLine>|<set-skipEmptyLine>(kotlin.Boolean){}[0]
+}
+
+final class com.jsoizo.kotlincsv.writer/CsvWriteIoOptions { // com.jsoizo.kotlincsv.writer/CsvWriteIoOptions|null[0]
+    constructor <init>(kotlin/Boolean = ...) // com.jsoizo.kotlincsv.writer/CsvWriteIoOptions.<init>|<init>(kotlin.Boolean){}[0]
+
+    final val prependBom // com.jsoizo.kotlincsv.writer/CsvWriteIoOptions.prependBom|{}prependBom[0]
+        final fun <get-prependBom>(): kotlin/Boolean // com.jsoizo.kotlincsv.writer/CsvWriteIoOptions.prependBom.<get-prependBom>|<get-prependBom>(){}[0]
+
+    final fun component1(): kotlin/Boolean // com.jsoizo.kotlincsv.writer/CsvWriteIoOptions.component1|component1(){}[0]
+    final fun copy(kotlin/Boolean = ...): com.jsoizo.kotlincsv.writer/CsvWriteIoOptions // com.jsoizo.kotlincsv.writer/CsvWriteIoOptions.copy|copy(kotlin.Boolean){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jsoizo.kotlincsv.writer/CsvWriteIoOptions.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jsoizo.kotlincsv.writer/CsvWriteIoOptions.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jsoizo.kotlincsv.writer/CsvWriteIoOptions.toString|toString(){}[0]
+}
+
+final class com.jsoizo.kotlincsv.writer/CsvWriter { // com.jsoizo.kotlincsv.writer/CsvWriter|null[0]
+    constructor <init>(com.jsoizo.kotlincsv.writer/CsvWriterConfig = ...) // com.jsoizo.kotlincsv.writer/CsvWriter.<init>|<init>(com.jsoizo.kotlincsv.writer.CsvWriterConfig){}[0]
+
+    final val config // com.jsoizo.kotlincsv.writer/CsvWriter.config|{}config[0]
+        final fun <get-config>(): com.jsoizo.kotlincsv.writer/CsvWriterConfig // com.jsoizo.kotlincsv.writer/CsvWriter.config.<get-config>|<get-config>(){}[0]
+
+    final fun write(kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String>>): kotlin.sequences/Sequence<kotlin/Char> // com.jsoizo.kotlincsv.writer/CsvWriter.write|write(kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String>>){}[0]
+    final fun writeAll(kotlin.collections/List<kotlin.collections/List<kotlin/String>>): kotlin/String // com.jsoizo.kotlincsv.writer/CsvWriter.writeAll|writeAll(kotlin.collections.List<kotlin.collections.List<kotlin.String>>){}[0]
+    final fun writeAllNullable(kotlin.collections/List<kotlin.collections/List<kotlin/String?>>): kotlin/String // com.jsoizo.kotlincsv.writer/CsvWriter.writeAllNullable|writeAllNullable(kotlin.collections.List<kotlin.collections.List<kotlin.String?>>){}[0]
+    final fun writeNullable(kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String?>>): kotlin.sequences/Sequence<kotlin/Char> // com.jsoizo.kotlincsv.writer/CsvWriter.writeNullable|writeNullable(kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String?>>){}[0]
+}
+
+final class com.jsoizo.kotlincsv.writer/CsvWriterConfig { // com.jsoizo.kotlincsv.writer/CsvWriterConfig|null[0]
+    constructor <init>(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.writer/WriteQuoteMode = ...) // com.jsoizo.kotlincsv.writer/CsvWriterConfig.<init>|<init>(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.writer.WriteQuoteMode){}[0]
+
+    final val dialect // com.jsoizo.kotlincsv.writer/CsvWriterConfig.dialect|{}dialect[0]
+        final fun <get-dialect>(): com.jsoizo.kotlincsv/CsvDialect // com.jsoizo.kotlincsv.writer/CsvWriterConfig.dialect.<get-dialect>|<get-dialect>(){}[0]
+    final val outputLastLineTerminator // com.jsoizo.kotlincsv.writer/CsvWriterConfig.outputLastLineTerminator|{}outputLastLineTerminator[0]
+        final fun <get-outputLastLineTerminator>(): kotlin/Boolean // com.jsoizo.kotlincsv.writer/CsvWriterConfig.outputLastLineTerminator.<get-outputLastLineTerminator>|<get-outputLastLineTerminator>(){}[0]
+    final val quoteMode // com.jsoizo.kotlincsv.writer/CsvWriterConfig.quoteMode|{}quoteMode[0]
+        final fun <get-quoteMode>(): com.jsoizo.kotlincsv.writer/WriteQuoteMode // com.jsoizo.kotlincsv.writer/CsvWriterConfig.quoteMode.<get-quoteMode>|<get-quoteMode>(){}[0]
+
+    final fun component1(): com.jsoizo.kotlincsv/CsvDialect // com.jsoizo.kotlincsv.writer/CsvWriterConfig.component1|component1(){}[0]
+    final fun component2(): kotlin/Boolean // com.jsoizo.kotlincsv.writer/CsvWriterConfig.component2|component2(){}[0]
+    final fun component3(): com.jsoizo.kotlincsv.writer/WriteQuoteMode // com.jsoizo.kotlincsv.writer/CsvWriterConfig.component3|component3(){}[0]
+    final fun copy(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.writer/WriteQuoteMode = ...): com.jsoizo.kotlincsv.writer/CsvWriterConfig // com.jsoizo.kotlincsv.writer/CsvWriterConfig.copy|copy(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.writer.WriteQuoteMode){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jsoizo.kotlincsv.writer/CsvWriterConfig.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jsoizo.kotlincsv.writer/CsvWriterConfig.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jsoizo.kotlincsv.writer/CsvWriterConfig.toString|toString(){}[0]
+}
+
+final class com.jsoizo.kotlincsv.writer/CsvWriterConfigBuilder { // com.jsoizo.kotlincsv.writer/CsvWriterConfigBuilder|null[0]
+    final var dialect // com.jsoizo.kotlincsv.writer/CsvWriterConfigBuilder.dialect|{}dialect[0]
+        final fun <get-dialect>(): com.jsoizo.kotlincsv/CsvDialect // com.jsoizo.kotlincsv.writer/CsvWriterConfigBuilder.dialect.<get-dialect>|<get-dialect>(){}[0]
+        final fun <set-dialect>(com.jsoizo.kotlincsv/CsvDialect) // com.jsoizo.kotlincsv.writer/CsvWriterConfigBuilder.dialect.<set-dialect>|<set-dialect>(com.jsoizo.kotlincsv.CsvDialect){}[0]
+    final var outputLastLineTerminator // com.jsoizo.kotlincsv.writer/CsvWriterConfigBuilder.outputLastLineTerminator|{}outputLastLineTerminator[0]
+        final fun <get-outputLastLineTerminator>(): kotlin/Boolean // com.jsoizo.kotlincsv.writer/CsvWriterConfigBuilder.outputLastLineTerminator.<get-outputLastLineTerminator>|<get-outputLastLineTerminator>(){}[0]
+        final fun <set-outputLastLineTerminator>(kotlin/Boolean) // com.jsoizo.kotlincsv.writer/CsvWriterConfigBuilder.outputLastLineTerminator.<set-outputLastLineTerminator>|<set-outputLastLineTerminator>(kotlin.Boolean){}[0]
+    final var quoteMode // com.jsoizo.kotlincsv.writer/CsvWriterConfigBuilder.quoteMode|{}quoteMode[0]
+        final fun <get-quoteMode>(): com.jsoizo.kotlincsv.writer/WriteQuoteMode // com.jsoizo.kotlincsv.writer/CsvWriterConfigBuilder.quoteMode.<get-quoteMode>|<get-quoteMode>(){}[0]
+        final fun <set-quoteMode>(com.jsoizo.kotlincsv.writer/WriteQuoteMode) // com.jsoizo.kotlincsv.writer/CsvWriterConfigBuilder.quoteMode.<set-quoteMode>|<set-quoteMode>(com.jsoizo.kotlincsv.writer.WriteQuoteMode){}[0]
+}
+
+final class com.jsoizo.kotlincsv/CsvDialect { // com.jsoizo.kotlincsv/CsvDialect|null[0]
+    constructor <init>(kotlin/Char = ..., kotlin/Char = ..., kotlin/Char = ..., kotlin/String = ...) // com.jsoizo.kotlincsv/CsvDialect.<init>|<init>(kotlin.Char;kotlin.Char;kotlin.Char;kotlin.String){}[0]
+
+    final val delimiter // com.jsoizo.kotlincsv/CsvDialect.delimiter|{}delimiter[0]
+        final fun <get-delimiter>(): kotlin/Char // com.jsoizo.kotlincsv/CsvDialect.delimiter.<get-delimiter>|<get-delimiter>(){}[0]
+    final val escapeChar // com.jsoizo.kotlincsv/CsvDialect.escapeChar|{}escapeChar[0]
+        final fun <get-escapeChar>(): kotlin/Char // com.jsoizo.kotlincsv/CsvDialect.escapeChar.<get-escapeChar>|<get-escapeChar>(){}[0]
+    final val lineTerminator // com.jsoizo.kotlincsv/CsvDialect.lineTerminator|{}lineTerminator[0]
+        final fun <get-lineTerminator>(): kotlin/String // com.jsoizo.kotlincsv/CsvDialect.lineTerminator.<get-lineTerminator>|<get-lineTerminator>(){}[0]
+    final val quoteChar // com.jsoizo.kotlincsv/CsvDialect.quoteChar|{}quoteChar[0]
+        final fun <get-quoteChar>(): kotlin/Char // com.jsoizo.kotlincsv/CsvDialect.quoteChar.<get-quoteChar>|<get-quoteChar>(){}[0]
+
+    final fun component1(): kotlin/Char // com.jsoizo.kotlincsv/CsvDialect.component1|component1(){}[0]
+    final fun component2(): kotlin/Char // com.jsoizo.kotlincsv/CsvDialect.component2|component2(){}[0]
+    final fun component3(): kotlin/Char // com.jsoizo.kotlincsv/CsvDialect.component3|component3(){}[0]
+    final fun component4(): kotlin/String // com.jsoizo.kotlincsv/CsvDialect.component4|component4(){}[0]
+    final fun copy(kotlin/Char = ..., kotlin/Char = ..., kotlin/Char = ..., kotlin/String = ...): com.jsoizo.kotlincsv/CsvDialect // com.jsoizo.kotlincsv/CsvDialect.copy|copy(kotlin.Char;kotlin.Char;kotlin.Char;kotlin.String){}[0]
+    final fun equals(kotlin/Any?): kotlin/Boolean // com.jsoizo.kotlincsv/CsvDialect.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // com.jsoizo.kotlincsv/CsvDialect.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // com.jsoizo.kotlincsv/CsvDialect.toString|toString(){}[0]
+
+    final object Companion { // com.jsoizo.kotlincsv/CsvDialect.Companion|null[0]
+        final val RFC4180 // com.jsoizo.kotlincsv/CsvDialect.Companion.RFC4180|{}RFC4180[0]
+            final fun <get-RFC4180>(): com.jsoizo.kotlincsv/CsvDialect // com.jsoizo.kotlincsv/CsvDialect.Companion.RFC4180.<get-RFC4180>|<get-RFC4180>(){}[0]
+        final val TSV // com.jsoizo.kotlincsv/CsvDialect.Companion.TSV|{}TSV[0]
+            final fun <get-TSV>(): com.jsoizo.kotlincsv/CsvDialect // com.jsoizo.kotlincsv/CsvDialect.Companion.TSV.<get-TSV>|<get-TSV>(){}[0]
+    }
+}
+
+open class com.jsoizo.kotlincsv.exceptions/MalformedCsvException : kotlin/RuntimeException { // com.jsoizo.kotlincsv.exceptions/MalformedCsvException|null[0]
+    constructor <init>(kotlin/String) // com.jsoizo.kotlincsv.exceptions/MalformedCsvException.<init>|<init>(kotlin.String){}[0]
+}
+
+final fun (com.jsoizo.kotlincsv.reader/CsvReader).com.jsoizo.kotlincsv.reader/readAll(kotlinx.io/Source, com.jsoizo.kotlincsv.reader/CsvReadIoOptions = ...): kotlin.collections/List<kotlin.collections/List<kotlin/String>> // com.jsoizo.kotlincsv.reader/readAll|readAll@com.jsoizo.kotlincsv.reader.CsvReader(kotlinx.io.Source;com.jsoizo.kotlincsv.reader.CsvReadIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.reader/CsvReader).com.jsoizo.kotlincsv.reader/readAllFromFile(kotlin/String, com.jsoizo.kotlincsv.reader/CsvReadIoOptions = ...): kotlin.collections/List<kotlin.collections/List<kotlin/String>> // com.jsoizo.kotlincsv.reader/readAllFromFile|readAllFromFile@com.jsoizo.kotlincsv.reader.CsvReader(kotlin.String;com.jsoizo.kotlincsv.reader.CsvReadIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.reader/CsvReader).com.jsoizo.kotlincsv.reader/readAllFromFile(kotlinx.io.files/Path, com.jsoizo.kotlincsv.reader/CsvReadIoOptions = ...): kotlin.collections/List<kotlin.collections/List<kotlin/String>> // com.jsoizo.kotlincsv.reader/readAllFromFile|readAllFromFile@com.jsoizo.kotlincsv.reader.CsvReader(kotlinx.io.files.Path;com.jsoizo.kotlincsv.reader.CsvReadIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.reader/CsvReader).com.jsoizo.kotlincsv.reader/readAllNullable(kotlinx.io/Source, com.jsoizo.kotlincsv.reader/CsvReadIoOptions = ...): kotlin.collections/List<kotlin.collections/List<kotlin/String?>> // com.jsoizo.kotlincsv.reader/readAllNullable|readAllNullable@com.jsoizo.kotlincsv.reader.CsvReader(kotlinx.io.Source;com.jsoizo.kotlincsv.reader.CsvReadIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.reader/CsvReader).com.jsoizo.kotlincsv.reader/readAllNullableFromFile(kotlin/String, com.jsoizo.kotlincsv.reader/CsvReadIoOptions = ...): kotlin.collections/List<kotlin.collections/List<kotlin/String?>> // com.jsoizo.kotlincsv.reader/readAllNullableFromFile|readAllNullableFromFile@com.jsoizo.kotlincsv.reader.CsvReader(kotlin.String;com.jsoizo.kotlincsv.reader.CsvReadIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.reader/CsvReader).com.jsoizo.kotlincsv.reader/readAllNullableFromFile(kotlinx.io.files/Path, com.jsoizo.kotlincsv.reader/CsvReadIoOptions = ...): kotlin.collections/List<kotlin.collections/List<kotlin/String?>> // com.jsoizo.kotlincsv.reader/readAllNullableFromFile|readAllNullableFromFile@com.jsoizo.kotlincsv.reader.CsvReader(kotlinx.io.files.Path;com.jsoizo.kotlincsv.reader.CsvReadIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.writer/CsvWriter).com.jsoizo.kotlincsv.writer/write(kotlin.collections/List<kotlin.collections/List<kotlin/String>>, kotlinx.io/Sink, com.jsoizo.kotlincsv.writer/CsvWriteIoOptions = ...) // com.jsoizo.kotlincsv.writer/write|write@com.jsoizo.kotlincsv.writer.CsvWriter(kotlin.collections.List<kotlin.collections.List<kotlin.String>>;kotlinx.io.Sink;com.jsoizo.kotlincsv.writer.CsvWriteIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.writer/CsvWriter).com.jsoizo.kotlincsv.writer/write(kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String>>, kotlinx.io/Sink, com.jsoizo.kotlincsv.writer/CsvWriteIoOptions = ...) // com.jsoizo.kotlincsv.writer/write|write@com.jsoizo.kotlincsv.writer.CsvWriter(kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String>>;kotlinx.io.Sink;com.jsoizo.kotlincsv.writer.CsvWriteIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.writer/CsvWriter).com.jsoizo.kotlincsv.writer/writeNullable(kotlin.collections/List<kotlin.collections/List<kotlin/String?>>, kotlinx.io/Sink, com.jsoizo.kotlincsv.writer/CsvWriteIoOptions = ...) // com.jsoizo.kotlincsv.writer/writeNullable|writeNullable@com.jsoizo.kotlincsv.writer.CsvWriter(kotlin.collections.List<kotlin.collections.List<kotlin.String?>>;kotlinx.io.Sink;com.jsoizo.kotlincsv.writer.CsvWriteIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.writer/CsvWriter).com.jsoizo.kotlincsv.writer/writeNullable(kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String?>>, kotlinx.io/Sink, com.jsoizo.kotlincsv.writer/CsvWriteIoOptions = ...) // com.jsoizo.kotlincsv.writer/writeNullable|writeNullable@com.jsoizo.kotlincsv.writer.CsvWriter(kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String?>>;kotlinx.io.Sink;com.jsoizo.kotlincsv.writer.CsvWriteIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.writer/CsvWriter).com.jsoizo.kotlincsv.writer/writeNullableToFile(kotlin.collections/List<kotlin.collections/List<kotlin/String?>>, kotlin/String, com.jsoizo.kotlincsv.writer/CsvWriteIoOptions = ...) // com.jsoizo.kotlincsv.writer/writeNullableToFile|writeNullableToFile@com.jsoizo.kotlincsv.writer.CsvWriter(kotlin.collections.List<kotlin.collections.List<kotlin.String?>>;kotlin.String;com.jsoizo.kotlincsv.writer.CsvWriteIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.writer/CsvWriter).com.jsoizo.kotlincsv.writer/writeNullableToFile(kotlin.collections/List<kotlin.collections/List<kotlin/String?>>, kotlinx.io.files/Path, com.jsoizo.kotlincsv.writer/CsvWriteIoOptions = ...) // com.jsoizo.kotlincsv.writer/writeNullableToFile|writeNullableToFile@com.jsoizo.kotlincsv.writer.CsvWriter(kotlin.collections.List<kotlin.collections.List<kotlin.String?>>;kotlinx.io.files.Path;com.jsoizo.kotlincsv.writer.CsvWriteIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.writer/CsvWriter).com.jsoizo.kotlincsv.writer/writeNullableToFile(kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String?>>, kotlin/String, com.jsoizo.kotlincsv.writer/CsvWriteIoOptions = ...) // com.jsoizo.kotlincsv.writer/writeNullableToFile|writeNullableToFile@com.jsoizo.kotlincsv.writer.CsvWriter(kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String?>>;kotlin.String;com.jsoizo.kotlincsv.writer.CsvWriteIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.writer/CsvWriter).com.jsoizo.kotlincsv.writer/writeNullableToFile(kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String?>>, kotlinx.io.files/Path, com.jsoizo.kotlincsv.writer/CsvWriteIoOptions = ...) // com.jsoizo.kotlincsv.writer/writeNullableToFile|writeNullableToFile@com.jsoizo.kotlincsv.writer.CsvWriter(kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String?>>;kotlinx.io.files.Path;com.jsoizo.kotlincsv.writer.CsvWriteIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.writer/CsvWriter).com.jsoizo.kotlincsv.writer/writeToFile(kotlin.collections/List<kotlin.collections/List<kotlin/String>>, kotlin/String, com.jsoizo.kotlincsv.writer/CsvWriteIoOptions = ...) // com.jsoizo.kotlincsv.writer/writeToFile|writeToFile@com.jsoizo.kotlincsv.writer.CsvWriter(kotlin.collections.List<kotlin.collections.List<kotlin.String>>;kotlin.String;com.jsoizo.kotlincsv.writer.CsvWriteIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.writer/CsvWriter).com.jsoizo.kotlincsv.writer/writeToFile(kotlin.collections/List<kotlin.collections/List<kotlin/String>>, kotlinx.io.files/Path, com.jsoizo.kotlincsv.writer/CsvWriteIoOptions = ...) // com.jsoizo.kotlincsv.writer/writeToFile|writeToFile@com.jsoizo.kotlincsv.writer.CsvWriter(kotlin.collections.List<kotlin.collections.List<kotlin.String>>;kotlinx.io.files.Path;com.jsoizo.kotlincsv.writer.CsvWriteIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.writer/CsvWriter).com.jsoizo.kotlincsv.writer/writeToFile(kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String>>, kotlin/String, com.jsoizo.kotlincsv.writer/CsvWriteIoOptions = ...) // com.jsoizo.kotlincsv.writer/writeToFile|writeToFile@com.jsoizo.kotlincsv.writer.CsvWriter(kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String>>;kotlin.String;com.jsoizo.kotlincsv.writer.CsvWriteIoOptions){}[0]
+final fun (com.jsoizo.kotlincsv.writer/CsvWriter).com.jsoizo.kotlincsv.writer/writeToFile(kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String>>, kotlinx.io.files/Path, com.jsoizo.kotlincsv.writer/CsvWriteIoOptions = ...) // com.jsoizo.kotlincsv.writer/writeToFile|writeToFile@com.jsoizo.kotlincsv.writer.CsvWriter(kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String>>;kotlinx.io.files.Path;com.jsoizo.kotlincsv.writer.CsvWriteIoOptions){}[0]
+final fun <#A: kotlin/Any?> (com.jsoizo.kotlincsv.reader/CsvReader).com.jsoizo.kotlincsv.reader/read(kotlinx.io/Source, com.jsoizo.kotlincsv.reader/CsvReadIoOptions = ..., kotlin/Function1<kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String>>, #A>): #A // com.jsoizo.kotlincsv.reader/read|read@com.jsoizo.kotlincsv.reader.CsvReader(kotlinx.io.Source;com.jsoizo.kotlincsv.reader.CsvReadIoOptions;kotlin.Function1<kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String>>,0:0>){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (com.jsoizo.kotlincsv.reader/CsvReader).com.jsoizo.kotlincsv.reader/readFromFile(kotlin/String, com.jsoizo.kotlincsv.reader/CsvReadIoOptions = ..., kotlin/Function1<kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String>>, #A>): #A // com.jsoizo.kotlincsv.reader/readFromFile|readFromFile@com.jsoizo.kotlincsv.reader.CsvReader(kotlin.String;com.jsoizo.kotlincsv.reader.CsvReadIoOptions;kotlin.Function1<kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String>>,0:0>){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (com.jsoizo.kotlincsv.reader/CsvReader).com.jsoizo.kotlincsv.reader/readFromFile(kotlinx.io.files/Path, com.jsoizo.kotlincsv.reader/CsvReadIoOptions = ..., kotlin/Function1<kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String>>, #A>): #A // com.jsoizo.kotlincsv.reader/readFromFile|readFromFile@com.jsoizo.kotlincsv.reader.CsvReader(kotlinx.io.files.Path;com.jsoizo.kotlincsv.reader.CsvReadIoOptions;kotlin.Function1<kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String>>,0:0>){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (com.jsoizo.kotlincsv.reader/CsvReader).com.jsoizo.kotlincsv.reader/readNullable(kotlinx.io/Source, com.jsoizo.kotlincsv.reader/CsvReadIoOptions = ..., kotlin/Function1<kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String?>>, #A>): #A // com.jsoizo.kotlincsv.reader/readNullable|readNullable@com.jsoizo.kotlincsv.reader.CsvReader(kotlinx.io.Source;com.jsoizo.kotlincsv.reader.CsvReadIoOptions;kotlin.Function1<kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String?>>,0:0>){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (com.jsoizo.kotlincsv.reader/CsvReader).com.jsoizo.kotlincsv.reader/readNullableFromFile(kotlin/String, com.jsoizo.kotlincsv.reader/CsvReadIoOptions = ..., kotlin/Function1<kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String?>>, #A>): #A // com.jsoizo.kotlincsv.reader/readNullableFromFile|readNullableFromFile@com.jsoizo.kotlincsv.reader.CsvReader(kotlin.String;com.jsoizo.kotlincsv.reader.CsvReadIoOptions;kotlin.Function1<kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String?>>,0:0>){0§<kotlin.Any?>}[0]
+final fun <#A: kotlin/Any?> (com.jsoizo.kotlincsv.reader/CsvReader).com.jsoizo.kotlincsv.reader/readNullableFromFile(kotlinx.io.files/Path, com.jsoizo.kotlincsv.reader/CsvReadIoOptions = ..., kotlin/Function1<kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String?>>, #A>): #A // com.jsoizo.kotlincsv.reader/readNullableFromFile|readNullableFromFile@com.jsoizo.kotlincsv.reader.CsvReader(kotlinx.io.files.Path;com.jsoizo.kotlincsv.reader.CsvReadIoOptions;kotlin.Function1<kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String?>>,0:0>){0§<kotlin.Any?>}[0]
+final fun com.jsoizo.kotlincsv/csvReader(com.jsoizo.kotlincsv.reader/CsvReaderConfig): com.jsoizo.kotlincsv.reader/CsvReader // com.jsoizo.kotlincsv/csvReader|csvReader(com.jsoizo.kotlincsv.reader.CsvReaderConfig){}[0]
+final fun com.jsoizo.kotlincsv/csvReader(kotlin/Function1<com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder, kotlin/Unit> = ...): com.jsoizo.kotlincsv.reader/CsvReader // com.jsoizo.kotlincsv/csvReader|csvReader(kotlin.Function1<com.jsoizo.kotlincsv.reader.CsvReaderConfigBuilder,kotlin.Unit>){}[0]
+final fun com.jsoizo.kotlincsv/csvWriter(com.jsoizo.kotlincsv.writer/CsvWriterConfig): com.jsoizo.kotlincsv.writer/CsvWriter // com.jsoizo.kotlincsv/csvWriter|csvWriter(com.jsoizo.kotlincsv.writer.CsvWriterConfig){}[0]
+final fun com.jsoizo.kotlincsv/csvWriter(kotlin/Function1<com.jsoizo.kotlincsv.writer/CsvWriterConfigBuilder, kotlin/Unit> = ...): com.jsoizo.kotlincsv.writer/CsvWriter // com.jsoizo.kotlincsv/csvWriter|csvWriter(kotlin.Function1<com.jsoizo.kotlincsv.writer.CsvWriterConfigBuilder,kotlin.Unit>){}[0]
+
+// Targets: [native, wasmJs, wasmWasi]
+final fun (kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String>>).com.jsoizo.kotlincsv.reader/withHeader(kotlin/Boolean = ...): kotlin.sequences/Sequence<kotlin.collections/HashMap<kotlin/String, kotlin/String>> // com.jsoizo.kotlincsv.reader/withHeader|withHeader@kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String>>(kotlin.Boolean){}[0]
+
+// Targets: [native, wasmJs, wasmWasi]
+final fun (kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String?>>).com.jsoizo.kotlincsv.reader/withNullableHeader(kotlin/Boolean = ...): kotlin.sequences/Sequence<kotlin.collections/HashMap<kotlin/String, kotlin/String?>> // com.jsoizo.kotlincsv.reader/withNullableHeader|withNullableHeader@kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String?>>(kotlin.Boolean){}[0]
+
+// Targets: [js]
+final fun (kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String>>).com.jsoizo.kotlincsv.reader/withHeader(kotlin/Boolean = ...): kotlin.sequences/Sequence<kotlin.collections/LinkedHashMap<kotlin/String, kotlin/String>> // com.jsoizo.kotlincsv.reader/withHeader|withHeader@kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String>>(kotlin.Boolean){}[0]
+
+// Targets: [js]
+final fun (kotlin.sequences/Sequence<kotlin.collections/List<kotlin/String?>>).com.jsoizo.kotlincsv.reader/withNullableHeader(kotlin/Boolean = ...): kotlin.sequences/Sequence<kotlin.collections/LinkedHashMap<kotlin/String, kotlin/String?>> // com.jsoizo.kotlincsv.reader/withNullableHeader|withNullableHeader@kotlin.sequences.Sequence<kotlin.collections.List<kotlin.String?>>(kotlin.Boolean){}[0]

@@ -2,6 +2,8 @@ package com.jsoizo.kotlincsv
 
 import com.jsoizo.kotlincsv.writer.WriteQuoteMode
 import io.kotest.property.Arb
+import io.kotest.property.arbitrary.bind
+import io.kotest.property.arbitrary.boolean
 import io.kotest.property.arbitrary.choice
 import io.kotest.property.arbitrary.filter
 import io.kotest.property.arbitrary.flatMap
@@ -9,6 +11,7 @@ import io.kotest.property.arbitrary.int
 import io.kotest.property.arbitrary.list
 import io.kotest.property.arbitrary.map
 import io.kotest.property.arbitrary.of
+import io.kotest.property.arbitrary.orNull
 
 internal val targetedChar: Arb<Char> = Arb.of(
     ',', '\t', '"', '\\',
@@ -45,6 +48,24 @@ internal val dialectArb: Arb<CsvDialect> = Arb.of(
     CsvDialect.TSV,
     CsvDialect(escapeChar = '\\'),
 )
+
+private val dialectSymbolChar: Arb<Char> = Arb.of(
+    ',', ';', '\t', '|', ' ', '\'', '"', '\\', '#', 'a', '.', '0', '9',
+)
+
+// CsvDialect accepts any non-empty lineTerminator, but the reader only splits rows on these.
+private val readerLineTerminatorArb: Arb<String> =
+    Arb.of("\n", "\r", "\r\n", "\u2028", "\u2029", "\u0085")
+
+internal val anyDialectArb: Arb<CsvDialect> =
+    Arb.bind(
+        dialectSymbolChar,
+        dialectSymbolChar,
+        dialectSymbolChar.orNull(0.5),
+        readerLineTerminatorArb,
+    ) { delimiter, quoteChar, escapeChar, lineTerminator ->
+        runCatching { CsvDialect(delimiter, quoteChar, escapeChar ?: quoteChar, lineTerminator) }
+    }.filter { it.isSuccess }.map { it.getOrThrow() }
 
 internal val quoteModeArb: Arb<WriteQuoteMode> = Arb.of(
     WriteQuoteMode.CANONICAL,
@@ -89,5 +110,26 @@ internal val variableWidthRowsArb: Arb<List<List<String>>> =
             firstRowArb.flatMap { firstRow ->
                 laterRowsArb.map { laterRows -> listOf(firstRow) + laterRows }
             }
+        }
+    }
+
+private val digitChar: Arb<Char> = Arb.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+
+// Strings that satisfy the writer's `isDecimalLikeToken` predicate:
+// non-empty, only `[0-9.]`, at most one `.`.
+internal val decimalNumberArb: Arb<String> = Arb.bind(
+    Arb.list(digitChar, 0..6),
+    Arb.boolean(),
+    Arb.list(digitChar, 0..6),
+) { intPart, hasDot, fracPart ->
+    val raw = intPart.joinToString("") + if (hasDot) "." + fracPart.joinToString("") else ""
+    raw.ifEmpty { "0" }
+}
+
+internal val decimalRowsArb: Arb<List<List<String>>> =
+    Arb.int(1..5).flatMap { columns ->
+        Arb.int(1..6).flatMap { rowCount ->
+            val rowArb = Arb.list(decimalNumberArb, columns..columns)
+            Arb.list(rowArb, rowCount..rowCount)
         }
     }
