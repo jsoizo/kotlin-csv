@@ -16,6 +16,11 @@ class CsvReaderConfigBinaryCompatTest {
     private val allDefaultsMask = 0b1111
 
     @Test
+    fun constructor_noArgSignature_matchesDefaultConfig() {
+        CsvReaderConfig::class.java.getConstructor().newInstance() shouldBe CsvReaderConfig()
+    }
+
+    @Test
     fun constructor_v200Signature_forwardsNeitherIndicator() {
         val config = CsvReaderConfig::class.java.getConstructor(*v200Params)
             .newInstance(CsvDialect.TSV, true, InsufficientFieldsRowBehaviour.EMPTY_STRING, ExcessFieldsRowBehaviour.TRIM)
@@ -41,7 +46,7 @@ class CsvReaderConfigBinaryCompatTest {
 
     @Test
     fun copy_v200Signature_keepsNullFieldIndicator() {
-        val base = CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.BOTH)
+        val base = CsvReaderConfig(nullFieldIndicator = CsvNullFieldIndicator.BOTH).withIgnoreLeadingWhitespace(true)
         val copied = CsvReaderConfig::class.java.getMethod("copy", *v200Params)
             .invoke(base, CsvDialect.TSV, true, InsufficientFieldsRowBehaviour.IGNORE, ExcessFieldsRowBehaviour.IGNORE)
 
@@ -51,7 +56,7 @@ class CsvReaderConfigBinaryCompatTest {
             insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.IGNORE,
             excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.IGNORE,
             nullFieldIndicator = CsvNullFieldIndicator.BOTH,
-        )
+        ).withIgnoreLeadingWhitespace(true)
     }
 
     @Test
@@ -62,7 +67,7 @@ class CsvReaderConfigBinaryCompatTest {
             insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.EMPTY_STRING,
             excessFieldsRowBehaviour = ExcessFieldsRowBehaviour.TRIM,
             nullFieldIndicator = CsvNullFieldIndicator.BOTH,
-        )
+        ).withIgnoreLeadingWhitespace(true)
         val copied = CsvReaderConfig::class.java
             .getMethod("copy\$default", CsvReaderConfig::class.java, *v200Params, Int::class.javaPrimitiveType, Any::class.java)
             .invoke(null, base, null, false, null, null, allDefaultsMask, null)

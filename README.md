@@ -199,9 +199,25 @@ val customWriter = csvWriter {
 | --- | --- | --- |
 | `dialect` | `CsvDialect.RFC4180` | Shared CSV format (delimiter / quote / escape / line terminator). |
 | `skipEmptyLine` | `false` | Drop rows that are entirely empty before the field-count check. |
+| `ignoreLeadingWhitespace` | `false` | Ignore ASCII spaces/tabs before an opening quote at field start; preserve unquoted contents and whitespace inside quotes. |
 | `excessFieldsRowBehaviour` | `ERROR` | What to do when a row has more fields than the first row: `ERROR` / `IGNORE` / `TRIM`. |
 | `insufficientFieldsRowBehaviour` | `ERROR` | What to do when a row has fewer fields: `ERROR` / `IGNORE` / `EMPTY_STRING`. |
 | `nullFieldIndicator` | `NEITHER` | Which empty fields nullable reader APIs expose as `null`: `NEITHER` / `EMPTY_SEPARATORS` / `EMPTY_QUOTES` / `BOTH`. |
+
+Quoted fields preceded by spaces or tabs can be read explicitly:
+
+```kotlin
+val rows = csvReader { ignoreLeadingWhitespace = true }
+    .readAll("a, \"b\"") // [[a, b]]
+```
+
+For an immutable configuration, use `config.withIgnoreLeadingWhitespace(true)`.
+The original constructor and `copy` keep their five arguments; copying a
+configuration preserves its whitespace option.
+
+The default remains strict. This option does not trim unquoted fields, accept
+spaces after a closing quote, or consume a configured delimiter/quote/escape
+as whitespace. Other whitespace characters are not ignored.
 
 `CsvFieldNumDifferentException.rowNum` counts CSV rows after reader filters
 such as `skipEmptyLine`; it is not a physical source line number.

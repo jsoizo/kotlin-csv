@@ -104,6 +104,7 @@ final class com.jsoizo.kotlincsv.reader/CsvReader { // com.jsoizo.kotlincsv.read
 }
 
 final class com.jsoizo.kotlincsv.reader/CsvReaderConfig { // com.jsoizo.kotlincsv.reader/CsvReaderConfig|null[0]
+    constructor <init>() // com.jsoizo.kotlincsv.reader/CsvReaderConfig.<init>|<init>(){}[0]
     constructor <init>(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour = ...) // com.jsoizo.kotlincsv.reader/CsvReaderConfig.<init>|<init>(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour){}[0]
     constructor <init>(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator = ...) // com.jsoizo.kotlincsv.reader/CsvReaderConfig.<init>|<init>(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.CsvNullFieldIndicator){}[0]
 
@@ -111,6 +112,8 @@ final class com.jsoizo.kotlincsv.reader/CsvReaderConfig { // com.jsoizo.kotlincs
         final fun <get-dialect>(): com.jsoizo.kotlincsv/CsvDialect // com.jsoizo.kotlincsv.reader/CsvReaderConfig.dialect.<get-dialect>|<get-dialect>(){}[0]
     final val excessFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.excessFieldsRowBehaviour|{}excessFieldsRowBehaviour[0]
         final fun <get-excessFieldsRowBehaviour>(): com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.excessFieldsRowBehaviour.<get-excessFieldsRowBehaviour>|<get-excessFieldsRowBehaviour>(){}[0]
+    final val ignoreLeadingWhitespace // com.jsoizo.kotlincsv.reader/CsvReaderConfig.ignoreLeadingWhitespace|{}ignoreLeadingWhitespace[0]
+        final fun <get-ignoreLeadingWhitespace>(): kotlin/Boolean // com.jsoizo.kotlincsv.reader/CsvReaderConfig.ignoreLeadingWhitespace.<get-ignoreLeadingWhitespace>|<get-ignoreLeadingWhitespace>(){}[0]
     final val insufficientFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.insufficientFieldsRowBehaviour|{}insufficientFieldsRowBehaviour[0]
         final fun <get-insufficientFieldsRowBehaviour>(): com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.insufficientFieldsRowBehaviour.<get-insufficientFieldsRowBehaviour>|<get-insufficientFieldsRowBehaviour>(){}[0]
     final val nullFieldIndicator // com.jsoizo.kotlincsv.reader/CsvReaderConfig.nullFieldIndicator|{}nullFieldIndicator[0]
@@ -123,11 +126,13 @@ final class com.jsoizo.kotlincsv.reader/CsvReaderConfig { // com.jsoizo.kotlincs
     final fun component3(): com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.component3|component3(){}[0]
     final fun component4(): com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfig.component4|component4(){}[0]
     final fun component5(): com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator // com.jsoizo.kotlincsv.reader/CsvReaderConfig.component5|component5(){}[0]
+    final fun component6(): kotlin/Boolean // com.jsoizo.kotlincsv.reader/CsvReaderConfig.component6|component6(){}[0]
     final fun copy(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour = ...): com.jsoizo.kotlincsv.reader/CsvReaderConfig // com.jsoizo.kotlincsv.reader/CsvReaderConfig.copy|copy(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour){}[0]
     final fun copy(com.jsoizo.kotlincsv/CsvDialect = ..., kotlin/Boolean = ..., com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour = ..., com.jsoizo.kotlincsv.reader/CsvNullFieldIndicator = ...): com.jsoizo.kotlincsv.reader/CsvReaderConfig // com.jsoizo.kotlincsv.reader/CsvReaderConfig.copy|copy(com.jsoizo.kotlincsv.CsvDialect;kotlin.Boolean;com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour;com.jsoizo.kotlincsv.reader.CsvNullFieldIndicator){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // com.jsoizo.kotlincsv.reader/CsvReaderConfig.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // com.jsoizo.kotlincsv.reader/CsvReaderConfig.hashCode|hashCode(){}[0]
     final fun toString(): kotlin/String // com.jsoizo.kotlincsv.reader/CsvReaderConfig.toString|toString(){}[0]
+    final fun withIgnoreLeadingWhitespace(kotlin/Boolean): com.jsoizo.kotlincsv.reader/CsvReaderConfig // com.jsoizo.kotlincsv.reader/CsvReaderConfig.withIgnoreLeadingWhitespace|withIgnoreLeadingWhitespace(kotlin.Boolean){}[0]
 }
 
 final class com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder { // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder|null[0]
@@ -137,6 +142,9 @@ final class com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder { // com.jsoizo.k
     final var excessFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.excessFieldsRowBehaviour|{}excessFieldsRowBehaviour[0]
         final fun <get-excessFieldsRowBehaviour>(): com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.excessFieldsRowBehaviour.<get-excessFieldsRowBehaviour>|<get-excessFieldsRowBehaviour>(){}[0]
         final fun <set-excessFieldsRowBehaviour>(com.jsoizo.kotlincsv.reader/ExcessFieldsRowBehaviour) // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.excessFieldsRowBehaviour.<set-excessFieldsRowBehaviour>|<set-excessFieldsRowBehaviour>(com.jsoizo.kotlincsv.reader.ExcessFieldsRowBehaviour){}[0]
+    final var ignoreLeadingWhitespace // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.ignoreLeadingWhitespace|{}ignoreLeadingWhitespace[0]
+        final fun <get-ignoreLeadingWhitespace>(): kotlin/Boolean // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.ignoreLeadingWhitespace.<get-ignoreLeadingWhitespace>|<get-ignoreLeadingWhitespace>(){}[0]
+        final fun <set-ignoreLeadingWhitespace>(kotlin/Boolean) // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.ignoreLeadingWhitespace.<set-ignoreLeadingWhitespace>|<set-ignoreLeadingWhitespace>(kotlin.Boolean){}[0]
     final var insufficientFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.insufficientFieldsRowBehaviour|{}insufficientFieldsRowBehaviour[0]
         final fun <get-insufficientFieldsRowBehaviour>(): com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.insufficientFieldsRowBehaviour.<get-insufficientFieldsRowBehaviour>|<get-insufficientFieldsRowBehaviour>(){}[0]
         final fun <set-insufficientFieldsRowBehaviour>(com.jsoizo.kotlincsv.reader/InsufficientFieldsRowBehaviour) // com.jsoizo.kotlincsv.reader/CsvReaderConfigBuilder.insufficientFieldsRowBehaviour.<set-insufficientFieldsRowBehaviour>|<set-insufficientFieldsRowBehaviour>(com.jsoizo.kotlincsv.reader.InsufficientFieldsRowBehaviour){}[0]

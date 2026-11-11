@@ -8,15 +8,17 @@ private const val BOM_CHAR_CODE = 0xFEFF
 internal fun parseRows(
     chars: Sequence<Char>,
     dialect: CsvDialect,
+    ignoreLeadingWhitespace: Boolean = false,
 ): Sequence<List<String>> =
-    parseRowsWithMetadata(chars, dialect).map { row -> row.map { it.value } }
+    parseRowsWithMetadata(chars, dialect, ignoreLeadingWhitespace).map { row -> row.map { it.value } }
 
 /** Lazily parse a `Sequence<Char>` into CSV rows with quoted-field metadata. */
 internal fun parseRowsWithMetadata(
     chars: Sequence<Char>,
     dialect: CsvDialect,
+    ignoreLeadingWhitespace: Boolean = false,
 ): Sequence<List<ParsedCsvField>> = sequence {
-    val parser = RowParser(dialect, IteratorCharCursor(chars.iterator()))
+    val parser = RowParser(dialect, IteratorCharCursor(chars.iterator()), ignoreLeadingWhitespace)
     while (true) {
         val row = parser.nextRow() ?: break
         yield(row)
@@ -40,8 +42,9 @@ internal fun parseRowsFromChunks(
     dialect: CsvDialect,
     stripBom: Boolean = false,
     bufferSize: Int = 8192,
+    ignoreLeadingWhitespace: Boolean = false,
 ): Sequence<List<String>> =
-    parseRowsWithMetadataFromChunks(readInto, dialect, stripBom, bufferSize).map { row -> row.map { it.value } }
+    parseRowsWithMetadataFromChunks(readInto, dialect, stripBom, bufferSize, ignoreLeadingWhitespace).map { row -> row.map { it.value } }
 
 /** Lazily parse chunked CSV rows with quoted-field metadata. */
 internal fun parseRowsWithMetadataFromChunks(
@@ -49,13 +52,14 @@ internal fun parseRowsWithMetadataFromChunks(
     dialect: CsvDialect,
     stripBom: Boolean,
     bufferSize: Int = 8192,
+    ignoreLeadingWhitespace: Boolean = false,
 ): Sequence<List<ParsedCsvField>> = sequence {
     require(bufferSize >= 2) { "bufferSize must be >= 2 to hold a UTF-16 surrogate pair" }
 
     val cursor = ChunkCharCursor(readInto, bufferSize)
     if (stripBom && cursor.cur == BOM_CHAR_CODE) cursor.advance()
 
-    val parser = RowParser(dialect, cursor)
+    val parser = RowParser(dialect, cursor, ignoreLeadingWhitespace)
     while (true) {
         val row = parser.nextRow() ?: break
         yield(row)

@@ -96,7 +96,7 @@ public final class com/jsoizo/kotlincsv/reader/CsvReader {
 }
 
 public final class com/jsoizo/kotlincsv/reader/CsvReaderConfig {
-	public fun <init> ()V
+	public synthetic fun <init> ()V
 	public synthetic fun <init> (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;)V
 	public synthetic fun <init> (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;)V
@@ -106,6 +106,7 @@ public final class com/jsoizo/kotlincsv/reader/CsvReaderConfig {
 	public final fun component3 ()Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;
 	public final fun component4 ()Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;
 	public final fun component5 ()Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;
+	public final fun component6 ()Z
 	public final synthetic fun copy (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;)Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;
 	public final fun copy (Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;)Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;
 	public static synthetic fun copy$default (Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;Lcom/jsoizo/kotlincsv/CsvDialect;ZLcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;ILjava/lang/Object;)Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;
@@ -113,21 +114,25 @@ public final class com/jsoizo/kotlincsv/reader/CsvReaderConfig {
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDialect ()Lcom/jsoizo/kotlincsv/CsvDialect;
 	public final fun getExcessFieldsRowBehaviour ()Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;
+	public final fun getIgnoreLeadingWhitespace ()Z
 	public final fun getInsufficientFieldsRowBehaviour ()Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;
 	public final fun getNullFieldIndicator ()Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;
 	public final fun getSkipEmptyLine ()Z
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
+	public final fun withIgnoreLeadingWhitespace (Z)Lcom/jsoizo/kotlincsv/reader/CsvReaderConfig;
 }
 
 public final class com/jsoizo/kotlincsv/reader/CsvReaderConfigBuilder {
 	public final fun getDialect ()Lcom/jsoizo/kotlincsv/CsvDialect;
 	public final fun getExcessFieldsRowBehaviour ()Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;
+	public final fun getIgnoreLeadingWhitespace ()Z
 	public final fun getInsufficientFieldsRowBehaviour ()Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;
 	public final fun getNullFieldIndicator ()Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;
 	public final fun getSkipEmptyLine ()Z
 	public final fun setDialect (Lcom/jsoizo/kotlincsv/CsvDialect;)V
 	public final fun setExcessFieldsRowBehaviour (Lcom/jsoizo/kotlincsv/reader/ExcessFieldsRowBehaviour;)V
+	public final fun setIgnoreLeadingWhitespace (Z)V
 	public final fun setInsufficientFieldsRowBehaviour (Lcom/jsoizo/kotlincsv/reader/InsufficientFieldsRowBehaviour;)V
 	public final fun setNullFieldIndicator (Lcom/jsoizo/kotlincsv/reader/CsvNullFieldIndicator;)V
 	public final fun setSkipEmptyLine (Z)V
