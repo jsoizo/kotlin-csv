@@ -1,7 +1,7 @@
 # kotlin-csv
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-2.0.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/badge/version-2.1.0-blue.svg?cacheSeconds=2592000" />
   <a href="https://github.com/jsoizo/kotlin-csv/blob/main/LICENSE">
     <img alt="License: Apache License 2.0" src="https://img.shields.io/badge/License-Apache License 2.0-yellow.svg" target="_blank" />
   </a>
@@ -20,7 +20,7 @@ Pure Kotlin Multiplatform CSV reader and writer.
 ### Gradle (Kotlin DSL)
 
 ```kotlin
-implementation("com.jsoizo:kotlin-csv:2.0.0")
+implementation("com.jsoizo:kotlin-csv:2.1.0")
 ```
 
 The multiplatform artifact resolves JVM, JS, Kotlin/Wasm, and supported
@@ -36,7 +36,7 @@ directly, for example `kotlin-csv-jvm`, `kotlin-csv-js`,
 ### Gradle (Groovy DSL)
 
 ```groovy
-implementation 'com.jsoizo:kotlin-csv:2.0.0'
+implementation 'com.jsoizo:kotlin-csv:2.1.0'
 ```
 
 ### Maven
@@ -45,12 +45,12 @@ implementation 'com.jsoizo:kotlin-csv:2.0.0'
 <dependency>
   <groupId>com.jsoizo</groupId>
   <artifactId>kotlin-csv-jvm</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
 </dependency>
 <dependency>
   <groupId>com.jsoizo</groupId>
   <artifactId>kotlin-csv-js</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
 </dependency>
 ```
 
