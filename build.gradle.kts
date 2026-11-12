@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "com.jsoizo"
-version = "2.0.0"
+version = "2.1.0"
 val projectName = "kotlin-csv"
 val isSnapshot = version.toString().endsWith("-SNAPSHOT")
 
